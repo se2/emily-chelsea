@@ -1,0 +1,155 @@
+@import "../base-components";
+
+.woocommerce-checkout {
+	.woocommerce {
+		padding: pxToRem(40) 0;
+	}
+	.woocommerce-billing-fields__field-wrapper {
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0 pxToRem(-8);
+		.form-row {
+			flex: 0 0 50%;
+			padding: 0 pxToRem(8);
+		}
+		.form-row-wide {
+			flex: 0 0 100%;
+		}
+	}
+}
+
+#order_comments {
+	height: 120px;
+}
+
+.woocommerce-form-coupon-toggle {
+	margin-bottom: pxToRem(20);
+	a {
+		color: var(--cl-gold);
+	}
+}
+
+.woocommerce-form-coupon {
+	margin-top: pxToRem(10);
+	margin-bottom: pxToRem(40);
+	.button {
+		@include button-base;
+		@include button-size-small;
+		@include button-solid;
+	}
+	@include media-breakpoint-up(md) {
+		max-width: calc(50% - 15px);
+	}
+}
+
+#place_order {
+	@include button-base;
+	@include button-size-small;
+	@include button-solid;
+}
+
+.wc_payment_methods {
+	margin: pxToRem(20) 0;
+	list-style-type: none;
+	padding: 0;
+	li {
+		padding: 10px 15px;
+		background-color: var(--cl-gold);
+		color: #fff;
+		p {
+			margin: 0;
+		}
+	}
+}
+
+.shop_table {
+	thead {
+		.product-name {
+			text-align: left;
+		}
+		.product-total {
+			text-align: right;
+		}
+	}
+	.cart-subtotal,
+	.order-total,
+	.tax-total,
+	.fee,
+	.shipping-fee,
+	.tax-rate {
+		th,
+		td {
+			text-align: right;
+			padding-top: 0;
+			padding-bottom: 0;
+		}
+	}
+	.product-total {
+		text-align: right;
+	}
+	@include media-breakpoint-down(md) {
+		thead {
+			display: block;
+			border-bottom: 1px solid var(--cl-border);
+			.product-name,
+			.product-total {
+				font-size: pxToRem(16);
+			}
+		}
+		tfoot {
+			width: 100%;
+			display: block;
+			padding: pxToRem(10) pxToRem(0);
+		}
+		tbody {
+			tr {
+				border-bottom: 1px solid var(--cl-border) !important;
+			}
+		}
+		.product-name {
+			flex: 0 0 70%;
+			max-width: 70%;
+			order: 0;
+		}
+		.product-total {
+			flex: 0 0 30%;
+			max-width: 30%;
+			text-align: right;
+		}
+	}
+}
+
+.woocommerce-shipping-methods {
+	list-style: none;
+	margin-top: 10px;
+	padding: 0;
+	input {
+		margin-right: 5px;
+	}
+}
+
+#shipping_method {
+	margin-bottom: 0;
+}
+
+#customer_details__info {
+	display: flex;
+	flex-direction: column;
+	.table-shipping {
+		margin-bottom: 30px;
+		order: 2;
+	}
+	@include media-breakpoint-up(md) {
+		display: block;
+		.table-shipping {
+			order: 0;
+		}
+	}
+}
+
+.woocommerce-notices-wrapper {
+	ul {
+		padding-top: 0;
+		padding-bottom: 30px;
+	}
+}

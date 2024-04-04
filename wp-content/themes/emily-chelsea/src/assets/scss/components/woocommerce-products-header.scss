@@ -1,0 +1,22 @@
+@import "../base-components";
+
+.woocommerce-products-header {
+	min-height: 80px;
+	padding: pxToRem(20) pxToRem(20);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	border-bottom: 2px solid var(--cl-border);
+	&__title {
+		font-size: pxToRem(40);
+		line-height: 1.15;
+		margin: 0;
+		@include media-breakpoint-up(md) {
+			font-size: pxToRem(60);
+		}
+	}
+	@include media-breakpoint-up(md) {
+		min-height: 200px;
+		padding: pxToRem(23) pxToRem(48);
+	}
+}

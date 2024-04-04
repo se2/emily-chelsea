@@ -1,0 +1,43 @@
+@import "../base-components";
+
+.woocommerce-cart-form-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	padding: pxToRem(40) 0;
+	.woocommerce-cart-form {
+		flex: 0 0 100%;
+		padding: 0;
+	}
+	.cart-collaterals {
+		flex: 0 0 100%;
+		margin-top: pxToRem(30);
+		td,
+		th {
+			text-align: left;
+		}
+	}
+
+	@include media-breakpoint-up(md) {
+		.woocommerce-cart-form {
+			flex: 0 0 70%;
+			padding: 0;
+		}
+		.cart-collaterals {
+			flex: 0 0 28%;
+			margin-left: auto;
+			margin-top: pxToRem(0);
+		}
+	}
+}
+
+.cart-collaterals {
+	.wc-proceed-to-checkout {
+		text-align: center;
+	}
+	.checkout-button {
+		margin-top: pxToRem(30);
+		@include button-base;
+		@include button-size-small;
+		@include button-solid;
+	}
+}

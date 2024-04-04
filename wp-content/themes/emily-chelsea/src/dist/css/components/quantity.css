@@ -1,0 +1,43 @@
+.quantity {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-top: 2px solid var(--cl-border);
+  border-bottom: 2px solid var(--cl-border);
+  padding-left: 60px;
+}
+.quantity label {
+  display: block;
+  color: #000;
+  font-size: 20px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.quantity button {
+  background: none;
+  border: 0;
+  flex: 0 0 50px;
+  width: 50px;
+  height: 96px;
+  font-size: 30px;
+  border-left: 2px solid var(--cl-border);
+  font-weight: normal;
+}
+.quantity input {
+  border: 0 !important;
+  height: 96px;
+  width: 100%;
+  text-align: right;
+  font-size: 20px;
+  padding-right: 60px;
+}
+.quantity input:focus {
+  outline: none;
+}
+.quantity--hide {
+  opacity: 0;
+  height: 0px;
+  overflow: hidden;
+}
+
+/*# sourceMappingURL=quantity.css.map*/

@@ -1,0 +1,116 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 2,
+	"settings": {
+		"appearanceTools": true,
+		"color": {
+			"custom": true,
+			"customGradient": true,
+			"link": true,
+			"palette": [
+				{
+					"name": "#DBC5C5",
+					"slug": "dbc5c5",
+					"color": "#DBC5C5"
+				},
+				{
+					"name": "#CCADAD",
+					"slug": "ccadad",
+					"color": "#CCADAD"
+				},
+				{
+					"name": "#000000",
+					"slug": "000000",
+					"color": "#000000"
+				},
+				{
+					"name": "#363636",
+					"slug": "363636",
+					"color": "#363636"
+				},
+				{
+					"name": "#F4EFEF",
+					"slug": "f4efef",
+					"color": "#F4EFEF"
+				},
+				{
+					"name": "#906C6B",
+					"slug": "906c6b",
+					"color": "#906C6B"
+				},
+				{
+					"name": "#DCC4C5",
+					"slug": "dcc4c5",
+					"color": "#DCC4C5"
+				},
+				{
+					"name": "#DCC3C5",
+					"slug": "dcc3c5",
+					"color": "#DCC3C5"
+				},
+				{
+					"name": "#919191",
+					"slug": "919191",
+					"color": "#919191"
+				},
+				{
+					"name": "#916C6C",
+					"slug": "916c6c",
+					"color": "#916C6C"
+				},
+				{
+					"name": "#3F7F88",
+					"slug": "3F7F88",
+					"color": "#3F7F88"
+				},
+				{
+					"name": "#FA5160",
+					"slug": "FA5160",
+					"color": "#FA5160"
+				},
+				{
+					"name": "#BC8F55",
+					"slug": "BC8F55",
+					"color": "#BC8F55"
+				},
+				{
+					"name": "#FDF9F4",
+					"slug": "FDF9F4",
+					"color": "#FDF9F4"
+				}
+			]
+		},
+		"typography": {
+			"customFontSize": true,
+			"customLineHeight": true,
+			"dropCaps": true,
+			"fontSize": "1rem",
+			"fontSizes": [
+				{
+					"slug": "small",
+					"size": "36px",
+					"name": "Small"
+				},
+				{
+					"slug": "medium",
+					"size": "48px",
+					"name": "Medium"
+				},
+				{
+					"slug": "large",
+					"size": "60px",
+					"name": "Large"
+				}
+			]
+		},
+		"spacing": [
+			{
+				"units": ["px", "em", "rem", "vh", "vw"]
+			}
+		],
+		"layout": {
+			"contentSize": "840px",
+			"wideSize": "1100px"
+		}
+	}
+}

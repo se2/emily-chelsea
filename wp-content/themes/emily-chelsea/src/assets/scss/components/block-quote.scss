@@ -1,0 +1,26 @@
+@import "../base-components";
+
+.wp-block-quote {
+	margin: 0;
+	padding-left: 0px;
+	padding-top: pxToRem(50) !important;
+	border: 0;
+	position: relative;
+	width: 100%;
+	&:before {
+		content: "“";
+		font-size: pxToRem(88);
+		line-height: 1;
+		position: absolute;
+		font-family: $headings-font-family;
+		top: 0;
+		left: 0;
+	}
+	cite {
+		font-weight: bold;
+		font-style: normal;
+		&:before {
+			content: "- ";
+		}
+	}
+}

@@ -1,0 +1,42 @@
+@import "../base-components";
+
+.main-header {
+	background: transparent;
+	&:before {
+		border-color: var(--cl-border);
+	}
+}
+
+.search-page {
+	padding-top: pxToRem(48);
+	&__title {
+		margin: 0;
+		color: #3f7f88;
+	}
+	&__result {
+		padding-top: pxToRem(48);
+	}
+	&__top {
+		&__right {
+			.facetwp-facet {
+				select {
+					min-width: 200px;
+				}
+			}
+		}
+	}
+}
+
+.header-line {
+	height: var(--header-line-height-m, 460px);
+	@include media-breakpoint-up(md) {
+		height: var(--header-line-height-tablet, 600px);
+	}
+	@include media-breakpoint-up(lg) {
+		height: var(--header-line-height-pc, 600px);
+	}
+}
+
+.post-item__thumbnail {
+	opacity: 1 !important;
+}

@@ -1,0 +1,30 @@
+@import "../base-components";
+
+html :where(.editor-styles-wrapper) {
+	background: #fff;
+	color: initial;
+	font-family: serif;
+	font-size: medium;
+	line-height: normal;
+}
+html :where(.editor-styles-wrapper) .wp-align-wrapper {
+	max-width: 840px;
+}
+html :where(.editor-styles-wrapper) .wp-align-wrapper.wp-align-full,
+html :where(.editor-styles-wrapper) .wp-align-wrapper > .wp-block {
+	max-width: none;
+}
+html :where(.editor-styles-wrapper) .wp-align-wrapper.wp-align-wide {
+	max-width: 840px;
+}
+html :where(.editor-styles-wrapper) a {
+	transition: none;
+}
+html :where(.editor-styles-wrapper) code,
+html :where(.editor-styles-wrapper) kbd {
+	background: inherit;
+	font-family: monospace;
+	font-size: inherit;
+	margin: 0;
+	padding: 0;
+}

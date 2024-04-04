@@ -1,0 +1,27 @@
+@charset "UTF-8";
+.wp-block-quote {
+  margin: 0;
+  padding-left: 0px;
+  padding-top: 3.125rem !important;
+  border: 0;
+  position: relative;
+  width: 100%;
+}
+.wp-block-quote:before {
+  content: "“";
+  font-size: 5.5rem;
+  line-height: 1;
+  position: absolute;
+  font-family: "New Forest", sans-serif;
+  top: 0;
+  left: 0;
+}
+.wp-block-quote cite {
+  font-weight: bold;
+  font-style: normal;
+}
+.wp-block-quote cite:before {
+  content: "- ";
+}
+
+/*# sourceMappingURL=block-quote.css.map*/

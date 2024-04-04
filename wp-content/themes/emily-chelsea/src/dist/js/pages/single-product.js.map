@@ -1,0 +1,1 @@
+{"version":3,"file":"/dist/js/pages/single-product.js","mappings":";;;;;AAAA,CAAC,UAAUA,CAAC,EAAE;EACb;AAAA,CACA,EAAEC,MAAM,CAAC,C","sources":["webpack://src/./assets/js/pages/single-product.js"],"sourcesContent":["(function ($) {\n\t//$form.find( '.single_variation' );\n})(jQuery);\n"],"names":["$","jQuery"],"sourceRoot":""}

@@ -1,0 +1,87 @@
+@import "../base-components";
+
+.ttg-buttons {
+	overflow: hidden;
+	width: 100%;
+	&__inner {
+		margin: -5px;
+		.btn {
+			margin: 5px;
+		}
+	}
+}
+
+.btn {
+	@include button-base;
+	width: var(--ttg-button-width-mobile);
+	@include media-breakpoint-up(md) {
+		width: var(--ttg-button-width-tablet);
+	}
+	@include media-breakpoint-up(lg) {
+		width: var(--ttg-button-width-pc);
+	}
+}
+
+.btn--small {
+	@include button-size-small;
+}
+
+.btn--medium {
+	@include button-size-medium;
+}
+
+.btn--large {
+	@include button-size-large;
+}
+
+.btn--solid {
+	@include button-solid;
+	&.btn--white {
+		@include button-solid-white;
+	}
+}
+
+.btn--outline {
+	@include button-outline;
+	&.btn--white {
+		@include button-outline-white;
+	}
+}
+
+.btn--secondary-solid {
+	@include button-solid-secondary;
+}
+
+.btn--secondary-outline {
+	@include button-outline-secondary;
+}
+
+.btn-custom {
+	height: var(--ttg-button-height-mobile);
+	border-width: var(--ttg-button-border_width-mobile);
+	@include media-breakpoint-up(md) {
+		height: var(--ttg-button-height-tablet);
+		border-width: var(--ttg-button-border_width-tablet);
+	}
+	@include media-breakpoint-up(lg) {
+		height: var(--ttg-button-height-pc);
+		border-width: var(--ttg-button-border_width-pc);
+	}
+	&--solid {
+		color: var(--ttg-button-text_color);
+		background-color: var(--ttg-button-background_color);
+		&:hover {
+			color: var(--ttg-button-text_color_hover);
+			background-color: var(--ttg-button-background_color_hover);
+		}
+	}
+	&--outline {
+		color: var(--ttg-button-text_color);
+		background-color: transparent;
+		border-color: var(--ttg-button-background_color);
+		&:hover {
+			color: var(--ttg-button-text_color_hover);
+			border-color: var(--ttg-button-background_color);
+		}
+	}
+}

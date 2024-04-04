@@ -1,0 +1,38 @@
+.alignfull {
+  position: relative;
+  margin-left: -0.9375rem;
+  margin-right: -0.9375rem;
+}
+@media (min-width: 1100px) {
+  .alignfull {
+    width: 100vw;
+    max-width: calc(100vw - var(--scrollbar-width, 0));
+    left: 50%;
+    right: 50%;
+    margin-right: -50vw;
+    margin-left: calc(-50vw - 50px + var(--scrollbar-width, 15px) / 2);
+  }
+}
+.alignfull .alignfull {
+  margin-left: 0;
+  margin-right: 0;
+}
+@media (min-width: 1100px) {
+  .alignfull .alignfull {
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 1100px) {
+  .container-fluid {
+    padding-left: 3.125rem;
+    padding-right: 3.125rem;
+  }
+}
+
+/*# sourceMappingURL=only-fe.css.map*/

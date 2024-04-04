@@ -1,0 +1,26 @@
+body:not(.wp-admin) {
+	.form-control {
+		border-color: var(--cl-border);
+		height: 49px;
+		padding: pxToRem(10) pxToRem(20);
+	}
+
+	.input-text {
+		@extend .form-control;
+	}
+
+	.select2-container .select2-selection--single {
+		height: auto;
+	}
+
+	.select2-selection__rendered {
+		height: 49px;
+		padding: pxToRem(10) pxToRem(20) !important;
+	}
+
+	.select2-container--default
+		.select2-selection--single
+		.select2-selection__arrow {
+		height: 100%;
+	}
+}
