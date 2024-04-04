@@ -89,6 +89,7 @@
 }
 .shop_table .actions-wrapper .coupon button {
   white-space: nowrap;
+  font-size: 0.7rem;
 }
 .shop_table .actions-wrapper button[name=update_cart] {
   width: 100%;
@@ -127,6 +128,7 @@
   border: 2px solid var(--cl-primary);
   background: var(--cl-primary);
   color: #fff;
+  height: 38px;
 }
 .shop_table .button:hover {
   background-color: #000;
@@ -134,10 +136,10 @@
   color: #fff;
 }
 .shop_table .coupon {
-  border-radius: 40px;
   display: inline-flex;
-  padding: 0.625rem 0.625rem;
+  padding: 0.3125rem 0.625rem;
   border: 1px solid var(--cl-border);
+  align-items: center;
 }
 .shop_table .coupon input {
   height: 49px;

@@ -36,6 +36,8 @@
 		@include button-base;
 		@include button-size-small;
 		@include button-solid;
+		height: 38px;
+		font-size: 0.7rem;
 	}
 	@include media-breakpoint-up(md) {
 		max-width: calc(50% - 15px);

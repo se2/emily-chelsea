@@ -8,6 +8,7 @@
     "/dist/js/components/single-product.js": "/dist/js/components/single-product.js",
     "/dist/js/components/video.js": "/dist/js/components/video.js",
     "/dist/js/pages/checkout.js": "/dist/js/pages/checkout.js",
+    "/dist/js/pages/single-product.js": "/dist/js/pages/single-product.js",
     "/dist/css/components/block-quote.css": "/dist/css/components/block-quote.css",
     "/dist/css/components/block-posts.css": "/dist/css/components/block-posts.css",
     "/dist/css/components/block-image.css": "/dist/css/components/block-image.css",

@@ -50,6 +50,8 @@
   border: 2px solid var(--cl-primary);
   background: var(--cl-primary);
   color: #fff;
+  height: 38px;
+  font-size: 0.7rem;
 }
 .woocommerce-form-coupon .button:hover {
   background-color: #000;
