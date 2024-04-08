@@ -78,6 +78,8 @@
 		const selectedOption = $(select).find("option:selected");
 		let listItems = "";
 
+		console.log("selectedOption", selectedOption.val());
+
 		$.each(options, function (index, el) {
 			const text = $(el).html();
 			const value = $(el).val();
