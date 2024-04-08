@@ -1,0 +1,22 @@
+.ttg-separator {
+  margin: var(--separator-mar-m);
+  display: block;
+  border-style: solid;
+  width: var(--separator-width-m, 100%);
+  border-width: var(--separator-border) 0 0 0;
+  border-color: var(--separator-border-color);
+}
+@media (min-width: 1100px) {
+  .ttg-separator {
+    margin: var(--separator-mar-tablet);
+    width: var(--separator-width-tablet, 100%);
+  }
+}
+@media (min-width: 1480px) {
+  .ttg-separator {
+    margin: var(--separator-mar);
+    width: var(--separator-width, 100%);
+  }
+}
+
+/*# sourceMappingURL=separator.css.map*/

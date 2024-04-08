@@ -1,0 +1,164 @@
+.ttg-media {
+  background-color: var(--cl-primary);
+  width: 100%;
+  height: 100%;
+  max-height: inherit;
+  position: relative;
+}
+.ttg-media__center {
+  width: 2px;
+  height: 2px;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+.ttg-media.loading:before {
+  position: absolute;
+  content: "loading...";
+  font-size: 30px;
+  color: #fff;
+  text-transform: uppercase;
+  display: block;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  letter-spacing: 0.05em;
+  z-index: 5;
+}
+.ttg-media--no-poster .ttg-media__video-wrapper {
+  position: relative;
+  opacity: 1;
+  height: 100%;
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+.ttg-media--no-video::before {
+  display: none !important;
+}
+.ttg-media__inner {
+  position: relative;
+  height: 100%;
+  max-height: inherit;
+}
+.ttg-media__inner:before {
+  content: "";
+  z-index: 2;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+.ttg-media__poster {
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.2s linear;
+  height: 100%;
+  max-height: inherit;
+}
+.ttg-media__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  max-height: inherit;
+}
+.ttg-media__play {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+.ttg-media__play.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.ttg-media__play__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+.ttg-media__play__icon svg {
+  display: block;
+  width: 15px;
+  height: auto;
+}
+.ttg-media__play__icon__pause {
+  display: none;
+}
+@media (min-width: 1480px) {
+  .ttg-media__play__icon {
+    width: 48px;
+    height: 48px;
+  }
+  .ttg-media__play__icon svg {
+    width: 17px;
+  }
+}
+.ttg-media__video-wrapper {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0;
+  overflow: hidden;
+}
+.ttg-media__video-wrapper__inner {
+  width: 100%;
+  height: 100%;
+}
+.ttg-media__video-wrapper__inner[data-type=youtube], .ttg-media__video-wrapper__inner[data-type=vimeo] {
+  min-height: 100%;
+  min-width: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  aspect-ratio: 16/9;
+}
+.ttg-media__video-wrapper iframe,
+.ttg-media__video-wrapper video {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.ttg-media__video {
+  width: 100%;
+  height: 100%;
+}
+.ttg-media.is-playing:not(.loading) .ttg-media__poster {
+  opacity: 0;
+  visibility: hidden;
+}
+.ttg-media.is-playing:not(.loading) .ttg-media__video-wrapper {
+  opacity: 1;
+}
+.ttg-media.is-playing:not(.loading) .ttg-media__play {
+  opacity: 0;
+}
+.ttg-media.is-playing:not(.loading) .ttg-media__play__icon__play {
+  display: none;
+}
+.ttg-media.is-playing:not(.loading) .ttg-media__play__icon__pause {
+  display: block;
+}
+.ttg-media.is-playing:not(.loading):hover .ttg-media__play {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=media.css.map*/

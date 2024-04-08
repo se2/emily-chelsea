@@ -1,0 +1,67 @@
+.container-share {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 30px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.container-share__social {
+  order: 2;
+}
+@media (min-width: 992px) {
+  .container-share__social {
+    order: 1;
+    position: absolute;
+    top: 0;
+    left: 0px;
+    bottom: 0;
+    padding-top: 30px;
+    box-sizing: border-box;
+  }
+}
+@media (min-width: 992px) {
+  .container-share .meks_ess {
+    flex-direction: column;
+  }
+}
+.container-share .meks_ess.circle .meks_ess-item,
+.container-share .meks_ess.square .meks_ess-item,
+.container-share .meks_ess.transparent .meks_ess-item {
+  line-height: 1;
+  min-width: 28px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d3d3d3 !important;
+}
+.container-share .meks_ess.circle .meks_ess-item.socicon-facebook,
+.container-share .meks_ess.square .meks_ess-item.socicon-facebook,
+.container-share .meks_ess.transparent .meks_ess-item.socicon-facebook {
+  align-items: flex-end;
+  font-size: 24px;
+}
+.container-share .meks_ess.circle .meks_ess-item:hover,
+.container-share .meks_ess.square .meks_ess-item:hover,
+.container-share .meks_ess.transparent .meks_ess-item:hover {
+  background: #5a7443 !important;
+}
+@media (min-width: 992px) {
+  .container-share .meks_ess.circle .meks_ess-item,
+.container-share .meks_ess.square .meks_ess-item,
+.container-share .meks_ess.transparent .meks_ess-item {
+    margin: 0 0 14px 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .container-share {
+    width: 848px;
+    padding: 0 110px;
+  }
+}
+
+/*# sourceMappingURL=container-share.css.map*/

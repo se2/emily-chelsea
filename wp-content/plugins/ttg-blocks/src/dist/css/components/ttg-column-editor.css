@@ -1,0 +1,23 @@
+.ttg-column {
+  max-width: 100% !important;
+  flex-basis: 100% !important;
+}
+.ttg-column__inner {
+  padding: 0 !important;
+}
+
+[data-type="ttg/column"] {
+  flex-basis: var(--ttg-column-width-m, 100%) !important;
+  max-width: var(--ttg-column-width-m, 100%) !important;
+  order: var(--ttg-column-order-m, 0);
+  min-height: 56px;
+}
+@media (min-width: 1480px) {
+  [data-type="ttg/column"] {
+    flex-basis: var(--ttg-column-width, 100%) !important;
+    max-width: var(--ttg-column-width, 100%) !important;
+    order: var(--ttg-column-order, 0);
+  }
+}
+
+/*# sourceMappingURL=ttg-column-editor.css.map*/

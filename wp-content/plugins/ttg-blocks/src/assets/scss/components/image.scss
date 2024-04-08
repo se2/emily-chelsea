@@ -1,0 +1,28 @@
+@import "../base-components";
+
+.ttg-image {
+	overflow: var(--ttg-image-overflow-mobile, visible);
+	img {
+		max-height: inherit;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.05s cubic-bezier(0, 0, 0, 1);
+	}
+	&__pc,
+	&__tablet,
+	&__mobile {
+		background-size: cover;
+		background-position: center center;
+		background-repeat: no-repeat;
+	}
+
+	@include media-breakpoint-up(md) {
+		overflow: var(--ttg-image-overflow-tablet, visible);
+	}
+
+	@include media-breakpoint-up(lg) {
+		overflow: var(--ttg-image-overflow-pc, visible);
+	}
+}

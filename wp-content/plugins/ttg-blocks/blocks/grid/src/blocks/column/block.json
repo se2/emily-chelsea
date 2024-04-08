@@ -1,0 +1,30 @@
+{
+	"name": "ttg/column",
+	"category": "ttg",
+	"attributes": {
+		"wid": {
+			"type": "number",
+			"default": 100
+		},
+		"wid_tablet": {
+			"type": "number",
+			"default": 100
+		},
+		"wid_m": {
+			"type": "number",
+			"default": 100
+		},
+		"order": {
+			"type": "number",
+			"default": 0
+		},
+		"order_tablet": {
+			"type": "number",
+			"default": 0
+		},
+		"order_m": {
+			"type": "number",
+			"default": 0
+		}
+	}
+}

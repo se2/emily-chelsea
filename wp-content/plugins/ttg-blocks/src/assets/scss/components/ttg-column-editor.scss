@@ -1,0 +1,20 @@
+@import "../base-components";
+
+.ttg-column {
+	max-width: 100% !important;
+	flex-basis: 100% !important;
+	&__inner {
+		padding: 0 !important;
+	}
+}
+[data-type="ttg/column"] {
+	flex-basis: var(--ttg-column-width-m, 100%) !important;
+	max-width: var(--ttg-column-width-m, 100%) !important;
+	order: var(--ttg-column-order-m, 0);
+	min-height: 56px;
+	@include media-breakpoint-up(lg) {
+		flex-basis: var(--ttg-column-width, 100%) !important;
+		max-width: var(--ttg-column-width, 100%) !important;
+		order: var(--ttg-column-order, 0);
+	}
+}

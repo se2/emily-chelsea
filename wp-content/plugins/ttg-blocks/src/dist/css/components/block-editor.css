@@ -1,0 +1,101 @@
+* {
+  box-sizing: border-box;
+}
+
+.wp-block {
+  max-width: 1170px;
+}
+
+.opacity-0 {
+  opacity: 1 !important;
+}
+
+.editor-styles-wrapper .edit-post-visual-editor__post-title-wrapper > :where(:not(.alignleft):not(.alignright):not(.alignfull)),
+.editor-styles-wrapper .block-editor-block-list__layout.is-root-container > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+  max-width: 1200px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+[data-type^="acf/separator"] {
+  background: #bf0000;
+}
+
+[data-type^="acf/"],
+[data-type^="ttg/"] {
+  border: 1px solid #bf0000;
+  margin-top: 20px;
+  max-width: 100%;
+  padding: 5px 5px;
+}
+[data-type^="acf/"]:before,
+[data-type^="ttg/"]:before {
+  font-size: 10px;
+  content: attr(data-title);
+  color: #fff;
+  position: absolute;
+  background: #bf0000;
+  padding: 3px;
+  border-bottom-right-radius: 3px;
+  left: -1px;
+  top: -1px;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+}
+[data-type^="acf/"]:hover:before,
+[data-type^="ttg/"]:hover:before {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-type^="ttg/"] a:not([href^="#"]):-moz-any-link {
+  pointer-events: none !important;
+}
+
+[data-type^="ttg/"] a:not([href^="#"]):any-link {
+  pointer-events: none !important;
+}
+
+[data-type^="core/heading"] span {
+  font-size: inherit !important;
+}
+
+.ttg-styling-box[class*=-none] {
+  display: flex !important;
+}
+.ttg-styling-box__inner > .block-editor-inner-blocks {
+  width: 100%;
+}
+
+.block-placeholder {
+  padding: 30px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #e3e3e3;
+  font-size: 20px;
+}
+
+.section-title {
+  padding: 3px 3px;
+  border-radius: 10px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.acf-fields.-left > .acf-field > .acf-label,
+.acf-fields.-left > .acf-field > .acf-input {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.acf-fields.-left > .acf-field:before {
+  width: 0 !important;
+  display: none !important;
+}
+
+/*# sourceMappingURL=block-editor.css.map*/

@@ -1,0 +1,13 @@
+.wp-block-quote {
+  margin: 0;
+  padding-left: 33px;
+  border-left: 4px solid #5a7443;
+}
+.wp-block-quote p {
+  font-size: 20px;
+  line-height: 1.5;
+  color: #404040;
+  font-family: Ubuntu Condensed;
+}
+
+/*# sourceMappingURL=block-quote.css.map*/

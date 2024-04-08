@@ -1,0 +1,98 @@
+@mixin button-base {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	text-decoration: none;
+	padding: 0 pxToRem(30);
+	border-radius: 34px;
+	border: 0;
+	font-size: 20px;
+	font-weight: bold;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	transition: all 0.2s linear;
+}
+
+@mixin button-size-large {
+	height: 68px;
+}
+
+@mixin button-size-medium {
+	height: 56px;
+	font-size: pxToRem(18);
+	border-width: 1px !important;
+	padding: 0 pxToRem(15);
+}
+
+@mixin button-size-small {
+	height: 49px;
+	font-size: pxToRem(14);
+	border-width: 1px !important;
+	padding: 0 pxToRem(15);
+}
+
+@mixin button-solid {
+	border: 2px solid var(--cl-primary);
+	background: var(--cl-primary);
+	color: #fff;
+	&:hover {
+		background-color: var(--cl-secondary);
+		border: 2px solid var(--cl-secondary);
+		color: #fff;
+	}
+}
+
+@mixin button-outline {
+	border: 2px solid var(--cl-primary);
+	background: transparent;
+	color: var(--cl-primary);
+	&:hover {
+		background-color: var(--cl-secondary);
+		border: 2px solid var(--cl-secondary);
+		color: #fff;
+	}
+}
+
+@mixin button-outline-white {
+	border-color: #fff;
+	color: #fff;
+	&:hover {
+		background-color: var(--cl-secondary);
+		border: 2px solid var(--cl-secondary);
+	}
+}
+
+@mixin button-outline-secondary {
+	border-color: var(--cl-secondary);
+	color: var(--cl-secondary);
+}
+
+@mixin button-solid-secondary {
+	background-color: var(--cl-secondary);
+	color: #fff;
+}
+
+@mixin heading-small {
+	font-size: pxToRem(24);
+	line-height: 1.16;
+	@include media-breakpoint-up(md) {
+		font-size: pxToRem(36);
+	}
+}
+
+@mixin heading-medium {
+	font-size: pxToRem(24);
+	line-height: 1.16;
+	@include media-breakpoint-up(md) {
+		font-size: pxToRem(48);
+	}
+}
+
+@mixin heading-large {
+	font-size: pxToRem(40);
+	line-height: 1.16;
+	@include media-breakpoint-up(md) {
+		font-size: pxToRem(60);
+	}
+}

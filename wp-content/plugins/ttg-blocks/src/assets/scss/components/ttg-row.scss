@@ -1,0 +1,32 @@
+@import "../base-components";
+
+.ttg-row {
+	width: 100%;
+	&__inner {
+		margin: var(--ttg-column-mar-m);
+		display: flex !important;
+		@include media-breakpoint-up(lg) {
+			margin: var(--ttg-column-mar);
+		}
+		&.align-items-start {
+			align-items: initial !important;
+		}
+		&.align-items-center {
+			align-items: center !important;
+		}
+		&.align-items-end {
+			align-items: flex-end !important;
+		}
+		@include media-breakpoint-up(lg) {
+			&.align-items-lg-start {
+				align-items: initial !important;
+			}
+			&.align-items-lg-center {
+				align-items: center !important;
+			}
+			&.align-items-lg-end {
+				align-items: flex-end !important;
+			}
+		}
+	}
+}

@@ -1,0 +1,141 @@
+.ttg-styling-box {
+  margin: var(--styling-box-mar-m) !important;
+  height: var(--styling-box-height-m);
+  border-width: var(--styling-box-border-width-m, 0);
+  border-color: var(--styling-box-border-color-m, transparent);
+  border-style: var(--styling-box-border-style-m, solid);
+  max-width: var(--styling-box-max-width-m) !important;
+  padding: 0 !important;
+  position: var(--styling-box-postion-m, relative);
+  z-index: var(--styling-box-z-index-m, 0);
+  aspect-ratio: var(--styling-box-ratio-m);
+}
+.ttg-styling-box .ttg-styling-box {
+  width: inherit;
+}
+@media (min-width: 1100px) {
+  .ttg-styling-box {
+    max-width: var(--styling-box-max-width-tablet) !important;
+    margin: var(--styling-box-mar-tablet) !important;
+    height: var(--styling-box-height-tablet);
+    border-width: var(--styling-box-border-width-tablet, 0);
+    border-color: var(--styling-box-border-color-tablet, transparent);
+    border-style: var(--styling-box-border-style-tablet, solid);
+    z-index: var(--styling-box-z-index-tablet, 0);
+    aspect-ratio: var(--styling-box-ratio-tablet);
+    position: var(--styling-box-postion-tablet, relative);
+  }
+}
+@media (min-width: 1480px) {
+  .ttg-styling-box {
+    max-width: var(--styling-box-max-width) !important;
+    margin: var(--styling-box-mar) !important;
+    height: var(--styling-box-height);
+    border-width: var(--styling-box-border-width, 0);
+    border-color: var(--styling-box-border-color, transparent);
+    border-style: var(--styling-box-border-style, solid);
+    z-index: var(--styling-box-z-index, 0);
+    aspect-ratio: var(--styling-box-ratio);
+    position: var(--styling-box-postion, relative);
+  }
+}
+.ttg-styling-box__bg {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--styling-box-border-radius-m);
+  overflow: hidden;
+}
+.ttg-styling-box__bg .ttg-background__img .bg-img {
+  background-position: var(--bg-img-pos-m);
+  background-size: var(--styling-box-bg-size-m);
+  background-repeat: no-repeat;
+}
+@media (min-width: 1100px) {
+  .ttg-styling-box__bg .ttg-background__img .bg-img {
+    background-position: var(--bg-img-pos-tablet);
+    background-size: var(--styling-box-bg-size-tablet);
+  }
+}
+@media (min-width: 1480px) {
+  .ttg-styling-box__bg .ttg-background__img .bg-img {
+    background-position: var(--bg-img-pos);
+    background-size: var(--styling-box-bg-size);
+  }
+}
+@media (min-width: 1100px) {
+  .ttg-styling-box__bg {
+    border-radius: var(--styling-box-border-radius-tablet);
+  }
+}
+@media (min-width: 1480px) {
+  .ttg-styling-box__bg {
+    border-radius: var(--styling-box-border-radius);
+  }
+}
+.ttg-styling-box__inner {
+  border-radius: var(--styling-box-border-radius-m);
+  box-shadow: var(--styling-box-box-shadow-m);
+  flex-direction: column;
+}
+@media (min-width: 1100px) {
+  .ttg-styling-box__inner {
+    border-radius: var(--styling-box-border-radius-tablet);
+    box-shadow: var(--styling-box-box-shadow-tablet);
+  }
+}
+@media (min-width: 1480px) {
+  .ttg-styling-box__inner {
+    border-radius: var(--styling-box-border-radius);
+    box-shadow: var(--styling-box-box-shadow);
+  }
+}
+.ttg-styling-box__inner:not(.container-fluid) {
+  padding: var(--styling-box-p-m);
+  flex-basis: var(--styling-box-width-m);
+  width: var(--styling-box-width-m);
+  height: inherit;
+}
+.ttg-styling-box__inner:not(.container-fluid).container {
+  width: var(--container);
+  flex-basis: var(--container);
+  padding-left: 1.875rem;
+  padding-right: 1.875rem;
+}
+@media (min-width: 1100px) {
+  .ttg-styling-box__inner:not(.container-fluid).container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+@media (min-width: 1480px) {
+  .ttg-styling-box__inner:not(.container-fluid).container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+@media (min-width: 1100px) {
+  .ttg-styling-box__inner:not(.container-fluid) {
+    padding: var(--styling-box-p-tablet);
+    flex-basis: var(--styling-box-width-tablet);
+    width: var(--styling-box-width-tablet);
+  }
+}
+@media (min-width: 1480px) {
+  .ttg-styling-box__inner:not(.container-fluid) {
+    padding: var(--styling-box-p);
+    flex-basis: var(--styling-box-width);
+    width: var(--styling-box-width);
+  }
+}
+.ttg-styling-box .wp-block-heading,
+.ttg-styling-box .gform_wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+.ttg-styling-box .gform_wrapper {
+  text-align: left;
+}
+
+/*# sourceMappingURL=styling-box.css.map*/

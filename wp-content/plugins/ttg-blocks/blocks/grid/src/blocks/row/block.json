@@ -1,0 +1,42 @@
+{
+	"name": "ttg/row",
+	"category": "ttg",
+	"attributes": {
+		"align": {
+			"type": "string",
+			"default": "start"
+		},
+		"align_tablet": {
+			"type": "string",
+			"default": "start"
+		},
+		"align_m": {
+			"type": "string",
+			"default": "start"
+		},
+		"justify": {
+			"type": "string",
+			"default": "start"
+		},
+		"justify_tablet": {
+			"type": "string",
+			"default": "start"
+		},
+		"justify_m": {
+			"type": "string",
+			"default": "start"
+		},
+		"gutter": {
+			"type": "number",
+			"default": 0
+		},
+		"gutter_tablet": {
+			"type": "number",
+			"default": 0
+		},
+		"gutter_m": {
+			"type": "number",
+			"default": 0
+		}
+	}
+}

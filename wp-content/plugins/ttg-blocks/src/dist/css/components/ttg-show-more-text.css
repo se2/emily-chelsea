@@ -1,0 +1,49 @@
+.ttg-show-more-text.open .ttg-show-more-text__content {
+  display: block;
+}
+.ttg-show-more-text.open .ttg-show-more-text__title__more {
+  display: none;
+}
+.ttg-show-more-text.open .ttg-show-more-text__title__close {
+  display: block;
+}
+.ttg-show-more-text.open .ttg-show-more-text__icon__open {
+  display: none;
+}
+.ttg-show-more-text.open .ttg-show-more-text__icon__close {
+  display: block;
+}
+.ttg-show-more-text__content {
+  display: none;
+}
+.ttg-show-more-text__title {
+  font-size: var(--show-more-text-font-size, 18px);
+  color: var(--show-more-text-color, #000);
+  font-weight: 600;
+  line-height: 1.44;
+  border-top: 3px solid #bc8f55;
+  text-align: center;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.ttg-show-more-text__title__more {
+  display: block;
+}
+.ttg-show-more-text__title__close {
+  display: none;
+}
+.ttg-show-more-text__icon {
+  display: flex;
+  justify-content: center;
+  color: #bc8f55;
+}
+.ttg-show-more-text__icon__open {
+  display: block;
+  width: 19px;
+}
+.ttg-show-more-text__icon__close {
+  display: none;
+  width: 30px;
+}
+
+/*# sourceMappingURL=ttg-show-more-text.css.map*/

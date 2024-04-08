@@ -1,0 +1,100 @@
+:root {
+	--cl-primary: #{$cl-primary};
+}
+
+.w-full {
+	width: 100%;
+}
+.h-full {
+	height: 100%;
+}
+
+.object {
+	&-left {
+		object-position: left;
+	}
+	&-bottom {
+		object-position: bottom;
+	}
+	&-center {
+		object-position: center;
+	}
+	&-left-bottom {
+		object-position: left bottom;
+	}
+	&-left-top {
+		object-position: left top;
+	}
+	&-right {
+		object-position: right;
+	}
+	&-right-bottom {
+		object-position: right bottom;
+	}
+	&-right-top {
+		object-position: right top;
+	}
+	&-top {
+		object-position: top;
+	}
+	@include media-breakpoint-up(lg) {
+		&-lg {
+			&-left {
+				object-position: left;
+			}
+			&-bottom {
+				object-position: bottom;
+			}
+			&-center {
+				object-position: center;
+			}
+			&-left-bottom {
+				object-position: left bottom;
+			}
+			&-left-top {
+				object-position: left top;
+			}
+			&-right {
+				object-position: right;
+			}
+			&-right-bottom {
+				object-position: right bottom;
+			}
+			&-right-top {
+				object-position: right top;
+			}
+			&-top {
+				object-position: top;
+			}
+		}
+	}
+}
+
+.object-cover {
+	object-fit: cover;
+}
+
+.custom-spacing {
+	margin: var(--custom-mar-m) !important;
+	padding: var(--custom-p-m) !important;
+	@include media-breakpoint-up(md) {
+		margin: var(--custom-mar-tablet) !important;
+		padding: var(--custom-p-tablet) !important;
+	}
+	@include media-breakpoint-up(lg) {
+		margin: var(--custom-mar) !important;
+		padding: var(--custom-p) !important;
+	}
+}
+
+#scroll-anchor-top {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+}
+
+#scroll-anchor-bottom {
+	position: fixed;
+	bottom: 0px;
+	left: 0;
+}
