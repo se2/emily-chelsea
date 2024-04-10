@@ -290,6 +290,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
       autoPlay = options.autoPlay;
     var promise = new Promise(function (resolve, reject) {
       var myVideo = document.getElementById(id);
+      console.log("video", myVideo);
       if (!myVideo) {
         reject(null);
       }
@@ -314,7 +315,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
       }
       resolve({
         play: function play() {
-          return myVideo.play();
+          console.log("play");
+          myVideo.play();
         },
         pause: function pause() {
           return myVideo.pause();
@@ -447,7 +449,11 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
             default:
               {
                 var _elmentID = $media.find("video").attr("id");
-                video(_elmentID).then(init);
+                console.log("elmentID", _elmentID);
+                video(_elmentID, {
+                  autoPlay: autoPlay,
+                  onStateChange: onStateChange
+                }).then(init);
               }
           }
         }

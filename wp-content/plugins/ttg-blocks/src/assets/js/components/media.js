@@ -108,7 +108,7 @@ import { isInViewport, addScript } from "./base";
 		const { onStateChange, autoPlay } = options;
 		const promise = new Promise((resolve, reject) => {
 			const myVideo = document.getElementById(id);
-
+			console.log("video", myVideo);
 			if (!myVideo) {
 				reject(null);
 			}
@@ -137,7 +137,10 @@ import { isInViewport, addScript } from "./base";
 			}
 
 			resolve({
-				play: () => myVideo.play(),
+				play: () => {
+					console.log("play");
+					myVideo.play();
+				},
 				pause: () => myVideo.pause(),
 				paused: () => myVideo.paused,
 			});
@@ -243,7 +246,11 @@ import { isInViewport, addScript } from "./base";
 						}
 						default: {
 							const elmentID = $media.find("video").attr("id");
-							video(elmentID).then(init);
+							console.log("elmentID", elmentID);
+							video(elmentID, {
+								autoPlay,
+								onStateChange,
+							}).then(init);
 						}
 					}
 				}
