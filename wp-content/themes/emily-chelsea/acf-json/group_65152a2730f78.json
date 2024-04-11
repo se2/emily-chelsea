@@ -464,6 +464,28 @@
                     "prepend": "",
                     "append": "",
                     "maxlength": ""
+                },
+                {
+                    "key": "field_6616aba241a7b",
+                    "label": "Condition Visible",
+                    "name": "condition_visible",
+                    "type": "taxonomy",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "taxonomy": "pa_metal-type",
+                    "field_type": "checkbox",
+                    "add_term": 1,
+                    "save_terms": 0,
+                    "load_terms": 0,
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0
                 }
             ]
         },
@@ -973,5 +995,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1711531722
+    "modified": 1712761895
 }

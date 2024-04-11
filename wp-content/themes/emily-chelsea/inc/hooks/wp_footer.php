@@ -3,8 +3,6 @@ add_action('wp_footer', function () {
 ?>
     <script>
         (function($) {
-
-
             document.addEventListener('facetwp-loaded', function() {
                 var width = 0;
                 var numberItems = 0;
@@ -52,8 +50,34 @@ add_action('wp_footer', function () {
                 //     }
                 // }, 500)
             });
-
         })(jQuery);
     </script>
+    <?php
+    if (is_singular("product")) {
+    ?>
+        <script>
+            (function($) {
+
+                const form = $(".variations_form");
+                const data = form.data(".product_variations");
+                const updateVariation = jQuery.fn.wc_variations_image_update.bind(form);
+                jQuery("#pa_metal-type").on("change", function() {
+                    var val = jQuery(this).val();
+                    var variation = data.find(
+                        (item) => item.attributes["attribute_pa_metal-type"] === val,
+                    );
+
+                    setTimeout(() => {
+                        if (variation) {
+                            updateVariation(variation);
+                        }
+                    }, 500);
+                });
+
+            })(jQuery);
+        </script>
+    <?php
+    }
+    ?>
 <?php
 }, 100);

@@ -119,7 +119,7 @@ function ttg_wp_scripts()
         wp_enqueue_style('search-page', get_template_directory_uri() . '/src/dist/css/pages/search.css');
     }
 }
-add_action('wp_enqueue_scripts', 'ttg_wp_scripts', 99);
+add_action('wp_enqueue_scripts', 'ttg_wp_scripts', 9999);
 
 // remove all block styles
 add_action('wp_enqueue_scripts', function () {
