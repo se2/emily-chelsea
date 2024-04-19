@@ -67,18 +67,19 @@
     }
   });
   function customSelect(select) {
+    var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
     var options = $(select).find("option");
     var selectedOption = $(select).find("option:selected");
     var listItems = "";
-    console.log("selectedOption", selectedOption.val());
     $.each(options, function (index, el) {
       var text = $(el).html();
       var value = $(el).val();
       var selectedValue = selectedOption.val();
       var isActive = selectedValue === value;
-      listItems += "<li class=\"".concat(isActive ? "active" : "", "\" data-value=\"").concat(value, "\">").concat(text, "</li>");
+      var extraText = $(el).attr("data-extra-text") || "";
+      listItems += "<li class=\"".concat(isActive ? "active" : "", "\" data-value=\"").concat(value, "\">").concat(text).concat(extraText, "</li>");
     });
-    listItems = $("\n\t\t<div class=\"custom-select\">\n\t\t<div class=\"custom-select__inner\">\n\t\t<ul>".concat(listItems, "</ul>\n\t\t</div>\n\t\t</div>"));
+    listItems = $("\n\t\t<div class=\"custom-select\" id=\"".concat(id, "\">\n\t\t<div class=\"custom-select__inner\">\n\t\t<ul>").concat(listItems, "</ul>\n\t\t</div>\n\t\t</div>"));
     $(listItems).insertAfter(select);
     var wrapper = $(select).next(".custom-select");
     var wrapperInner = $(wrapper).find(".custom-select__inner");
@@ -98,6 +99,7 @@
       wrapper.toggleClass("active");
     });
   }
+  window.customSelect = customSelect;
   $(document).on("click", function (e) {
     var target = $(e.target);
     if ($(target).hasClass("custom-select") || $(target).parents(".custom-select").length) {
@@ -114,9 +116,6 @@
       console.log("target outside");
       $(document).find(".custom-select").removeClass("active");
     }
-  });
-  $("[name^=attribute_pa]").each(function (index, value) {
-    customSelect(value);
   });
   $(".toggle-modal").on("click", function (e) {
     e.preventDefault();

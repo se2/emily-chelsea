@@ -108,4 +108,39 @@
 		// options
 		itemSelector: ".product-gallery__item",
 	});
+	jQuery("#pa_metal-type").on("change", function (el) {
+		const val = $(this).find("option:selected").attr("value");
+		const productId = $(".variations_form").data("product_id");
+		const selctedSize = $("#pa_size").find("option:selected").attr("value");
+		if (productId == 12633) {
+			jQuery.ajax({
+				method: "POST",
+				url: jsData.ajaxUrl,
+				data: {
+					action: "get_products_by_attr",
+					parent_product_id: productId,
+					meta_type: val,
+				},
+				dataType: "json",
+				success: function (res) {
+					const { options } = res;
+					$("#custom-select-pa_size").remove();
+					$("#pa_size").html(options);
+					$("#pa_size").val(selctedSize);
+					customSelect($("#pa_size"), "custom-select-pa_size");
+				},
+			});
+		}
+	});
+
+	setTimeout(() => {
+		$("[name^=attribute_pa]").each(function (index, value) {
+			const id = `custom-select-${$(value).attr("id")}`;
+			customSelect(value, id);
+		});
+
+		if ($("#pa_size").length > 0) {
+			$("#pa_metal-type").trigger("change");
+		}
+	}, 500);
 })(jQuery);

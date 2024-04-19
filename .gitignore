@@ -48,3 +48,6 @@ wp-config.php
 #/wp-content/themes
 node_modules
 local-xdebuginfo.php
+cache
+wp-content/autoptimize_404_handler.php
+wp-content/updraft

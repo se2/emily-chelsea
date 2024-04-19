@@ -73,24 +73,23 @@
 		}
 	});
 
-	function customSelect(select) {
+	function customSelect(select, id = "") {
 		const options = $(select).find("option");
 		const selectedOption = $(select).find("option:selected");
 		let listItems = "";
-
-		console.log("selectedOption", selectedOption.val());
 
 		$.each(options, function (index, el) {
 			const text = $(el).html();
 			const value = $(el).val();
 			const selectedValue = selectedOption.val();
 			const isActive = selectedValue === value;
+			const extraText = $(el).attr("data-extra-text") || "";
 			listItems += `<li class="${
 				isActive ? "active" : ""
-			}" data-value="${value}">${text}</li>`;
+			}" data-value="${value}">${text}${extraText}</li>`;
 		});
 		listItems = $(`
-		<div class="custom-select">
+		<div class="custom-select" id="${id}">
 		<div class="custom-select__inner">
 		<ul>${listItems}</ul>
 		</div>
@@ -116,6 +115,8 @@
 			wrapper.toggleClass("active");
 		});
 	}
+
+	window.customSelect = customSelect;
 
 	$(document).on("click", function (e) {
 		const target = $(e.target);
@@ -143,10 +144,6 @@
 			console.log("target outside");
 			$(document).find(".custom-select").removeClass("active");
 		}
-	});
-
-	$("[name^=attribute_pa]").each(function (index, value) {
-		customSelect(value);
 	});
 
 	$(".toggle-modal").on("click", function (e) {
