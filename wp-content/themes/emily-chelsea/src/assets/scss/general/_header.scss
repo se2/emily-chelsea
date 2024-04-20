@@ -619,13 +619,13 @@ body.scroll-up {
 	}
 	&__middle {
 		padding: pxToRem(30) pxToRem(0) pxToRem(30) pxToRem(30);
-		max-height: calc(100% - 190px);
+		max-height: calc(100% - 260px);
 		overflow: hidden;
 	}
 	&__bottom {
 		padding-top: pxToRem(15);
 		padding-left: pxToRem(30);
-		height: 80px;
+		height: 150px;
 	}
 	.social {
 		display: flex;

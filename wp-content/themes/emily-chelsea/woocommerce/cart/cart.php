@@ -95,6 +95,15 @@ do_action('woocommerce_before_cart'); ?>
 									echo wp_kses_post(apply_filters('woocommerce_cart_item_backorder_notification', '<p class="backorder_notification">' . esc_html__('Available on backorder', 'woocommerce') . '</p>', $product_id));
 								}
 								?>
+								<?php
+								$statues = [
+									'instock' => 'Instock',
+									'outofstock' => 'Out Of Stock',
+									'onbackorder' => 'Made to Order'
+								];
+
+								echo '( ' . $statues[$_product->get_stock_status()] . ' )';
+								?>
 							</td>
 
 							<td class="product-price" data-title="<?php esc_attr_e('Price', 'woocommerce'); ?>">

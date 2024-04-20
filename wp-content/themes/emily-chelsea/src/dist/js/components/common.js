@@ -21,6 +21,26 @@
       $(".product-filter-user-selection").removeClass("active");
     }
   });
+  $(document).on("facetwp-loaded", function () {
+    console.log("FWP.settings", FWP);
+    if (!FWP.settings) return;
+    $.each(FWP.settings.num_choices, function (key, val) {
+      // assuming each facet is wrapped within a "facet-wrap" container element
+      // this may need to change depending on your setup, for example:
+      // change ".facet-wrap" to ".widget" if using WP text widgets
+      var $facet = $(".facetwp-facet-" + key);
+      var $wrap = $facet.closest(".products-filter__item");
+      console.log("val", key, val);
+      if (key === "available_in_fairmined_gold") {
+        console.log("val", val);
+        if (!val) {
+          $wrap.find(".products-filter__item__label").show();
+        } else {
+          $wrap.find(".products-filter__item__label").hide();
+        }
+      }
+    });
+  });
   $("a[href^=#]").on("click", function (e) {
     e.preventDefault();
     var id = $(this).attr("href");

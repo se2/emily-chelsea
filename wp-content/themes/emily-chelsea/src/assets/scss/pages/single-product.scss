@@ -727,3 +727,11 @@
 .woocommerce-variation-add-to-cart-disabled + .product-line {
 	display: block;
 }
+
+.hide-quantity {
+	.quantity {
+		height: 0px;
+		overflow: hidden;
+		border-bottom: 0 !important;
+	}
+}

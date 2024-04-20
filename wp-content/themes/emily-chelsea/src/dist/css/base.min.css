@@ -7146,13 +7146,13 @@ body:not(.wp-admin) .select2-container--default .select2-selection--single .sele
 }
 .main-navigation__middle {
   padding: 1.875rem 0rem 1.875rem 1.875rem;
-  max-height: calc(100% - 190px);
+  max-height: calc(100% - 260px);
   overflow: hidden;
 }
 .main-navigation__bottom {
   padding-top: 0.9375rem;
   padding-left: 1.875rem;
-  height: 80px;
+  height: 150px;
 }
 .main-navigation .social {
   display: flex;

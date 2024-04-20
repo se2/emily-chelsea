@@ -772,4 +772,10 @@
   display: block;
 }
 
+.hide-quantity .quantity {
+  height: 0px;
+  overflow: hidden;
+  border-bottom: 0 !important;
+}
+
 /*# sourceMappingURL=single-product.css.map*/
