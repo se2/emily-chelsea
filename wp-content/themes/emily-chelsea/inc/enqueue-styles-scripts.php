@@ -22,6 +22,7 @@ function ttg_wp_scripts()
 
     wp_enqueue_style('single-post-heading', get_template_directory_uri() . '/src/dist/css/components/single-post-heading.css');
     wp_enqueue_style('base', get_template_directory_uri() . '/src/dist/css/base.min.css');
+    wp_enqueue_style('ttg-buttons', get_template_directory_uri() . '/src/dist/css/components/buttons.css');
 
     if (!is_admin()) {
         wp_enqueue_style('ttg-front-end', get_template_directory_uri() . '/src/dist/css/components/only-fe.css');

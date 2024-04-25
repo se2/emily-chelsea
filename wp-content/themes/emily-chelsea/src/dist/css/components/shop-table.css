@@ -147,12 +147,16 @@
   border: 0;
   outline: none !important;
 }
-@media (max-width: 1479.98px) {
+@media (max-width: 1099.98px) {
   .shop_table {
     display: block;
   }
   .shop_table tbody {
     display: block;
+  }
+  .shop_table tfoot {
+    display: block;
+    width: 100%;
   }
   .shop_table thead {
     display: none;

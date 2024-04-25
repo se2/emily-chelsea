@@ -128,10 +128,14 @@
 		}
 	}
 
-	@include media-breakpoint-down(lg) {
+	@include media-breakpoint-down(md) {
 		display: block;
 		tbody {
 			display: block;
+		}
+		tfoot {
+			display: block;
+			width: 100%;
 		}
 		thead {
 			display: none;

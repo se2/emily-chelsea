@@ -139,6 +139,31 @@ p {
 	}
 }
 
+.woocommerce-error {
+	padding: 30px 0 30px 0;
+	margin: 0;
+	list-style: none;
+	li {
+		font-size: pxToRem(14);
+		line-height: 1.444;
+		font-weight: normal;
+		letter-spacing: 0.15em;
+		color: #bc8f55;
+		text-transform: uppercase;
+		text-align: center;
+
+		@include media-breakpoint-up(sm) {
+			text-align: left;
+			font-size: pxToRem(18);
+			&::after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+		}
+	}
+}
+
 .facetwp-reset {
 	@include button-base;
 	@include button-solid;
