@@ -21,27 +21,19 @@ function get_products_by_attr()
         'orderby' => 'menu_order',
         'order' => 'ASC',
     ));
+    $parent_sizes = wc_get_product_terms($parent_product, 'pa_size');
+    $child_size_count = 0;
     $sizes = [];
     $options = '<option value="">Choose your  Ring Size</option>';
-    $options_2  =  '<li class="active" data-value="">Choose your  Ring Size</li>';
 
     if (!empty($pa_sizes)) {
         foreach ($pa_sizes as $key => $value) {
             $k = 'size_' . $value->slug;
             $sizes[$k] = [
                 'name' => $value->name,
-                'stock_status' => ''
+                'stock_status' => '',
+                'is_exist' => false
             ];
-        }
-    }
-
-    if (empty($meta_type) && !empty($sizes)) {
-        $terms = wc_get_product_terms($parent_product, 'pa_size');
-
-        if (!empty($terms)) {
-            foreach ($terms as $key => $value) {
-                $options .= sprintf('<option value="%s">%s</option>', $value->slug, $value->name);
-            }
         }
     }
 
@@ -66,13 +58,35 @@ function get_products_by_attr()
                 $stock_status = '';
                 $k = 'size_' . $size;
 
-                if ($product->is_in_stock()) {
+                if ($product->get_stock_status() == "instock") {
                     $stock_status = ' (Ready to Ship)';
                 }
 
-                if (isset($sizes[$k])) {
-                    $options .= sprintf('<option value="%s">%s</option>', $size, $sizes[$k]['name'] .  $stock_status);
+                if (!empty($size)) {
+                    $child_size_count++;
                 }
+
+                if (isset($sizes[$k])) {
+                    $sizes[$k]['name'] = $sizes[$k]['name'] .  $stock_status;
+                    $sizes[$k]['is_exist'] = true;
+                    $sizes[$k]['size'] = $size;
+                }
+            }
+
+            if (!empty($sizes)) {
+                foreach ($sizes as $key => $value) {
+                    if ($value['is_exist']) {
+                        $options .= sprintf('<option value="%s">%s</option>', $value['size'], $value['name']);
+                    }
+                }
+            }
+        }
+    }
+
+    if ((empty($meta_type) || $child_size_count == 0) && !empty($sizes)) {
+        if (!empty($parent_sizes)) {
+            foreach ($parent_sizes as $key => $value) {
+                $options .= sprintf('<option value="%s">%s</option>', $value->slug, $value->name);
             }
         }
     }

@@ -226,4 +226,12 @@
   text-align: right;
 }
 
+.cart-instock-status,
+.cart-outofstock-status,
+.cart-onbackorder-status {
+  color: #fa5160;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 /*# sourceMappingURL=shop-table.css.map*/

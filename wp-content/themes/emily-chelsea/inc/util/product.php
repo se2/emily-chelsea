@@ -138,9 +138,10 @@ class TTG_Product
 
     public static function get_require_stone_message_cart($number_stone_need = 0)
     {
+
         $stone = TTG_Product::get_stone();
         $stone_link =  sprintf('<a href="%s">%s</a>', get_term_link($stone, $stone->taxonomy), $stone->name);
-        $message = sprintf('%s Product(s) is require products from %s CATEGORY. PLEASE ADD PRODUCT(s) FROM THE %s CATEGORY TO YOUR CART.', $number_stone_need, $stone->name, $stone_link);
+        $message = sprintf('Item(s) In Your Cart Requires Product From %s Category. Please Add Product(s) From The %s Category To Your Cart.', $stone->name, $stone_link);
         return $message;
     }
 
@@ -149,7 +150,28 @@ class TTG_Product
         $product_title = get_the_title($product_id);
         $stone = TTG_Product::get_stone();
         $stone_link =  sprintf('<a href="%s">%s</a>', get_term_link($stone, $stone->taxonomy), $stone->name);
-        $message = sprintf('"%s" REQUIRES PURCHASING A PRODUCT FROM THE "%s" CATEGORY. TO GET ACCESS TO THIS PRODUCT NOW, PLEASE ADD A PRODUCT FROM THE %s CATEGORY TO YOUR CART.', $product_title, $stone->name, $stone_link);
+        $message = sprintf('"%s" Requires Purchasing A Product From The "%s" Category. To Get Access To This Product Now, Please Add A Product From The %s Category To Your Cart.', $product_title, $stone->name, $stone_link);
         return $message;
+    }
+
+    public static function is_instock_meta_type($parent_product, $meta_type)
+    {
+        $products = get_posts(array(
+            'post_type' => 'product_variation',
+            'posts_per_page' => -1,
+            'meta_query' => array(
+                array(
+                    'key' => 'attribute_pa_metal-type',
+                    'value' => $meta_type,
+                ),
+                array(
+                    'key' => '_stock_status',
+                    'value' => 'instock',
+                )
+            ),
+            'post_parent' => intval($parent_product)
+        ));
+
+        return count($products);
     }
 }

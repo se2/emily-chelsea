@@ -1,8 +1,10 @@
 <?php
-// apply_filters( 'woocommerce_variation_option_name', $term->name, $term, $attribute, $product )
-// add_filter('woocommerce_variation_option_name', function ($term_name, $term, $attribute, $product) {
-//     if (is_admin()) return $term_name;
+add_filter('woocommerce_variation_option_name', function ($term_name, $term, $attribute, $product) {
+    if (is_admin()) return $term_name;
 
-//     $text = $product->is_in_stock() ? 'in-stock' : 'out of stock';
-//     return  $term_name . ' ' .  $text;
-// }, 10, 4);
+    if ($term->taxonomy == "pa_metal-type") {
+        $products_instock = TTG_Product::is_instock_meta_type($product->get_id(), $term->slug);
+        return $products_instock > 0 ? $term_name . ' (Ready to Ship)' : $term_name;
+    }
+    return  $term_name;
+}, 10, 4);

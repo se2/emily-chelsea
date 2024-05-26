@@ -105,11 +105,11 @@ p {
 	.woocommerce-message,
 	ul li {
 		font-size: pxToRem(14);
-		line-height: 1.444;
+		line-height: 1.28;
 		font-weight: normal;
-		letter-spacing: 0.15em;
+		letter-spacing: normal;
 		color: #bc8f55;
-		text-transform: uppercase;
+		text-transform: normal;
 		text-align: center;
 
 		@include media-breakpoint-up(sm) {
@@ -145,11 +145,11 @@ p {
 	list-style: none;
 	li {
 		font-size: pxToRem(14);
-		line-height: 1.444;
+		line-height: 1.28;
 		font-weight: normal;
-		letter-spacing: 0.15em;
-		color: #bc8f55;
-		text-transform: uppercase;
+		letter-spacing: normal;
+		color: #fa5160;
+		text-transform: normal;
 		text-align: center;
 
 		@include media-breakpoint-up(sm) {

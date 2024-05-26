@@ -213,3 +213,11 @@
 		}
 	}
 }
+
+.cart-instock-status,
+.cart-outofstock-status,
+.cart-onbackorder-status {
+	color: #fa5160;
+	font-size: pxToRem(16);
+	font-weight: 600;
+}

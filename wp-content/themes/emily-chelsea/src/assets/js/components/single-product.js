@@ -112,7 +112,7 @@
 		const val = $(this).find("option:selected").attr("value");
 		const productId = $(".variations_form").data("product_id");
 		const selctedSize = $("#pa_size").find("option:selected").attr("value");
-		if (productId == 12633) {
+		if ($("#pa_size").length) {
 			jQuery.ajax({
 				method: "POST",
 				url: jsData.ajaxUrl,
