@@ -97,7 +97,7 @@ do_action('woocommerce_before_cart'); ?>
 								?>
 								<?php
 								$statues = [
-									'instock' => '<div class="cart-instock-status">In Stock</div>',
+									'instock' => '<div class="cart-instock-status">In Stock Ready to Ship</div>',
 									'outofstock' => '<div class="cart-outofstock-status">OUT OF STOCK</div>',
 									'onbackorder' => '<div class="cart-onbackorder-status">Made to Order</div>'
 								];

@@ -165,8 +165,9 @@ class TTG_Product
                     'value' => $meta_type,
                 ),
                 array(
-                    'key' => '_stock_status',
-                    'value' => 'instock',
+                    'key' => '_stock',
+                    'value' => 0,
+                    "compare" => ">"
                 )
             ),
             'post_parent' => intval($parent_product)
