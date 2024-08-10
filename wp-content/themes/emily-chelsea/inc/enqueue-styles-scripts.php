@@ -54,6 +54,7 @@ function ttg_wp_scripts()
     }
 
     if (is_singular('product')) {
+        wp_enqueue_style('product-inquiry-form', get_template_directory_uri() . '/src/dist/css/components/product-inquiry-form.css');
         wp_enqueue_style('product-services', get_template_directory_uri() . '/src/dist/css/components/product-services.css');
         wp_enqueue_style('ttg-buttons', get_template_directory_uri() . '/src/dist/css/components/buttons.css');
         wp_enqueue_style('custom-breadcrumb', get_template_directory_uri() . '/src/dist/css/components/woocommerce-breadcrumb.css');

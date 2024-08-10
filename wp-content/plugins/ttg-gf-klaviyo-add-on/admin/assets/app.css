@@ -1,0 +1,47 @@
+#klaviyo-list-form-wrapper {
+	opacity: 0;
+	visibility: hidden;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#klaviyo-list-form-wrapper.active {
+	opacity: 1;
+	visibility: visible;
+}
+
+#klaviyo-list-form {
+	position: relative;
+	background: #fff;
+	border-radius: 5px;
+	padding: 15px 15px;
+	width: 500px;
+	overflow: hidden;
+}
+
+#klaviyo-list-form.loading:before {
+	content: "Processing...";
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	color: #fff;
+	background: rgba(0, 0, 0, 0.3);
+	text-transform: uppercase;
+}
+
+#klaviyo-list-form .error {
+	display: block;
+	color: red;
+}

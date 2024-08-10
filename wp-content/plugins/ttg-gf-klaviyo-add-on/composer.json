@@ -1,0 +1,7 @@
+{
+	"require": {
+		"klaviyo/php-sdk": "^2.3",
+		"klaviyo/sdk": "1.0.3.20220329",
+		"klaviyo/api": "^9.0"
+	}
+}
