@@ -64,6 +64,17 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
 
             self::$order_sections = $this->available_sections();
 
+	        $reordered_sections = [];
+	        foreach (self::$order_sections as $key => $value) {
+		        // Move addons above Custom Fields
+		        if ($key === "cf") {
+			        $reordered_sections["addons"] = true;
+		        }
+		        $reordered_sections[$key] = $value;
+	        }
+
+	        self::$order_sections = $reordered_sections;
+
         }
 
         // [FILTERS]
@@ -98,13 +109,15 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
             if (!empty($existing_meta_keys)) {
                 foreach (self::$order_sections as $slug => $section) :
 
-                    foreach ($section['meta'] as $cur_meta_key => $cur_meta_label) {
-                        foreach ($existing_meta_keys as $key => $record_meta_key) {
-                            if ($record_meta_key == $cur_meta_key) {
-                                unset($existing_meta_keys[$key]);
-                                break;
-                            }
-                        }
+                    if(!empty($section['meta'])) {
+	                    foreach ( $section['meta'] as $cur_meta_key => $cur_meta_label ) {
+		                    foreach ( $existing_meta_keys as $key => $record_meta_key ) {
+			                    if ( $record_meta_key == $cur_meta_key ) {
+				                    unset( $existing_meta_keys[ $key ] );
+				                    break;
+			                    }
+		                    }
+	                    }
                     }
 
                 endforeach;
@@ -198,7 +211,8 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
 
             if($this->isHPOSEnabled()) {
                 $query = XmlExportEngine::$exportQuery->getQuery();
-                $in_orders = str_replace("SELECT * FROM ", "SELECT id FROM ", $query);
+                $query = preg_replace("%(SQL_CALC_FOUND_ROWS|LIMIT.*)%", "", $query);
+                $in_orders = str_replace("SELECT * FROM ", "SELECT {$wpdb->prefix}wc_orders.id FROM ", $query);
 
             } else {
                 $in_orders = preg_replace("%(SQL_CALC_FOUND_ROWS|LIMIT.*)%", "", XmlExportEngine::$exportQuery->request);
@@ -265,7 +279,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
         {
             $orderId = false;
             if($this->isHPOSEnabled()) {
-                $orderId = $record->id;
+                $orderId = $record->order_id ?? $record->id;
             } else {
                 $orderId = $record->ID;
             }
@@ -323,7 +337,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
                     }
                 }
 
-                if( class_exists('Automattic\WooCommerce\Utilities\OrderUtil') && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+                if( $this->isHPOSEnabled() ) {
                     $this->order_refunds = $wpdb->get_results("SELECT * FROM {$table_prefix}wc_orders WHERE parent_order_id = {$orderId} AND type = 'shop_order_refund'");
                 } else {
                     $this->order_refunds = $wpdb->get_results("SELECT * FROM {$table_prefix}posts WHERE post_parent = {$orderId} AND post_type = 'shop_order_refund'");
@@ -442,7 +456,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
                         switch ($options['cc_value'][$elId]) {
                             case 'ID':
                                 if ($this->isHPOSEnabled()) {
-                                    $data[$options['cc_name'][$elId]] = $record->id;
+                                    $data[$options['cc_name'][$elId]] = $record->order_id ?? $record->id;
                                 } else {
                                     $data[$options['cc_name'][$elId]] = $record->ID;
                                 }
@@ -579,7 +593,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
 
                                 $_refund_total = 0;
 
-                                if( class_exists('Automattic\WooCommerce\Utilities\OrderUtil') && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+                                if( $this->isHPOSEnabled() ) {
                                     $order_refunds = $wpdb->get_results("SELECT * FROM {$table_prefix}wc_orders WHERE parent_order_id = {$orderId} AND type = 'shop_order_refund'");
                                 } else {
                                     $order_refunds = $wpdb->get_results("SELECT * FROM {$table_prefix}posts WHERE post_parent = {$orderId} AND post_type = 'shop_order_refund'");
@@ -587,7 +601,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
 
                                 if (!empty($order_refunds)) {
                                     foreach ($order_refunds as $refund) {
-                                        if( class_exists('Automattic\WooCommerce\Utilities\OrderUtil') && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+                                        if( $this->isHPOSEnabled() ) {
                                             $_refund_total += $refund->total_amount;
                                         } else {
                                             $_refund_total += (float)get_post_meta($refund->ID, '_refund_amount', true);
@@ -603,7 +617,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
 
                                 $shipping_refunded_values = [];
                                 foreach ($internalRefunds as $refund) {
-                                    $shipping_refunded_values[] = $internalOrder->get_total_shipping_refunded() / count($internalRefunds);
+                                    $shipping_refunded_values[] = $refund->get_shipping_total();
                                 }
                                 $data[$options['cc_name'][$elId]] = pmxe_filter(implode($implode_delimiter, $shipping_refunded_values), $fieldSnipped);
 
@@ -1051,7 +1065,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
                                                         if (!is_array($item_data[$element_name])) {
                                                             $item_data[$element_name] = array($item_data[$element_name]);
                                                         }
-                                                        $item_data[$element_name][] = $meta['meta_value'];
+                                                        $item_data[$element_name] = [$meta['meta_value']];
                                                         $meta_key_founded = true;
 
                                                     }
@@ -1810,7 +1824,7 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
             if (!self::$is_active) return;
 
             if($this->isHPOSEnabled()) {
-                $orderId = $record->id;
+                $orderId = $record->order_id ?? $record->id;
             } else {
                 $orderId = $record->ID;
             }
@@ -2004,7 +2018,11 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
             if (!self::$is_active) return;
 
             foreach (self::$order_sections as $slug => $section) :
-                if (!empty($section['meta']) or !empty($section['additional'])):
+	            if ($slug === 'addons') {
+		            foreach ( \XmlExportEngine::get_addons() as $addon ) {
+			            do_action( "pmxe_render_{$addon}_addon", $i );
+		            }
+	            }else if (!empty($section['meta']) or !empty($section['additional'])):
                     ?>
                     <p class="wpae-available-fields-group"><?php echo esc_html($section['title']); ?><span
                                 class="wpae-expander">+</span></p>
@@ -2122,6 +2140,9 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
             <select class="wp-all-export-chosen-select" name="column_value_type" style="width:350px;">
                 <?php
                 foreach (self::$order_sections as $slug => $section) :
+	                if(!isset($section['title'])){
+		                continue;
+	                }
                     ?>
                     <optgroup label="<?php echo esc_attr($section['title']); ?>">
                         <?php
@@ -2190,6 +2211,9 @@ if (!class_exists('XmlExportWooCommerceOrder')) {
             if (!self::$is_active) return;
             $exclude = array('__product_variation', 'post_type', '__line_item_id', '__line_item_title', '_line_tax', '_line_tax_data', '_wc_rating_count', '_wc_review_count', '_default_attributes', '_product_attributes');
             foreach (self::$order_sections as $slug => $section) :
+                if(!isset($section['title'])){
+                    continue;
+                }
                 ?>
                 <optgroup label="<?php echo esc_attr($section['title']); ?>">
                     <?php

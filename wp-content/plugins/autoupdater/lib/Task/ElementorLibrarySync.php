@@ -15,30 +15,28 @@ class AutoUpdater_Task_ElementorLibrarySync extends AutoUpdater_Task_Base
             $plugin_slug .= '.php';
         }
 
-        if ($plugin_slug != 'elementor-pro/elementor-pro.php' && $plugin_slug != 'elementor/elementor.php') {
+        if ($plugin_slug !== 'elementor-pro/elementor-pro.php' && $plugin_slug !== 'elementor/elementor.php') {
             return array(
                 'success' => true,
                 'message' => 'Slug does not match either Elementor or Elementor Pro'
             );
         }
 
-        $plugin_dir = '/' . strtok($plugin_slug, '/');
-        $plugin_name = 'Elementor' . (strpos($plugin_slug, 'pro') !== false ? ' Pro' : '');
-        $plugin_file_name = strpos($plugin_slug, 'pro') !== 'false' ? ' elementor-pro.php' : 'elementor.php';
-
-        if (!is_plugin_active($plugin_slug)) {
+        // Elementor is the core plugin that has to be active in order to flush CSS.
+        // Elementor Pro is only an extension of the core plugin.
+        if (!is_plugin_active('elementor/elementor.php')) {
             return array(
                 'success' => true,
-                'message' => $plugin_name . ' plugin is not active, skipping library sync'
+                'message' => 'Elementor plugin is not active, skipping library sync'
             );
         }
 
-        if (
-            file_exists(WP_PLUGIN_DIR . $plugin_dir . '/' . $plugin_file_name)
-           && file_exists(WP_PLUGIN_DIR . $plugin_dir . '/includes/api.php')
-        ) {
-            include_once WP_PLUGIN_DIR . $plugin_dir . '/' . $plugin_file_name;
-            include_once WP_PLUGIN_DIR . $plugin_dir . '/includes/api.php';
+        $plugin_file = WP_PLUGIN_DIR . '/elementor/elementor.php';
+        $api_file = WP_PLUGIN_DIR . '/elementor/includes/api.php';
+
+        if (file_exists($plugin_file) && file_exists($api_file)) {
+            include_once $plugin_file; // phpcs:ignore
+            include_once $api_file; // phpcs:ignore
         }
 
         $api_class = '\Elementor\Api';
@@ -47,7 +45,7 @@ class AutoUpdater_Task_ElementorLibrarySync extends AutoUpdater_Task_Base
             return array(
                 'success' => true,
                 'needs_refactor' => true,
-                'message' =>  $plugin_name . ' api class not found, check for source code update',
+                'message' =>  'Elementor\Api class not found, check for source code update',
             );
         }
 
@@ -57,7 +55,7 @@ class AutoUpdater_Task_ElementorLibrarySync extends AutoUpdater_Task_Base
             return array(
                 'success' => true,
                 'needs_refactor' => true,
-                'message' => $plugin_name . ' api method: get_library_data not found, check for source code update',
+                'message' => 'Elementor\Api::get_library_data method not found, check for source code update',
             );
         }
 
@@ -65,13 +63,13 @@ class AutoUpdater_Task_ElementorLibrarySync extends AutoUpdater_Task_Base
         if (empty($data)) {
             return array(
                 'success' => false,
-                'message' =>  'Cannot sync library',
+                'message' =>  'Cannot sync Elementor library',
             );
         }
 
         return array(
             'success' => true,
-            'message' => 'Library has been synced'
+            'message' => 'Elementor library has been synced'
         );
     }
 }

@@ -12,7 +12,7 @@ class Smart_Manager_Install {
 	private static $db_updates = array(
 		'5.0.0' => array(
 			'create_table_for_custom_views',
-			'create_dummy_views',
+			'create_predefined_custom_views',
 			'update_500_model_transients'
 		),
 		'5.0.1' => array(
@@ -32,7 +32,13 @@ class Smart_Manager_Install {
 		),
 		'8.31.0' => array(
 			'update_8310_port_access_privilege_settings'
-		)
+		),
+		'8.56.0' => array(
+			'update_856_alter_table'
+		),
+		'8.58.0' => array(
+			'create_predefined_custom_views'
+		),
 	);
 
 	/**
@@ -180,52 +186,6 @@ class Smart_Manager_Install {
 							$wpdb->esc_like('_transient_timeout_sm_beta_') . '%'
 						)
 					);
-	}
-	
-	public static function create_dummy_views() {
-		global $wpdb;
-
-		if( !( defined('SMPRO') && true === SMPRO ) ) {
-			return;
-		}
-
-		$email = get_option( 'admin_email' );
-		if ( ! empty( $email ) ) {
-			$user = get_user_by( 'email', $email );
-			if ( ! empty( $user ) ) {
-				$userId = $user->ID;
-
-				$data = array(
-							array(
-								'title'		=> 'Product Stock',
-								'slug'		=> 'product-stock',
-								'params'	=> '{"columns":{"posts_id":{"width":100,"position":1},"postmeta_meta_key__thumbnail_id_meta_value__thumbnail_id":{"width":211.787109375,"position":2},"posts_post_title":{"width":200,"position":3},"postmeta_meta_key__sku_meta_value__sku":{"width":100,"position":4},"postmeta_meta_key__manage_stock_meta_value__manage_stock":{"width":191.77734375,"position":5},"postmeta_meta_key__stock_status_meta_value__stock_status":{"width":168.4130859375,"position":6},"postmeta_meta_key__stock_meta_value__stock":{"width":100,"position":7},"postmeta_meta_key__backorders_meta_value__backorders":{"width":151.728515625,"position":8}},"sort_params":{"orderby":"ID","order":"DESC","default":true},"treegrid":"true","search_params":{"isAdvanceSearch":"false","params":""}}'
-							),
-							array(
-								'title'		=> 'Product Price List',
-								'slug'		=> 'product-price-list',
-								'params'	=> '{"columns":{"posts_id":{"width":100,"position":1},"postmeta_meta_key__thumbnail_id_meta_value__thumbnail_id":{"width":211.787109375,"position":2},"posts_post_title":{"width":200,"position":3},"postmeta_meta_key__sku_meta_value__sku":{"width":100,"position":4},"postmeta_meta_key__regular_price_meta_value__regular_price":{"width":181.7431640625,"position":5},"postmeta_meta_key__sale_price_meta_value__sale_price":{"width":136.728515625,"position":6},"postmeta_meta_key__sale_price_dates_from_meta_value__sale_price_dates_from":{"width":250,"position":7},"postmeta_meta_key__sale_price_dates_to_meta_value__sale_price_dates_to":{"width":250,"position":8}},"sort_params":{"orderby":"ID","order":"DESC","default":true},"treegrid":"true","search_params":{"isAdvanceSearch":"false","params":""}}'
-							)
-				);
-
-				foreach( $data as $view ){
-					$wpdb->query(
-							$wpdb->prepare(
-											"INSERT INTO {$wpdb->prefix}sm_views(author, title, slug, params, is_public, post_type, created_date, modified_date)
-											VALUES(%d, %s, %s, %s, %d, %s, %d, %d)",
-											$userId,
-											$view['title'],
-											$view['slug'],
-											$view['params'],
-											1,
-											'product',
-											time(),
-											time()
-							)
-					);
-				}
-			}
-		}
 	}
 
 	public static function create_table_for_custom_views() {
@@ -442,6 +402,141 @@ class Smart_Manager_Install {
 			$wpdb->query( "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( 'sa_sm_" . $role . "_dashboards', '" . maybe_serialize( $get_user_role_accessible_dashboards ) ."', 'no' )" );
 			delete_option( "sm_beta_" . $role . "_accessible_dashboards" );
 		}
+	}
+
+	/**
+	 * Check if a specific column exists in a table.
+	 *
+	 * @param string $table_name  The name of the table to check.
+	 * @param string $column_name The name of the column to check for.
+	 *
+	 * @return bool True if the column exists, false otherwise, void if table_name,column_name is empty.
+	*/
+	public static function check_table_column_exists( $table_name = "", $column_name = "" ) {
+		if ( ( empty( $table_name ) ) || ( empty( $column_name ) ) ) {
+			return;
+		}
+		// Check if the table exists.
+		if ( empty( self::check_table_exists( $table_name ) ) ) {
+			return;
+		}
+		global $wpdb;
+		$column_exists = $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM $table_name LIKE %s", $column_name ) );
+		if ( ( is_wp_error( $column_exists ) ) ) {
+			return;
+		}
+		return ( ( empty( $column_exists ) ) ) ? false : true;
+	}
+
+	/**
+	 * Check if a table exists in the database.
+	 *
+	 * @param string $table_name The name of the table to check.
+	 *
+	 * @return bool True if the table exists, false otherwise, void if table_name in empty.
+	*/
+	public static function check_table_exists( $table_name = "" ) {
+		if ( ( empty( $table_name ) ) ) {
+			return;
+		}
+		global $wpdb;
+		$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) );
+		return ( ( empty( $table_exists ) ) || ( is_wp_error( $table_exists ) ) ) ? false : true;
+	}
+
+	/**
+	 * Update the 'sm_views' table to add the 'type' column if it does not exist.
+	 *
+	 * The 'type' column is added as an ENUM type with default value '0'.
+	 * 
+	 * @return bool Void.
+	*/
+	public static function update_856_alter_table() {
+		global $wpdb;
+		// Check if the 'type' column already exists.
+		if ( false === ( self::check_table_column_exists( $wpdb->prefix . 'sm_views', 'type' ) ) ) {
+			// Add the 'type' column as ENUM type with default value '0'.
+			$wpdb->query( $wpdb->prepare( "
+            	ALTER TABLE {$wpdb->prefix}sm_views
+            	ADD COLUMN `type` ENUM('0', '1', '2') DEFAULT %s
+            	COMMENT 'ENUM values: 0 - Custom View, 1 - Saved Search, 2 - Saved Bulk Edit'
+            	AFTER `post_type`", 
+            	'0'
+        	) );
+		}
+	}
+
+	/**
+	 * Creates predefined Custom Views.
+	 * 
+	 * @return void
+	 */
+	public static function create_predefined_custom_views() {
+		if ( ! ( defined('SMPRO') && ( true === SMPRO ) ) ) {
+			return;
+		}
+		global $wpdb;
+		$email = get_option( 'admin_email' );
+		if ( empty( $email ) ) {
+			return;
+		}
+		$user = get_user_by( 'email', $email );
+		if ( empty( $user ) || empty( $user->ID ) ) {
+			return;
+		}
+		$user_id = $user->ID;
+		$data    = array(
+			array(
+				'title'     => 'Product Stock',
+				'slug'      => 'product-stock',
+				'params'    => '{"columns":{"posts_id":{"width":100,"position":1},"postmeta_meta_key__thumbnail_id_meta_value__thumbnail_id":{"width":211.787109375,"position":2},"posts_post_title":{"width":200,"position":3},"postmeta_meta_key__sku_meta_value__sku":{"width":100,"position":4},"postmeta_meta_key__manage_stock_meta_value__manage_stock":{"width":191.77734375,"position":5},"postmeta_meta_key__stock_status_meta_value__stock_status":{"width":168.4130859375,"position":6},"postmeta_meta_key__stock_meta_value__stock":{"width":100,"position":7},"postmeta_meta_key__backorders_meta_value__backorders":{"width":151.728515625,"position":8}},"sort_params":{"orderby":"ID","order":"DESC","default":true},"treegrid":"true","search_params":{"isAdvanceSearch":"false","params":""}}',
+				'post_type' => 'product',
+				'is_public' => 1,
+			),
+			array(
+				'title'     => 'Product Price List',
+				'slug'      => 'product-price-list',
+				'params'    => '{"columns":{"posts_id":{"width":100,"position":1},"postmeta_meta_key__thumbnail_id_meta_value__thumbnail_id":{"width":211.787109375,"position":2},"posts_post_title":{"width":200,"position":3},"postmeta_meta_key__sku_meta_value__sku":{"width":100,"position":4},"postmeta_meta_key__regular_price_meta_value__regular_price":{"width":181.7431640625,"position":5},"postmeta_meta_key__sale_price_meta_value__sale_price":{"width":136.728515625,"position":6},"postmeta_meta_key__sale_price_dates_from_meta_value__sale_price_dates_from":{"width":250,"position":7},"postmeta_meta_key__sale_price_dates_to_meta_value__sale_price_dates_to":{"width":250,"position":8}},"sort_params":{"orderby":"ID","order":"DESC","default":true},"treegrid":"true","search_params":{"isAdvanceSearch":"false","params":""}}',
+				'post_type' => 'product',
+				'is_public' => 1,
+			),
+			array(
+				'title'     => 'Customers',
+				'slug'      => 'customers',
+				'params'    => '{"columns":{"users_id":{"width":100,"position":1},"usermeta_meta_key_first_name_meta_value_first_name":{"width":196,"position":2},"usermeta_meta_key_last_name_meta_value_last_name":{"width":210,"position":3},"users_user_email":{"width":239,"position":4},"users_user_registered":{"width":204,"position":5},"custom_last_order_date":{"width":207,"position":6},"custom_last_order_total":{"width":179,"position":7},"custom_orders_count":{"width":157,"position":8},"custom_orders_total":{"width":147,"position":9},"usermeta_meta_key_billing_address_1_meta_value_billing_address_1":{"width":232,"position":10},"usermeta_meta_key_billing_city_meta_value_billing_city":{"width":197,"position":11},"usermeta_meta_key_billing_state_meta_value_billing_state":{"width":192,"position":12},"usermeta_meta_key_billing_phone_meta_value_billing_phone":{"width":200,"position":13}},"sort_params":{"orderby":"ID","order":"DESC","default":true},"search_params":{"isAdvanceSearch":"true","params":[{"condition":"OR","rules":[{"condition":"AND","rules":[{"type":"'.$wpdb->prefix.'usermeta.'.$wpdb->prefix.'capabilities","operator":"is","value":"customer"}]}]}]}}',
+				'post_type' => 'user',
+				'is_public' => 1,
+			),
+			array(
+				'title'     => 'Pending for Shipping Orders',
+				'slug'      => 'pending-for-shipping-orders',
+				'params'    => '{"columns":{"wc_orders_id":{"width":100,"position":1},"wc_orders_date_created_gmt":{"width":197,"position":2},"woocommerce_order_items_shipping_method":{"width":193,"position":3},"wc_orders_total_amount":{"width":149,"position":4},"custom_line_items":{"width":325,"position":5},"wc_orders_billing_email":{"width":222,"position":6},"wc_order_addresses_billing_first_name":{"width":189,"position":7},"wc_order_addresses_billing_last_name":{"width":181,"position":8},"wc_orders_meta_meta_key__billing_address_index_meta_value__billing_address_index":{"width":373,"position":9},"wc_orders_meta_meta_key__shipping_address_index_meta_value__shipping_address_index":{"width":340,"position":10},"wc_orders_payment_method":{"width":211,"position":11},"wc_orders_currency":{"width":135,"position":12},"wc_orders_customer_note":{"width":211,"position":13}},"sort_params":{"orderby":"ID","order":"DESC","default":true},"search_params":{"isAdvanceSearch":"true","params":[{"condition":"OR","rules":[{"condition":"AND","rules":[{"type":"'.$wpdb->prefix.'wc_orders.status","operator":"is","value":"wc-processing"}]}]}]}}',
+				'post_type' => 'shop_order',
+				'is_public' => 1,
+			),
+			);
+			// Fetch all existing slugs for predefined Custom Views in a single query.
+			$existing_slugs = $wpdb->get_col( "SELECT slug FROM {$wpdb->prefix}sm_views" );
+			$existing_slugs = array_flip( $existing_slugs );
+			foreach ( $data as $view ) {
+				if ( ! empty( $existing_slugs[ $view['slug'] ] ) ) {
+					continue; // Skip if slug already exists
+				}
+				$wpdb->query(
+					$wpdb->prepare(
+						"INSERT INTO {$wpdb->prefix}sm_views ( author, title, slug, params, is_public, post_type, created_date, modified_date )
+						VALUES ( %d, %s, %s, %s, %d, %s, %d, %d )",
+						$user_id,
+						$view['title'],
+						$view['slug'],
+						$view['params'],
+						$view['is_public'],
+						$view['post_type'],
+						time(),
+						time()
+					)
+				);
+			}
 	}
 }
 

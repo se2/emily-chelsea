@@ -252,6 +252,15 @@ class FilteringOrdersHPOS extends \Wpae\Pro\Filtering\FilteringCPT
             case 'menu_order':
                 $this->queryWhere .= "$this->ordersTableName.$rule->element " . $this->parse_condition($rule);
                 break;
+
+	        default:
+		        if (strpos($rule->element, 'cf_') === 0) {
+					$cf_name = substr($rule->element, 3);
+
+			        $this->queryJoin[] = " INNER JOIN {$this->wpdb->prefix}wc_orders_meta AS order_meta ON ($this->ordersTableName.id = order_meta.order_id) ";
+			        $this->queryWhere .= "order_meta.meta_key = '$cf_name' AND order_meta.meta_value " . $this->parse_condition($rule);
+		        }
+				break;
         }
         $this->recursion_parse_query($rule);
     }

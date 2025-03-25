@@ -155,6 +155,12 @@ if ( ! class_exists( 'SA_Smart_Manager_Deactivation' ) ) {
 		 * @since  1.1.2
 		 */
 		public static function sa_submit_deactivation_reason_action() {
+			// Check nonce for security.
+			check_ajax_referer( 'sm_deactivation_survey', 'security' );
+			// Check if user has the required capability.
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+			}
 			if ( ! isset( $_POST[ 'reason_id' ] ) ) {
 				exit;
 			}

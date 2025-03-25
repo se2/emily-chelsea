@@ -129,12 +129,8 @@ if (!class_exists('XmlExportCustomRecord')) {
 
                     $articleData = self::prepare_data($record, $snippets, $xmlWriter, $implode_delimiter, $preview);
 
-                    $functions = $snippetParser->parseFunctions($combineMultipleFieldsValue);
-                    $combineMultipleFieldsValue = \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($functions, $combineMultipleFieldsValue, $articleData);
+                    $combineMultipleFieldsValue = \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($articleData, true, $combineMultipleFieldsValue, $preview);
 
-                    if ($preview) {
-                        $combineMultipleFieldsValue = trim(preg_replace('~[\r\n]+~', ' ', htmlspecialchars($combineMultipleFieldsValue)));
-                    }
 
 
                     wp_all_export_write_article($article, $element_name, pmxe_filter($combineMultipleFieldsValue, $fieldSnipped));

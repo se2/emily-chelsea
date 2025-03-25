@@ -71,10 +71,9 @@ class Smart_Manager_Admin_Welcome {
 	 */
 	public function admin_head() {
 
-		if ( !( isset($_GET['page']) && ($_GET['page'] == "smart-manager" || $_GET['page'] == "smart-manager-settings") && ( isset($_GET['landing-page']) ) ) ) {
+		if ( ! ( isset( $_GET['page'] ) && ( "smart-manager" === $_GET['page'] ) && ( isset( $_GET['landing-page'] ) ) ) ) {
 			return;
 		}
-
 		?>
 		<style type="text/css">
 			/*<![CDATA[*/
@@ -189,7 +188,7 @@ class Smart_Manager_Admin_Welcome {
 	 */
 	function smart_manager_support_ticket_content() {
 
-		if ( !( isset($_GET['page']) && ($_GET['page'] == "smart-manager" || $_GET['page'] == "smart-manager-settings") && (isset($_GET['landing-page']) && $_GET['landing-page'] == "sm-faqs") ) ) {
+		if ( !( isset( $_GET['page'] ) && ( "smart-manager" === $_GET['page'] ) && ( isset( $_GET['landing-page'] ) && "sm-faqs" === $_GET['landing-page'] ) ) ) {
 			return;
 		}
 
@@ -225,7 +224,6 @@ class Smart_Manager_Admin_Welcome {
 		if( is_callable( array( 'Smart_Manager', 'get_version' ) ) ) {
 			$version = Smart_Manager::get_version();
 		}
-
 		?>
 		<h1><?php printf( 
 		/* translators: %s: Plugin version number */
@@ -252,7 +250,7 @@ class Smart_Manager_Admin_Welcome {
 							</a>
 						<br>
 					<?php if ( SMPRO === true ) { ?>
-						<a class="button-primary" href="options-general.php?page=smart-manager&sm-settings" target="_blank"><?php _e( 'Settings', 'smart-manager-for-wp-e-commerce' ); ?></a>
+						<a class="button-primary" href="<?php echo admin_url( 'admin.php?page=smart-manager#!/settings' ); ?>" target="_blank"><?php _e( 'Settings', 'smart-manager-for-wp-e-commerce' ); ?></a>
 					<?php } ?>
 					<a class="button-primary" href="https://www.storeapps.org/knowledgebase_category/smart-manager/?utm_source=sm&utm_medium=welcome_page&utm_campaign=view_docs" target="_blank"><?php _e( 'Docs', 'smart-manager-for-wp-e-commerce' ); ?></a>
 				</p>

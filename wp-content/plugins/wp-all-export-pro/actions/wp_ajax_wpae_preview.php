@@ -247,8 +247,9 @@ function pmxe_wp_ajax_wpae_preview(){
 		$wp_uploads = wp_upload_dir();
 
 		$functions = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
-		if ( @file_exists($functions) ) {
-			require_once $functions;
+		$functions = apply_filters( 'wp_all_export_functions_file_path', $functions );
+        if ( @file_exists($functions) ) {
+			\Wpae\Integrations\CodeBox::requireFunctionsFile();
 		}
 
 		switch ($exportOptions['export_to']) {

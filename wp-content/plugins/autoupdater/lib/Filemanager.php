@@ -7,6 +7,7 @@ class AutoUpdater_Filemanager
 
     protected $FS_CHMOD_FILE;
     protected $FS_CHMOD_DIR;
+    /** @see WP_Filesystem_Direct */
     protected static $wp_filesystem;
 
     public function __construct()

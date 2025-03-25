@@ -114,4 +114,16 @@ CREATE TABLE {$table_prefix}hash (
 	post_type VARCHAR(32) NOT NULL DEFAULT '',
 	PRIMARY KEY  (hash)
 ) $charset_collate;
+CREATE TABLE {$table_prefix}geocoding (
+    id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    address TEXT NULL,
+    latitude DECIMAL(18, 15) NULL,
+    longitude DECIMAL(18, 15) NULL,
+    raw_data TEXT,
+    provider VARCHAR(50) NOT NULL DEFAULT 'google_maps',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_address (address(255)),
+    INDEX idx_coordinates (latitude, longitude),
+    PRIMARY KEY (id)
+) $charset_collate;
 SCHEMA;

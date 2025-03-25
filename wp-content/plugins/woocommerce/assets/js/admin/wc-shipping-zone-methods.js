@@ -104,7 +104,6 @@
 					$( document.body ).on( 'wc_backbone_modal_next_response', this.onAddShippingMethodSubmitted );
 					$( document.body ).on( 'wc_backbone_modal_before_remove', this.onCloseConfigureShippingMethod );
 					$( document.body ).on( 'wc_backbone_modal_back_response', this.onConfigureShippingMethodBack );
-					$( document.body ).on( 'change', '.wc-shipping-zone-method-selector select', this.onChangeShippingMethodSelector );
 					$( document.body ).on( 'click', '.wc-shipping-zone-postcodes-toggle', this.onTogglePostcodes );
 					$( document.body ).on( 'wc_backbone_modal_validation', { view: this }, this.validateFormArguments );
 					$( document.body ).on( 'wc_backbone_modal_loaded', { view: this }, this.onModalLoaded );
@@ -203,6 +202,7 @@
 					$( '.tips' ).tipTip({ 'attribute': 'data-tip', 'fadeIn': 50, 'fadeOut': 50, 'delay': 50 });
 				},
 				onSubmit: function( event ) {
+					$save_button.addClass( 'is-busy' );
 					event.data.view.block();
 					event.data.view.model.save();
 					event.preventDefault();
@@ -264,6 +264,7 @@
 				setUnloadConfirmation: function() {
 					this.needsUnloadConfirm = true;
 					$save_button.prop( 'disabled', false );
+					$save_button.removeClass( 'is-busy' );
 				},
 				clearUnloadConfirmation: function() {
 					this.needsUnloadConfirm = false;
@@ -465,7 +466,9 @@
 
 					priceInputs.addClass( `wc-shipping-currency-size-${ symbol.length }` );
 					priceInputs.addClass( `wc-shipping-currency-position-${ symbolPosition }` );
-					priceInputs.before( `<div class="wc-shipping-zone-method-currency wc-shipping-currency-position-${ symbolPosition }">${ symbol }</div>` );
+					priceInputs.before(
+						`<div class="wc-shipping-zone-method-currency wc-shipping-currency-position-${ symbolPosition }">${ symbol }</div>`
+					);
 
 					priceInputs.each( ( i ) => {
 						const priceInput = $( priceInputs[ i ] );
@@ -478,7 +481,11 @@
 				},
 				moveHTMLHelpTips: function( html ) {
 					// These help tips aren't moved.
-					const helpTipsToRetain = [ 'woocommerce_flat_rate_cost', 'woocommerce_flat_rate_no_class_cost', 'woocommerce_flat_rate_class_cost_' ];
+					const helpTipsToRetain = [
+						'woocommerce_flat_rate_cost',
+						'woocommerce_flat_rate_no_class_cost',
+						'woocommerce_flat_rate_class_cost_'
+					];
 
 					const htmlContent = $( html );
 					const labels = htmlContent.find( 'label' );
@@ -498,7 +505,8 @@
 							return;
 						}
 
-						// woocommerce_free_shipping_ignore_discounts gets a helpTip appended to its label. Otherwise, add the text as the last element in the fieldset.
+						// woocommerce_free_shipping_ignore_discounts gets a helpTip appended to its label.
+						// Otherwise, add the text as the last element in the fieldset.
 						if ( id === 'woocommerce_free_shipping_ignore_discounts' ) {
 							const input = htmlContent.find( `#${ id }` );
 							const fieldset = input.closest( 'fieldset' );
@@ -564,7 +572,8 @@
 									}
 								}
 
-								// Avoid triggering a rerender here because we don't want to show the method in the table in case merchant doesn't finish flow.
+								// Avoid triggering a rerender here because we don't want to show the method
+								// in the table in case merchant doesn't finish flow.
 								
 								shippingMethodView.model.set( 'methods', response.data.methods );
 
@@ -698,11 +707,6 @@
 							});
 						}
 					}
-				},
-				onChangeShippingMethodSelector: function() {
-					var description = $( this ).find( 'option:selected' ).data( 'description' );
-					$( this ).parent().find( '.wc-shipping-zone-method-description' ).remove();
-					$( this ).after( '<div class="wc-shipping-zone-method-description">' + description + '</div>' );
 				},
 				onTogglePostcodes: function( event ) {
 					event.preventDefault();

@@ -436,8 +436,10 @@ Smart_Manager.prototype.showImportButtonHtml = function() {
 	}
 
 	jQuery('.sm_top_bar_action_btns:nth-last-child(3) #import_csv_sm_editor_grid').off('click').on('click',function() {
-		if(window.smart_manager.WCProductImportURL){
-			window.open(window.smart_manager.WCProductImportURL, '_blank');
+		if((typeof window.smart_manager.dirtyRowColIds !== 'undefined') && Object.getOwnPropertyNames(window.smart_manager.dirtyRowColIds).length > 0){
+			window.smart_manager.confirmUnsavedChanges({'yesCallback': window.smart_manager.handleProductImportCSV})
+		}else if("undefined" !== typeof(window.smart_manager.handleProductImportCSV) && "function" === typeof(window.smart_manager.handleProductImportCSV)){
+			window.smart_manager.handleProductImportCSV()
 		}
 	})
 }
@@ -464,11 +466,16 @@ Smart_Manager.prototype.showVariationsHtml = function() {
 			window.smart_manager.currentDashboardModel.treegrid = 'false';
 		}
 
-		if ( typeof (window.smart_manager.updateState) !== "undefined" && typeof (window.smart_manager.updateState) === "function" ) {
+		if((typeof window.smart_manager.dirtyRowColIds !== 'undefined') && Object.getOwnPropertyNames(window.smart_manager.dirtyRowColIds).length > 0){
+			window.smart_manager.confirmUnsavedChanges({'yesCallback': window.smart_manager.updateState})
+		}else if ( typeof (window.smart_manager.updateState) !== "undefined" && typeof (window.smart_manager.updateState) === "function" ) {
 			window.smart_manager.updateState(); //refreshing the dashboard states
 		}
-
-		window.smart_manager.refresh();
+		if((typeof window.smart_manager.dirtyRowColIds !== 'undefined') && Object.getOwnPropertyNames(window.smart_manager.dirtyRowColIds).length > 0){
+			window.smart_manager.confirmUnsavedChanges({'yesCallback': window.smart_manager.refresh, 'noCallback': window.smart_manager.handleShowVariations})
+		}else if ( typeof (window.smart_manager.refresh) !== "undefined" && typeof (window.smart_manager.refresh) === "function" ) {
+			window.smart_manager.refresh(); //refreshing the dashboard states
+		}
 	});
 }
 
@@ -489,5 +496,15 @@ Smart_Manager.prototype.setExportButtonHTML = function() {
 		if(document.getElementById('sm_export_entire_store_visible_cols') !== null){
 		    document.getElementById('sm_export_entire_store_visible_cols').innerHTML = (window.smart_manager.isFilteredData()) ? _x('All Items In Search Results - Visible Columns', 'export button', 'smart-manager-for-wp-e-commerce') : _x('Entire Store - Visible Columns', 'export button', 'smart-manager-for-wp-e-commerce');
 		}
+	}
+}
+// Function for handling the 'Show Variations' when click on it during unsaved changes.
+Smart_Manager.prototype.handleShowVariations = function(){
+	jQuery('#sm_products_show_variations').prop('checked', !jQuery('#sm_products_show_variations').prop('checked')); 
+}
+//Function for redirecting to WC product import
+Smart_Manager.prototype.handleProductImportCSV = function(){
+	if(window.smart_manager.WCProductImportURL){
+		window.open(window.smart_manager.WCProductImportURL, '_blank');
 	}
 }

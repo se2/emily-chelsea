@@ -60,9 +60,6 @@ class AutoUpdater_Task_ExtensionUpdate extends AutoUpdater_Task_Base
             throw new AutoUpdater_Exception_Response('Bad type', 400);
         }
 
-        // Convince WordPress that we're currently viewing the update-core.php page
-        AutoUpdater_Helper_SiteTransient::simulateUpdateCorePage();
-
         /** @var AutoUpdater_Upgrader_Task_Base $upgrader_task */
         $upgrader_task = new $class_name($this);
         $result = $upgrader_task->update($slug, $path);

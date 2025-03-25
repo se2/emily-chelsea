@@ -15,8 +15,9 @@ function pmxe_wp_ajax_wpae_available_rules(){
 	$input = new PMXE_Input();
 	
 	$post = $input->post('data', array());
+	$type = $post['type'] ?? '';
 
-	$is_date = false;
+	$is_date = $type === 'date' || $type === 'datetime' || $type === 'time';
 
 	if(class_exists('GF_Export_Add_On')) {
         $gf_addon = \GF_Export_Add_On::get_instance()->add_on;

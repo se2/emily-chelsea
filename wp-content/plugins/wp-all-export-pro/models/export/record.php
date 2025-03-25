@@ -30,9 +30,9 @@ class PMXE_Export_Record extends PMXE_Model_Record {
         wp_reset_postdata();
 
         $functions = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
-
+	    $functions = apply_filters( 'wp_all_export_functions_file_path', $functions );
         if (@file_exists($functions)) {
-            require_once $functions;
+	        \Wpae\Integrations\CodeBox::requireFunctionsFile();
         }
 
         XmlExportEngine::$exportOptions  	 = $this->options;
@@ -230,11 +230,11 @@ class PMXE_Export_Record extends PMXE_Model_Record {
                 else if (in_array('shop_order', $this->options['cpt']) && $this->hposEnabled()) {
                         add_filter('posts_where', 'wp_all_export_numbering_where', 15, 1);
 
-                        if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive()) {
+                        if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() || XMLExportEngine::get_addons_service()->isWooCommerceOrderAddonActive()) {
                             $exportQuery = new \Wpae\WordPress\OrderQuery();
 
                             $totalOrders = $exportQuery->getOrders();
-                            $foundOrders = $exportQuery->getOrders($this->exported, $this->options['records_per_iteration']);
+                            $foundOrders = $exportQuery->getOrders($this->exported, $this->options['records_per_iteration'], $post_id);
 
                             $foundPosts = count($totalOrders);
                             $postCount = count($foundOrders);
@@ -426,11 +426,11 @@ class PMXE_Export_Record extends PMXE_Model_Record {
         else if (in_array('shop_order', $this->options['cpt']) && $this->hposEnabled()) {
             add_filter('posts_where', 'wp_all_export_numbering_where', 15, 1);
 
-            if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive()) {
+            if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() || XMLExportEngine::get_addons_service()->isWooCommerceOrderAddonActive()) {
                 $exportQuery = new \Wpae\WordPress\OrderQuery();
 
                 $totalOrders = $exportQuery->getOrders();
-                $foundOrders = $exportQuery->getOrders($this->exported, $this->options['records_per_iteration']);
+                $foundOrders = $exportQuery->getOrders($this->exported, $this->options['records_per_iteration'], $post_id);
 
                 $foundPosts = count($totalOrders);
                 $postCount = count($foundOrders);
@@ -444,7 +444,7 @@ class PMXE_Export_Record extends PMXE_Model_Record {
         else
         {
             $exportOptions = $this->options;
-            if(strpos($exportOptions['cpt'][0], 'custom_') === 0) {
+            if(isset($exportOptions['cpt'][0]) && strpos($exportOptions['cpt'][0], 'custom_') === 0) {
 
                 $addon = GF_Export_Add_On::get_instance();
 
@@ -459,8 +459,6 @@ class PMXE_Export_Record extends PMXE_Model_Record {
                 $exportQuery = $addon->add_on->get_query($this->exported, $exportOptions['records_per_iteration'] , $filter_args );
                 $foundPosts = count($totalQuery->results);
                 $postCount = count($exportQuery->results);
-
-                XmlExportEngine::$exportQuery = $exportQuery;
 
             } else {
                 if (XmlExportEngine::$is_user_export || XmlExportEngine::$is_woo_customer_export) {

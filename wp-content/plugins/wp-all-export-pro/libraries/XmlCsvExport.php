@@ -108,7 +108,7 @@ final Class XmlCsvExport
 
             foreach (XmlExportEngine::$exportQuery->results as $record) {
 
-                $articles[] = XmlExportCustomRecord::prepare_data($record, XmlExportEngine::$exportOptions, false, $acfs, XmlExportEngine::$implode, $preview);
+                $articles[] = XmlExportCustomRecord::prepare_data($record, XmlExportEngine::$exportOptions, false, XmlExportEngine::$implode, $preview);
                 $articles = apply_filters('wp_all_export_csv_rows', $articles, XmlExportEngine::$exportOptions, XmlExportEngine::$exportID);
                 if (!$preview) do_action('pmxe_exported_post', $record->id, XmlExportEngine::$exportRecord);
             }
@@ -154,7 +154,7 @@ final Class XmlCsvExport
                 }
             }
 
-            if(in_array('shop_order', $exportOptions['cpt']) && PMXE_Plugin::hposEnabled()) {
+            if($exportOptions['export_type'] != 'advanced' &&  in_array('shop_order', $exportOptions['cpt']) && PMXE_Plugin::hposEnabled()) {
 
 
                 $exported = 0;
@@ -167,9 +167,9 @@ final Class XmlCsvExport
                 foreach ($orders as $record) {
 
                     if(!isset($record->ID)) {
-                        $recordId = $record->id;
+                        $recordId = $record->order_id ?? $record->id;
                     } else {
-                        $recordId = $record->ID;
+                        $recordId = $record->order_id ?? $record->ID;
                     }
                     $articles[] = XmlExportCpt::prepare_data($record, $exportOptions, false, $acfs, $woo, $woo_order, XmlExportEngine::$implode, $preview);
                     $articles = apply_filters('wp_all_export_csv_rows', $articles, XmlExportEngine::$exportOptions, XmlExportEngine::$exportID);
@@ -190,35 +190,9 @@ final Class XmlCsvExport
                 }
 
             }
-            if (isset($exportOptions['cc_combine_multiple_fields']) && is_array($exportOptions['cc_combine_multiple_fields'])) {
-                foreach ($exportOptions['cc_combine_multiple_fields'] as $ID => $value) {
-                    if ($value) {
-                        $label = $exportOptions['cc_name'][$ID];
-                        foreach ($articles as $key => $article) {
-                            $multipleFieldsValue = $exportOptions['cc_combine_multiple_fields_value'][$ID];
 
-                            foreach ($article as $snippetName => $articleValue) {
-
-                                if ($wpaeString->isBetween($multipleFieldsValue, "{" . $snippetName . "}", '[', ']')) {
-                                    // Replace snippets in functions
-                                    $multipleFieldsValue = str_replace("{" . $snippetName . "}", '$articleData**OPENARR**"' . $snippetName . '"**CLOSEARR**', $multipleFieldsValue);
-                                } else {
-                                    // Replace snippets not in functions
-                                    $multipleFieldsValue = str_replace("{" . $snippetName . "}", $articleValue, $multipleFieldsValue);
-                                }
-                            }
-
-                            $multipleFieldsValue = html_entity_decode($multipleFieldsValue);
-                            $functions = $snippetParser->parseFunctions($multipleFieldsValue);
-
-                            $multipleFieldsValue = \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($functions, $multipleFieldsValue, $article);
-
-                            $articles[$key][$label] = $multipleFieldsValue;
-                        }
-                    }
-                }
-            }
-
+			// Process multiplefieldsvalue for combine multiple fields if needed.
+	        \Wpae\App\Service\CombineFields::prepareMultipleFieldsValue($articles,false, false, $preview);
 
             wp_reset_postdata();
         }
@@ -528,51 +502,46 @@ final Class XmlCsvExport
                 if (!$preview) do_action('pmxe_exported_post', $review->comment_ID, XmlExportEngine::$exportRecord);
 
             }
-        } else if (XmlExportEngine::$is_woo_order_export && PMXE_Plugin::hposEnabled()) {
-            add_filter('posts_where', 'wp_all_export_numbering_where', 15, 1);
+        } else if ( XmlExportEngine::$exportOptions['export_type'] != 'advanced' && XmlExportEngine::$is_woo_order_export && PMXE_Plugin::hposEnabled() ) {
+	        add_filter( 'posts_where', 'wp_all_export_numbering_where', 15, 1 );
 
 
-            $exported = 0;
-            if(is_object(XmlExportEngine::$exportRecord)) {
-                $exported = XmlExportEngine::$exportRecord->exported;
-            }
-            $orders = XmlExportEngine::$exportQuery->getOrders($exported, XmlExportEngine::$exportOptions['records_per_iteration']);
+	        $exported = 0;
+	        if ( is_object( XmlExportEngine::$exportRecord ) ) {
+		        $exported = XmlExportEngine::$exportRecord->exported;
+	        }
+	        $orders = XmlExportEngine::$exportQuery->getOrders( $exported, XmlExportEngine::$exportOptions['records_per_iteration'] );
 
-            foreach ($orders as $record) {
+	        foreach ( $orders as $record ) {
 
-                if(!isset($record->ID)) {
-                    $recordId = $record->id;
-                } else {
-                    $recordId = $record->ID;
-                }
+		        if ( ! isset( $record->ID ) ) {
+			        $recordId = $record->order_id ?? $record->id;
+		        } else {
+			        $recordId = $record->order_id ?? $record->ID;
+		        }
 
-                if (!$is_custom_xml) {
-                    // add additional information before each node
-                    self::before_xml_node($xmlWriter, $record->id);
-                    $xmlWriter->startElement(self::$node_xml_tag);
+		        if ( ! $is_custom_xml ) {
+			        // add additional information before each node
+			        self::before_xml_node( $xmlWriter, $recordId );
+			        $xmlWriter->startElement( self::$node_xml_tag );
 
-                    XmlExportCpt::prepare_data($record, XmlExportEngine::$exportOptions, $xmlWriter, $acfs, $woo, $woo_order, XmlExportEngine::$implode, $preview);
+			        XmlExportCpt::prepare_data( $record, XmlExportEngine::$exportOptions, $xmlWriter, $acfs, $woo, $woo_order, XmlExportEngine::$implode, $preview );
 
-                    $xmlWriter->closeElement(); // end post
+			        $xmlWriter->closeElement(); // end post
 
-                    // add additional information after each node
-                    self::after_xml_node($xmlWriter, $record->id);
-                } else {
-                    $articles = array();
-                    $articles[] = XmlExportCpt::prepare_data($record, XmlExportEngine::$exportOptions, false, $acfs, $woo, $woo_order, XmlExportEngine::$implode, $preview);
-                    $xmlWriter->writeArticle($articles);
-                }
+			        // add additional information after each node
+			        self::after_xml_node( $xmlWriter, $recordId );
+		        } else {
+			        $articles = [];
+			        $articles[] = XmlExportCpt::prepare_data( $record, XmlExportEngine::$exportOptions, false, $acfs, $woo, $woo_order, XmlExportEngine::$implode, $preview );
+			        $articles   = apply_filters( 'wp_all_export_csv_rows', $articles, XmlExportEngine::$exportOptions, XmlExportEngine::$exportID );
+			        $xmlWriter->writeArticle( $articles );
+		        }
 
-                if (!$preview) {
-                    do_action('pmxe_exported_post', $record->id, XmlExportEngine::$exportRecord);
-                }
-
-				// Ensure $articles is defined.
-	            $articles = $articles ?? [];
-
-                $articles = apply_filters('wp_all_export_csv_rows', $articles, XmlExportEngine::$exportOptions, XmlExportEngine::$exportID);
-                if (!$preview) do_action('pmxe_exported_post', $recordId, XmlExportEngine::$exportRecord);
-            }
+		        if ( ! $preview ) {
+			        do_action( 'pmxe_exported_post', $recordId, XmlExportEngine::$exportRecord );
+		        }
+	        }
         }
         elseif (XmlExportEngine::$is_custom_addon_export) {
 
@@ -783,6 +752,7 @@ final Class XmlCsvExport
     {
         $element_name = (!empty(XmlExportEngine::$exportOptions['cc_name'][$ID])) ? XmlExportEngine::$exportOptions['cc_name'][$ID] : 'untitled_' . $ID;
         $element_name = apply_filters('wp_all_export_field_name', wp_all_export_parse_field_name($element_name), XmlExportEngine::$exportID);
+        $field_type = XmlExportEngine::$exportOptions['cc_type'][$ID];
 
         if (strpos(XmlExportEngine::$exportOptions['cc_label'][$ID], "item_data__") !== false) {
             if (XmlExportEngine::$woo_order_export) {
@@ -842,6 +812,22 @@ final Class XmlCsvExport
 
 
                 break;
+        }
+
+        $addons = XmlExportEngine::get_addons();
+
+        if (in_array($field_type, $addons)) {
+            $ccOptions = XmlExportEngine::$exportOptions['cc_options'][$ID];
+            $fieldOptions = maybe_unserialize($ccOptions);
+            
+            $headers = apply_filters(
+                "pmxe_{$field_type}_addon_get_headers",
+                $headers,
+                $fieldOptions,
+                XmlExportEngine::$exportOptions,
+                $ID,
+                $element_name,
+            );
         }
 
     }
@@ -1145,7 +1131,11 @@ final Class XmlCsvExport
             }
         }
 
-        return $auto_generate;
+	    foreach (\XmlExportEngine::get_addons() as $addon) {
+		    $auto_generate = apply_filters("pmxe_get_{$addon}_addon_auto_generate_fields", $auto_generate, 10, 1);
+	    }
+
+		return $auto_generate;
     }
 
     /**

@@ -66,6 +66,10 @@ class AutoUpdater_Api
         AutoUpdater_Helper_Cache::setCacheExclusionRules();
         AutoUpdater_Helper_Cache::noCache();
 
+        if (!defined('AUTOUPDATER_IN_PROGRESS')) {
+            define('AUTOUPDATER_IN_PROGRESS', true);
+        }
+
         // Get all data from the request
         $payload = $this->getPayload($method);
         AutoUpdater_Log::debug(sprintf('---------- Running API %s %s endpoint ----------', strtoupper($method), $payload['wpe_endpoint']));
@@ -79,7 +83,7 @@ class AutoUpdater_Api
 
         $this->initTask($payload);
         $this->initialized = true;
-        AutoUpdater_Log::traceHooks();
+        AutoUpdater_Log::traceRunningHooks();
 
         $priority = $this->task->getPriority();
         if (!is_admin()) {
@@ -241,11 +245,20 @@ class AutoUpdater_Api
 
     protected function grantAdminPrivileges()
     {
+        global $pagenow;
+
         if (!$this->task->areAdminPrivilegesRequired() || $this->task->input('guest')) {
             return;
         }
 
         AutoUpdater_Authentication::getInstance()->logInAsAdmin();
+
+        if ($pagenow === 'update-core.php') {
+            return;
+        }
+        // Done on purpose. Convinces WordPress that we are currently viewing the update-core.php page.
+        $pagenow = 'update-core.php'; // phpcs:ignore
+        do_action('load-update-core.php');
     }
 
     public function handle()
@@ -277,7 +290,9 @@ class AutoUpdater_Api
             $data = $this->task->doTask();
             $response->setData($data);
 
-            AutoUpdater_Log::debug('Task ' . $this->task->getName() . ' ended with result: ' . print_r($response->data, true));
+            if (strpos(strtolower($this->task->getName()), 'debug') === false) {
+                AutoUpdater_Log::debug('Task ' . $this->task->getName() . ' ended with result: ' . print_r($response->data, true));
+            }
         } catch (AutoUpdater_Exception_Response $e) {
             $data = array(
                 'success' => false,

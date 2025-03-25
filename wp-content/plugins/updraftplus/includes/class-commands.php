@@ -441,6 +441,7 @@ class UpdraftPlus_Commands {
 	
 		global $updraftplus_addon_cloudfilesenhanced;
 		if (!is_a($updraftplus_addon_cloudfilesenhanced, 'UpdraftPlus_Addon_CloudFilesEnhanced')) {
+			// translators: %s: The name of the missing add-on.
 			$data = array('e' => 1, 'm' => sprintf(__('%s add-on not found', 'updraftplus'), 'Rackspace Cloud Files'));
 		} else {
 			$data = $updraftplus_addon_cloudfilesenhanced->create_api_user($data);
@@ -1078,10 +1079,11 @@ class UpdraftPlus_Commands {
 				$is_vps_tester = !empty($response['is_vps_tester']);
 				$supported_wp_versions = isset($response['supported_wp_versions']) ? $response['supported_wp_versions'] : array();
 				$supported_packages = isset($response['supported_packages']) ? $response['supported_packages'] : array();
+				$supported_packages_label = isset($response['supported_packages_label']) ? $response['supported_packages_label'] : array();
 				$supported_regions = isset($response['supported_regions']) ? $response['supported_regions'] : array();
 				$nearest_region = isset($response['nearest_region']) ? $response['nearest_region'] : '';
 				$content .= '<div class="updraftclone_action_box">';
-				$content .= $updraftplus_admin->updraftplus_clone_ui_widget($is_vps_tester, $supported_wp_versions, $supported_packages, $supported_regions, $nearest_region);
+				$content .= $updraftplus_admin->updraftplus_clone_ui_widget($is_vps_tester, $supported_wp_versions, $supported_packages, $supported_regions, $nearest_region, $supported_packages_label);
 				$content .= '<p class="updraftplus_clone_status"></p>';
 				$content .= '<button id="updraft_migrate_createclone" class="button button-primary button-hero" data-clone_id="'.$response['clone_info']['id'].'" data-secret_token="'.$response['clone_info']['secret_token'].'">'. __('Create clone', 'updraftplus') . '</button>';
 				$content .= '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span><br>';

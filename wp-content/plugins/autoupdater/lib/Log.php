@@ -6,6 +6,15 @@ class AutoUpdater_Log
     protected static $instance = null;
 
     /**
+     * Hooks to trace
+     * @var array
+     */
+    protected $trace_hooks = array(
+        'pre_set_site_transient_update_plugins',
+        'pre_set_site_transient_update_themes',
+    );
+
+    /**
      * @return static
      */
     public static function getInstance()
@@ -54,15 +63,15 @@ class AutoUpdater_Log
     }
 
     /**
-     * @param string $date The date in format YYYY-MM-DD
+     * @param DateTime|null $date The date
      * @return string
      */
-    public function getLogsFilePath($date = '')
+    public function getLogsFilePath($date = null)
     {
-        if (!$date) {
-            $date = date('Y-m-d');
+        if (is_null($date)) {
+            $date = new DateTime();
         }
-        return $this->getLogsPath() . 'autoupdater_' . $date . '.logs.php';
+        return $this->getLogsPath() . 'autoupdater_' . $date->format('Y-m-d') . '.logs.php';
     }
 
     /**
@@ -88,7 +97,7 @@ class AutoUpdater_Log
         }
 
         $level = strtoupper($level);
-        $date = date('Y-m-d H:i:s');
+        $date = gmdate('c'); //2004-02-12T15:19:21+00:00
 
         $filemanager->put_contents(
             $file_path,
@@ -111,22 +120,76 @@ class AutoUpdater_Log
         }
     }
 
-    public static function traceHooks()
+    /**
+     * @param null|array $filter_hooks Trace only listed hooks. Empty array to trace all hooks. NULL to trace default updates-related hooks.
+     */
+    public static function traceRunningHooks($filter_hooks = null)
     {
         if (!AutoUpdater_Config::get('trace_hooks', 0)) {
             return;
         }
 
-        add_action('all', array(static::getInstance(), 'logHooks'), 99999, 99);
+        $logger = static::getInstance();
+        if (is_array($filter_hooks)) {
+            $logger->setTracedHooks($filter_hooks);
+        }
+
+        add_action('all', array($logger, 'logRunningHooks'), 99999, 99);
     }
 
-    public function logHooks()
+    /**
+     * @param array $filter_hooks Trace only listed hooks. By default traces updates-related hooks.
+     */
+    public static function traceRegisteredHooks($filter_hooks = array())
+    {
+        if (!AutoUpdater_Config::get('trace_hooks', 0)) {
+            return;
+        }
+
+        $logger = static::getInstance();
+        $logger->log('debug', 'Listing registered hooks');
+        $logger->logRegisteredHooks($filter_hooks);
+    }
+
+    /**
+     * @param array $filter_hooks
+     */
+    public function setTracedHooks($filter_hooks)
+    {
+        $this->trace_hooks = $filter_hooks;
+    }
+
+    /**
+     * @param array $filter_hooks
+     */
+    public function logRegisteredHooks($filter_hooks = array())
+    {
+        global $wp_filter;
+
+        if (empty($filter_hooks)) {
+            $filter_hooks = $this->trace_hooks;
+        }
+
+        foreach ($filter_hooks as $hook_name) {
+            if (!isset($wp_filter[$hook_name])) {
+                continue;
+            }
+
+            $this->logHookDetails($hook_name, $wp_filter[$hook_name]);
+        }
+    }
+
+    public function logRunningHooks()
     {
         global $wp_filter;
         $hook_name = current_filter();
 
         $exclude_hooks = array('gettext', 'gettext_with_context');
         if (in_array($hook_name, $exclude_hooks)) {
+            return;
+        }
+
+        if (!empty($this->trace_hooks) && !in_array($hook_name, $this->trace_hooks)) {
             return;
         }
 

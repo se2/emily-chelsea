@@ -287,6 +287,7 @@ foreach ( $reasons as $reason ) {
 							'sa_plugin_version': SAPluginVersion,
 							'reason_id': 0,
 							'reason_text': "Deactivated without any option",
+							'security': '<?php echo esc_attr( wp_create_nonce( 'sm_deactivation_survey' ) ); ?>'
 						};
 					} else {
 						var data = {
@@ -297,6 +298,7 @@ foreach ( $reasons as $reason ) {
 							'reason_id': ( 0 !== $radio.length ) ? $radio.val() : '',
 							'reason_text': $selected_reason.text(),
 							'reason_info': ( 0 !== $input.length ) ? $input.val().trim() : '',
+							'security': '<?php echo esc_attr( wp_create_nonce( 'sm_deactivation_survey' ) ); ?>'
 						};
 					}
 					

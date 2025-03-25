@@ -15,7 +15,7 @@ class AgeGroup extends Field
 
             if(isset($detailedInformationData['ageGroupAttribute'])) {
                 $ageGroupAttribute = $detailedInformationData['ageGroupAttribute'];
-                return $this->replaceSnippetsInValue($ageGroupAttribute, $snippetData);
+                return $ageGroupAttribute;
             } else {
                 return '';
             }
@@ -33,7 +33,7 @@ class AgeGroup extends Field
             }
 
         } else if($detailedInformationData['ageGroup'] == self::CUSTOM_VALUE_TEXT) {
-            return $this->replaceSnippetsInValue($detailedInformationData['ageGroupCV'], $snippetData);
+            return $detailedInformationData['ageGroupCV'];
         } else {
             throw new \Exception('Unknown vale '.$detailedInformationData['ageGroup'].' for field ageGroup');
         }

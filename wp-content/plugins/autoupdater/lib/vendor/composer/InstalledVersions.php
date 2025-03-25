@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'd5ab492724f7d7ab087ff590c4463aa029b0c2ac',
+    'reference' => 'd3388955bd4565e0a7bbbed3fd4bc8e0270abbea',
     'name' => 'wpengine/autoupdater',
   ),
   'versions' => 
@@ -48,12 +48,12 @@ private static $installed = array (
     ),
     'paragonie/sodium_compat' => 
     array (
-      'pretty_version' => 'v1.20.0',
-      'version' => '1.20.0.0',
+      'pretty_version' => 'v1.21.1',
+      'version' => '1.21.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'e592a3e06d1fa0d43988c7c7d9948ca836f644b6',
+      'reference' => 'bb312875dcdd20680419564fe42ba1d9564b9e37',
     ),
     'wpengine/autoupdater' => 
     array (
@@ -62,7 +62,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'd5ab492724f7d7ab087ff590c4463aa029b0c2ac',
+      'reference' => 'd3388955bd4565e0a7bbbed3fd4bc8e0270abbea',
     ),
   ),
 );

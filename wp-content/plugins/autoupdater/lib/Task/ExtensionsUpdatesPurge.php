@@ -3,21 +3,13 @@ defined('AUTOUPDATER_LIB') or die;
 
 class AutoUpdater_Task_ExtensionsUpdatesPurge extends AutoUpdater_Task_Base
 {
-    public function __construct($payload)
-    {
-        parent::__construct($payload);
-
-        AutoUpdater_Loader::loadClass('Helper_SiteTransient');
-    }
+    protected $admin_privileges = true;
 
     /**
      * @return array
      */
     public function doTask()
     {
-        // Convince WordPress that we're currently viewing the update-core.php page
-        AutoUpdater_Helper_SiteTransient::simulateUpdateCorePage();
-
         $type = $this->input('type', '');
 
         switch ($type) {

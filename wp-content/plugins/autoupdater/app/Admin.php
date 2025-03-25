@@ -35,14 +35,15 @@ class AutoUpdater_WP_Admin
 
     public function __construct()
     {
-        if (!is_admin()) {
+        if (!is_admin() || AutoUpdater_Api::getInstance()->isInitialized()) {
             return;
         }
 
         global $pagenow;
         if ($pagenow === 'update-core.php') {
             AutoUpdater_Log::debug('---------- Displaying WP-Admin update-core.php page ----------');
-            AutoUpdater_Log::traceHooks();
+            // See which plugins and themes have hooked their updates
+            AutoUpdater_Log::traceRunningHooks();
         }
 
         add_filter('plugin_auto_update_setting_html', array($this, 'getAutoUpdateSettingHtml'));

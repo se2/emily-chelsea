@@ -364,6 +364,60 @@ function pmxe_pmxe_after_export($export_id, $export, $file = false)
 
         }
 
+		// Remove empty columns.
+	    if(!empty($export->options['csv_omit_empty_columns']) && $export->options['export_to'] == 'csv' && $export->options['export_to_sheet'] == 'csv' && @file_exists($filepath)){
+		    // Create a temporary file
+		    $tempFile = tempnam(sys_get_temp_dir(), 'temp_csv');
+
+		    // Open the input file for reading and the temporary file for writing
+		    $in = fopen($filepath, 'r');
+		    $out = fopen($tempFile, 'w');
+
+		    if ($in === FALSE || $out === FALSE) {
+			    // TODO: Add error handling.
+		    }
+
+		    // Read the header row.
+		    $header = fgetcsv($in, 0, XmlExportEngine::$exportOptions['delimiter']);
+		    $columnCount = count($header);
+		    $nonEmptyColumns = array_fill(0, $columnCount, false);
+
+		    // Determine non-empty columns by scanning through each data row.
+		    while (($row = fgetcsv($in, 0, XmlExportEngine::$exportOptions['delimiter'])) !== FALSE) {
+			    foreach ($row as $index => $value) {
+				    if (!empty($value)) {
+					    $nonEmptyColumns[$index] = true;
+				    }
+			    }
+		    }
+
+		    // Close and reopen the input file for reading from the beginning
+		    fclose($in);
+		    $in = fopen($filepath, 'r');
+
+		    // Write the header row with filtered columns.
+		    $header = fgetcsv($in, 0, XmlExportEngine::$exportOptions['delimiter']);
+		    $filteredHeader = array_filter($header, function($key) use ($nonEmptyColumns) {
+			    return $nonEmptyColumns[$key];
+		    }, ARRAY_FILTER_USE_KEY);
+		    fputcsv($out, array_values($filteredHeader), XmlExportEngine::$exportOptions['delimiter']);
+
+		    // Write the filtered data rows.
+		    while (($row = fgetcsv($in, 0, XmlExportEngine::$exportOptions['delimiter'])) !== FALSE) {
+			    $filteredRow = array_filter($row, function($key) use ($nonEmptyColumns) {
+				    return $nonEmptyColumns[$key];
+			    }, ARRAY_FILTER_USE_KEY);
+			    fputcsv($out, array_values($filteredRow), XmlExportEngine::$exportOptions['delimiter']);
+		    }
+
+		    // Close the files.
+		    fclose($in);
+		    fclose($out);
+
+		    // Overwrite the original file with our updated version.
+		    rename($tempFile, $filepath);
+	    }
+
         // make a temporary copy of current file
         if (empty($export->parent_id) and @file_exists($filepath) and @copy($filepath, str_replace(basename($filepath), '', $filepath) . 'current-' . basename($filepath))) {
             $exportOptions = $export->options;

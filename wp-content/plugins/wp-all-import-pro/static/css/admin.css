@@ -1192,6 +1192,7 @@ body.wpallimport-plugin {
 }
 .wpallimport-plugin input[type="radio"]{
 	margin-left: 4px;
+	margin-top: -3px;
 }
 
 .wpallimport-plugin .wpallimport-wrapper{
@@ -2931,7 +2932,7 @@ body.wpallimport-plugin {
 	overflow: hidden;
 }
 .wpallimport-plugin form.edit{
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 .wpallimport-plugin .switcher-target-is_keep_former_posts{
 	padding-left: 25px;
@@ -3175,6 +3176,10 @@ body.wpallimport-plugin {
 	}
 	.wpallimport-plugin #import_finished #download_log{
 		background: url('../img/ui_4.0/view_log.png') no-repeat 2px 0px;
+		padding-left: 25px;
+	}
+	.wpallimport-plugin #import_finished #re_run_import{
+		background: url('../img/ui_4.0/import_history.png') no-repeat 2px 0px;
 		padding-left: 25px;
 	}
 	.wpallimport-plugin #import_finished #import_history{

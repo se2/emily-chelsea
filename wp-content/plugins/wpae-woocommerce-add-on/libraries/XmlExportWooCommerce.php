@@ -44,7 +44,7 @@ if ( ! class_exists('XmlExportWooCommerce') )
 			);
 
 			$this->wooCommerceVersion = new \Pmwe\App\Service\WooCommerceVersion();
-			$this->_product_data = array('_sku', '_price', '_regular_price','_sale_price', '_stock_status', '_stock', '_product_url', 'total_sales', 'attributes');
+			$this->_product_data = array('_sku', '_global_unique_id', '_price', '_regular_price','_sale_price', '_stock_status', '_stock', '_product_url', 'total_sales', 'attributes');
 
 			// Old way of managing visibility
             if(!\Pmwe\App\Service\WooCommerceVersion::isWooCommerceNewerThan('3.0')) {
@@ -631,7 +631,7 @@ if ( ! class_exists('XmlExportWooCommerce') )
 
 								$taxonomy = get_taxonomy($taxonomy_slug);
 
-                                $taxonomy_slug_xpath = str_replace("-", "_", $taxonomy_slug);
+                                $taxonomy_slug_xpath = $taxonomy_slug;//str_replace("-", "_", $taxonomy_slug);
 								$data['Attribute Name (' . $taxonomy_slug_xpath . ')'] = $taxonomy->labels->singular_name;
 								$data['Attribute In Variations (' . $taxonomy_slug_xpath . ')'] = (!empty($_product_attributes[strtolower(urlencode($taxonomy_slug))]['is_variation'])) ? "yes" : "no";
 								$data['Attribute Is Visible (' . $taxonomy_slug_xpath . ')']    = (!empty($_product_attributes[strtolower(urlencode($taxonomy_slug))]['is_visible'])) ? "yes" : "no";
@@ -861,7 +861,7 @@ if ( ! class_exists('XmlExportWooCommerce') )
 						foreach (self::$_existing_attributes as $taxonomy_slug) {
 
 							$taxonomy = get_taxonomy($taxonomy_slug);
-                            $taxonomy_slug_xpath = str_replace("-", "_", $taxonomy_slug);
+                            $taxonomy_slug_xpath = $taxonomy_slug;//str_replace("-", "_", $taxonomy_slug);
                             $headers[] = 'Attribute Name (' . $taxonomy_slug_xpath . ')';
                             $headers[] = 'Attribute Value (' . $taxonomy_slug_xpath . ')';
                             $headers[] = 'Attribute In Variations (' . $taxonomy_slug_xpath . ')';
@@ -1018,6 +1018,9 @@ if ( ! class_exists('XmlExportWooCommerce') )
 					$templateOptions['single_product_sku'] = '{'. $element_name .'[1]}';
 					//$templateOptions['single_product_parent_id'] = '{parent_id[1]}';
 					break;
+				case '_global_unique_id':
+					$templateOptions['single_product_global_unique_id'] = '{'. $element_name .'[1]}';
+					break;
 				case '_sale_price_dates_from':
 					$templateOptions['single_sale_price_dates_from'] = '{'. $element_name .'[1]}';
 					break;
@@ -1121,7 +1124,7 @@ if ( ! class_exists('XmlExportWooCommerce') )
 
 						if (strpos($obj->name, "pa_") === 0 and strlen($obj->name) > 3)
 						{
-                            $attribute_name = preg_replace('/[^a-z0-9_]/i', '', str_replace("-", "_", $obj->name));
+                            $attribute_name = preg_replace('/[^a-z0-9_]/i', '', str_replace("-", "", $obj->name));// Remove dashes to match WPAI behavior.
 
                             if ($is_xml_template)
                             {
@@ -1241,8 +1244,8 @@ if ( ! class_exists('XmlExportWooCommerce') )
 
                                 foreach ($attributeOptions as $templateKey => $xpathKey){
 
-                                    if(!is_array($templateOptions[$templateKey])) {
-                                        continue;
+                                    if(!isset($templateOptions[$templateKey]) || !is_array($templateOptions[$templateKey])) {
+	                                    $templateOptions[$templateKey] = [];
                                     }
                                     
                                     if ( ! in_array('{'. $xpathKey . $attribute_name .'[1]}', $templateOptions[$templateKey]) ){

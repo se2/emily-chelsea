@@ -29,9 +29,6 @@ class AutoUpdater_Task_ExtensionsUpdatesRefresh extends AutoUpdater_Task_Base
         AutoUpdater_Loader::loadClass('Helper_Extension');
         AutoUpdater_Helper_Extension::loadMasterSliderPro();
 
-        // Convince WordPress that we're currently viewing the update-core.php page
-        AutoUpdater_Helper_SiteTransient::simulateUpdateCorePage();
-
         switch ($type) {
             case 'plugin':
                 wp_update_plugins();

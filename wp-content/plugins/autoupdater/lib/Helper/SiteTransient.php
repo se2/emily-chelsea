@@ -280,18 +280,4 @@ class AutoUpdater_Helper_SiteTransient
 
         return $this->transient_deleted_by;
     }
-
-    /**
-     *
-     * Convinces WordPress that we are currently viewing the update-core.php page.
-     *
-     */
-    public static function simulateUpdateCorePage()
-    {
-        // Done on purpose
-        global $pagenow;
-        $pagenow = 'update-core.php'; // phpcs:ignore
-
-        do_action('load-update-core.php');
-    }
 }

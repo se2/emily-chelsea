@@ -14,7 +14,6 @@ class AutoUpdater_Task_Extensions extends AutoUpdater_Task_Base
     public function doTask()
     {
         AutoUpdater_Loader::loadClass('Helper_Version');
-        AutoUpdater_Loader::loadClass('Helper_SiteTransient');
 
         AutoUpdater_Config::set('update_themes', (int) $this->input('update_themes', 0));
 
@@ -142,8 +141,10 @@ class AutoUpdater_Task_Extensions extends AutoUpdater_Task_Base
      */
     protected function getUpdatesFromRemoteServers()
     {
-        // Convince WordPress that we're currently viewing the update-core.php page
-        AutoUpdater_Helper_SiteTransient::simulateUpdateCorePage();
+        if (AutoUpdater_Config::get('debug')) {
+            // See which plugins and themes have hooked their updates
+            AutoUpdater_Log::traceRegisteredHooks();
+        }
 
         // get updates
         $core = get_site_transient('update_core');

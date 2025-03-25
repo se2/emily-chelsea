@@ -16,6 +16,10 @@ class ComposerStaticInit5ad073a7de8b1bb08996e6274fe48cad
             'phpseclib\\' => 10,
             'phpseclib3\\' => 11,
         ),
+        'e' => 
+        array (
+            'enshrined\\svgSanitize\\' => 22,
+        ),
         'W' => 
         array (
             'Wpai\\' => 5,
@@ -39,6 +43,10 @@ class ComposerStaticInit5ad073a7de8b1bb08996e6274fe48cad
         'phpseclib3\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
+        'enshrined\\svgSanitize\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/enshrined/svg-sanitize/src',
         ),
         'Wpai\\' => 
         array (
