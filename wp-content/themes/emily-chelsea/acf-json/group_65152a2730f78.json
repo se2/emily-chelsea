@@ -882,6 +882,27 @@
             "delay": 0
         },
         {
+            "key": "field_67e216580278b",
+            "label": "Sign up form",
+            "name": "sign_up_form",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_65465aca9bdde",
             "label": "Social",
             "name": "social",
@@ -1219,5 +1240,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1732847695
+    "modified": 1742870147
 }

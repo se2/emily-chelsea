@@ -78,7 +78,7 @@ var __webpack_exports__ = {};
       if (FWP.loaded) {
         // Run only after the initial page load
         $('html, body').animate({
-          scrollTop: $('.woocommerce-products-header').offset().top // Scroll to the top of the element with class "woocommerce-products-header"
+          scrollTop: $('.woocommerce-products-header').offset().top // Scroll to the top of the element with class "facetp-template"
         }, 500);
       }
     });

@@ -50,38 +50,58 @@ if (!empty($footer_enable_parallax)) {
                     ));
                 }
                 ?>
+                <?php
+                if (!empty($certified_image)) {
+                ?>
+                    <div class="main-footer__certified">
+                        <?php echo wp_get_attachment_image($certified_image['id'], 'full') ?>
+                    </div>
+                <?php
+                }
+                ?>
             </div>
         <?php
         }
         ?>
 
         <div class="main-footer__item text-center main-footer__info">
-            <div class="ttg-post main-footer__address">
-                <?php
-                the_field('address', 'options');
-                ?>
-            </div>
+
             <a class="d-block main-footer__logo" href="<?php echo get_bloginfo('url') ?>">
                 <?php echo TTG_Template::get_icon('logo'); ?>
             </a>
             <div class="ttg-post main-footer__address">
                 <?php
+                the_field('address', 'options');
+                ?>
+            </div>
+            <div class="ttg-post main-footer__open-times">
+                <?php
                 the_field('open_times', 'options');
                 ?>
             </div>
+            <div class="main-footer__social">
+                <?php
+                echo TTG_Template::get_template_part('socials', ['socials' => $social]);
+                ?>
+            </div>
+
         </div>
 
-        <div class="main-footer__item text-center main-footer__social">
+        <?php
+        if (!empty($certified_image)) {
+        ?>
+            <div class="main-footer__certified main-footer__item text-center main-footer__certified--mobile">
+                <?php echo wp_get_attachment_image($certified_image['id'], 'full') ?>
+            </div>
+        <?php
+        }
+        ?>
+
+        <div class="main-footer__item text-center main-footer__signup">
             <?php
-            echo TTG_Template::get_template_part('socials', ['socials' => $social]);
-            ?>
-            <?php
-            if (!empty($certified_image)) {
-            ?>
-                <div class="main-footer__certified">
-                    <?php echo wp_get_attachment_image($certified_image['id'], 'full') ?>
-                </div>
-            <?php
+            $signup_form = get_field('sign_up_form', 'options');
+            if (!empty($signup_form)) {
+                echo do_shortcode($signup_form);
             }
             ?>
         </div>
