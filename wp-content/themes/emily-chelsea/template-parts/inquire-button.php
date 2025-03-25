@@ -34,7 +34,7 @@ $custom_inquiry = get_field('custom_inquiry', 'options');
                         </div>
                         <h3 class="product-inquiry-form__title">ASK A QUESTION</h3>
                         <h2 class="product-inquiry-form__product-title"><?php echo get_the_title($post); ?></h2>
-                        <?php echo do_shortcode('[gravityform id="6" ajax="true" title="true"]') ?>
+                        <?php echo do_shortcode('[gravityform id="6" title="true"]') ?>
                     </div>
                 </div>
             </div>

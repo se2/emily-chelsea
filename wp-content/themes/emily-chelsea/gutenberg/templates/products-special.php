@@ -27,7 +27,7 @@ $products = new WP_Query(array(
     </ul>
     <nav class="woocommerce-pagination">
         <?php
-        echo do_shortcode('[facetwp facet="load_more"]');
+        echo do_shortcode('[facetwp facet="pagination"]');
         echo do_shortcode('[facetwp facet="result_count"]');
         ?>
     </nav>

@@ -36,7 +36,7 @@ if (count($filters) < 3) {
 }
 
 ?>
-<div class="products-filter" <?php echo TTG_Util::generate_html_attrs($attrs); ?>>
+<div class="products-filter" id="products-filter" <?php echo TTG_Util::generate_html_attrs($attrs); ?>>
     <div class="d-md-flex flex-md-wrap align-items-md-center">
         <h3 class="products-filter__title">FILTER BY:</h3>
         <input class="products-filter__checkbox" type="checkbox" />

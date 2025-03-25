@@ -2,3 +2,6 @@
 Theme Name: TTG Base Theme
 Author: TTG
 */
+.grecaptcha-badge {
+    opacity: 0 !important;
+}

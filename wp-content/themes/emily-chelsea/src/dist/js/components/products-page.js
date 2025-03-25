@@ -4,7 +4,10 @@ var __webpack_exports__ = {};
   !*** ./assets/js/components/products-page.js ***!
   \***********************************************/
 (function ($) {
-  $(".products-filter").stick_in_parent();
+  console.log('stick_in_parent');
+  $(window).on('load', function() {
+    $(".products-filter, #products-filter").stick_in_parent();
+  });
 })(jQuery);
 /******/ })()
 ;

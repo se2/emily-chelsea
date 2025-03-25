@@ -73,6 +73,16 @@ var __webpack_exports__ = {};
       $(".header-search__form input").focus();
     }
   });
+  (function ($) {
+    $(document).on('facetwp-loaded', function () {
+      if (FWP.loaded) {
+        // Run only after the initial page load
+        $('html, body').animate({
+          scrollTop: $('.woocommerce-products-header').offset().top // Scroll to the top of the element with class "woocommerce-products-header"
+        }, 500);
+      }
+    });
+  })(jQuery);
 })(jQuery);
 /******/ })()
 ;

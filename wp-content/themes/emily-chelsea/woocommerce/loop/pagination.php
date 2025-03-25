@@ -33,7 +33,8 @@ if ($total <= 1) {
 <nav class="woocommerce-pagination">
 	<?php
 	if (is_tax('product_cat') || is_shop() || is_home()) {
-		echo do_shortcode('[facetwp facet="load_more"]');
+		// echo do_shortcode('[facetwp facet="load_more"]');
+		echo do_shortcode('[facetwp facet="pagination"]');
 		echo do_shortcode('[facetwp facet="result_count"]');
 	} else {
 		echo paginate_links(
