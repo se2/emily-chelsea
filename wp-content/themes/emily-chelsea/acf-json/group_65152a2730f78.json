@@ -764,6 +764,26 @@
             "bidirectional_target": []
         },
         {
+            "key": "field_67e413a421322",
+            "label": "Header Phone",
+            "name": "header_phone",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Please select default style for header",
+            "required": false,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_651554f27e81d",
             "label": "Footer",
             "name": "",
@@ -1240,5 +1260,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1742870147
+    "modified": 1743000524
 }

@@ -23,24 +23,33 @@
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-5NRGW2NN');
     </script>
-    <!-- End Google Tag Manager --> 
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '146856861782937');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=146856861782937&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
+    <!-- End Google Tag Manager -->
+    <!-- Meta Pixel Code -->
+    <script>
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '146856861782937');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=146856861782937&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
     <?php wp_head(); ?>
 </head>
 
@@ -62,6 +71,9 @@ $attr = ['style' => apply_filters('body_attr_style', [])];
             <div class="toggle-nav-btn__text">CLOSE MENU</div>
         </div>
     </button>
+    <a class="header-phone header-phone--mobile" href="tel:<?php the_field("header_phone", "option"); ?>">
+        <?php echo TTG_Template::get_icon('phone'); ?>
+    </a>
     <?php echo TTG_Template::get_template_part('main-navigation'); ?>
 
     <div id="wrapper">

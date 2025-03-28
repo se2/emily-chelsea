@@ -22,9 +22,13 @@ $attr = [
             </div>
             <div class="main-header__right">
                 <div class="main-header__actions">
+                    <a class="header-phone" href="tel:<?php the_field("header_phone", "option"); ?>">
+                        <?php echo TTG_Template::get_icon('phone'); ?>
+                    </a>
                     <div class="header-search">
                         <form action="<?php echo home_url() ?>" class="header-search__form">
                             <input class="header-search__form__toggle" type="checkbox">
+
                             <div class="header-search__form__inner">
                                 <div class="header-search__form__input-wrapper">
                                     <input value="<?php echo get_query_var('s') ?>" placeholder="Search..." type="text" class="form-control" name="s">

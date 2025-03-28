@@ -198,7 +198,28 @@ body.scroll-up {
 		}
 	}
 }
-
+.header-phone {
+	margin-right: 30px;
+	svg {
+		width: 28px;
+		height: 28px;
+	}
+}
+.header-phone--mobile {
+	display: none;
+}
+@media (max-width: 767px) {
+	.header-phone {
+		display: none;
+	}
+	.header-phone--mobile {
+		z-index: 88;
+		position: fixed;
+		top: 40px;
+		left: 85px;
+		display: block;
+	}
+}
 .toggle-nav-btn {
 	$this: &;
 	z-index: 88;
