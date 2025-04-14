@@ -1,0 +1,121 @@
+.product-inquiry-form-modal {
+  width: 95%;
+  max-width: 1280px;
+  overflow: auto;
+  top: 20px;
+  bottom: 20px;
+}
+.product-inquiry-form-modal.open {
+  display: block;
+}
+.product-inquiry-form-modal .modal__inner {
+  padding: 0;
+  border-radius: 0;
+}
+.product-inquiry-form-modal .modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d7bc99;
+  border-radius: 0;
+  border: 0;
+  width: 43px;
+  height: 43px;
+  color: #fff;
+  top: auto;
+}
+
+.product-inquiry-form__inner {
+  display: flex;
+  flex-wrap: wrap;
+}
+.product-inquiry-form__left {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-inquiry-form__left img {
+  width: 300px;
+  display: block;
+  margin: 0 auto;
+}
+.product-inquiry-form__right {
+  flex: 0 0 100%;
+  padding: 15px 15px;
+}
+.product-inquiry-form__title {
+  text-align: center;
+  font: normal normal 600 18px/26px Outfit;
+  letter-spacing: 2.7px;
+  color: #bc8f55;
+  text-transform: uppercase;
+}
+.product-inquiry-form__product-title {
+  text-align: center;
+  font: normal normal normal 25px/26px New Forest;
+  letter-spacing: 0px;
+  color: #363636;
+  margin: 0 0 20px 0;
+}
+.product-inquiry-form__icon {
+  text-align: center;
+  width: 23px;
+  color: #bc8f55;
+  margin: 0 auto;
+  top: 0;
+}
+.product-inquiry-form__icon svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.product-inquiry-form .gform_footer {
+  justify-content: center !important;
+}
+.product-inquiry-form .gform_footer .gform_button {
+  width: auto !important;
+}
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=color]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=date]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=datetime-local]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=datetime]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=email]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=month]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=number]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=password]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=search]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=tel]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=text]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=time]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=url]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme input[type=week]::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme select::-moz-placeholder, .product-inquiry-form .gform_wrapper.gravity-theme textarea::-moz-placeholder {
+  opacity: 0.21;
+}
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=color]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=date]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=datetime-local]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=datetime]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=email]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=month]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=number]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=password]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=search]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=tel]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=text]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=time]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=url]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme input[type=week]::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme select::placeholder,
+.product-inquiry-form .gform_wrapper.gravity-theme textarea::placeholder {
+  opacity: 0.21;
+}
+@media (min-width: 1100px) {
+  .product-inquiry-form__left {
+    flex: 0 0 54%;
+  }
+  .product-inquiry-form__left img {
+    width: 90%;
+  }
+  .product-inquiry-form__right {
+    flex: 0 0 46%;
+    border-left: 1px solid #bc8f55;
+    padding: 70px 35px;
+  }
+  .product-inquiry-form__product-title {
+    text-align: center;
+    font: normal normal normal 40px/46px New Forest;
+    letter-spacing: 0px;
+    color: #363636;
+    margin: 0 0 50px 0;
+  }
+}
+
+/*# sourceMappingURL=product-inquiry-form.css.map*/

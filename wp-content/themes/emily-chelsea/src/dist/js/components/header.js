@@ -83,6 +83,11 @@ var __webpack_exports__ = {};
       }
     });
   })(jQuery);
+  var phoneBlock = document.querySelector('.header-phone--desktop');
+  var phoneNumber = phoneBlock.querySelector('.header-phone--number');
+  phoneBlock.addEventListener('click', function () {
+    phoneNumber.classList.toggle('show');
+  });
 })(jQuery);
 /******/ })()
 ;

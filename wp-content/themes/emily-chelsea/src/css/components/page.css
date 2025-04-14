@@ -1,0 +1,18 @@
+.main-header {
+  background: transparent;
+  z-index: 2;
+}
+.main-header:before {
+  border-color: var(--cl-border);
+}
+
+.header-line {
+  height: var(--header-line-height-m, 460px);
+}
+@media (min-width: 992px) {
+  .header-line {
+    height: var(--header-line-height, 600px);
+  }
+}
+
+/*# sourceMappingURL=page.css.map*/

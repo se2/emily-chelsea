@@ -85,4 +85,12 @@
 			}
 		});
 	})(jQuery);
+
+	const phoneBlock = document.querySelector('.header-phone--desktop');
+	const phoneNumber = phoneBlock.querySelector('.header-phone--number');
+
+	phoneBlock.addEventListener('click', function () {
+		phoneNumber.classList.toggle('show');
+	});
+
 })(jQuery);

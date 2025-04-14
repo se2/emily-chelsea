@@ -200,20 +200,44 @@ body.scroll-up {
 }
 .header-phone {
 	margin-right: 30px;
+	&--mobile {
+		display: none;
+	}
+	&--desktop {
+		cursor: pointer;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		.header-phone--number {
+			display: block;
+			font: normal normal normal 18px/23px Outfit;
+			letter-spacing: 0px;
+			color: #ffffff;
+
+			width: 0;
+			opacity: 0;
+			overflow: hidden;
+			white-space: nowrap;
+			transition: width 0.5s ease, opacity 0.5s ease;
+			&.show {
+				width: 132px;
+				padding-left: 13px;
+				opacity: 1;
+			}
+		}
+	}
 	svg {
 		width: 28px;
 		height: 28px;
 	}
 }
-.header-phone--mobile {
-	display: none;
-}
+
 @media (max-width: 767px) {
 	.header-phone {
 		display: none;
 	}
 	.header-phone--mobile {
-		z-index: 88;
+		z-index: 99;
 		position: fixed;
 		top: 40px;
 		left: 85px;

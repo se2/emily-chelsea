@@ -1,0 +1,10 @@
+.wp-block-image {
+  margin: 0;
+  width: 100%;
+}
+.wp-block-image img {
+  height: auto !important;
+  width: 100% !important;
+}
+
+/*# sourceMappingURL=block-image.css.map*/

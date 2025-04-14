@@ -1,0 +1,143 @@
+.facetwp-facet {
+  margin: 0 !important;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap {
+  border: 0;
+  width: auto;
+  display: block;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap .fs-label-wrap {
+  border: 0;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap .fs-label-wrap .fs-label {
+  font-size: 0.875rem;
+  padding-left: 0;
+  color: #909090;
+  font-family: "Outfit", sans-serif;
+  text-transform: uppercase;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap .fs-search {
+  border: 1px solid var(--cl-gold);
+  background: #f4efef;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap .fs-search input {
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap.multiple .fs-option {
+  margin: 5px 0;
+}
+.facetwp-facet.facetwp-type-fselect .fs-arrow {
+  border-top: 5px solid #909090;
+}
+.facetwp-facet.facetwp-type-fselect .fs-arrow:before {
+  position: absolute;
+  left: -5px;
+  top: -7px;
+  content: "";
+  display: block;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap.multiple .fs-option.selected .fs-checkbox i {
+  background: var(--cl-gold);
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap.multiple .fs-option .fs-option-label {
+  font-size: 0.75rem;
+  font-family: "Outfit", sans-serif;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap.multiple .fs-option .fs-checkbox {
+  width: auto;
+}
+.facetwp-facet.facetwp-type-fselect .fs-wrap.multiple .fs-option .fs-checkbox i {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--cl-gold);
+  border-radius: 0;
+}
+.facetwp-facet .fs-dropdown {
+  min-width: 180px;
+  border: 1px solid var(--cl-gold);
+  padding: 20px 14px 15px;
+  transition: opacity 0.3s ease;
+}
+
+.facetwp-facet-instock .facetwp-checkbox,
+.facetwp-facet-available_in_fairmined_gold .facetwp-checkbox {
+  position: relative;
+  padding-left: 50px;
+  background: none !important;
+  color: #909090;
+}
+.facetwp-facet-instock .facetwp-checkbox:before,
+.facetwp-facet-available_in_fairmined_gold .facetwp-checkbox:before {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  content: "";
+  display: block;
+  width: 40px;
+  height: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 30px;
+}
+.facetwp-facet-instock .facetwp-checkbox:after,
+.facetwp-facet-available_in_fairmined_gold .facetwp-checkbox:after {
+  position: absolute;
+  left: 2px;
+  top: 4px;
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 100%;
+  z-index: 2;
+  background-color: #e3e3e3;
+  transition: left 0.2s linear;
+}
+.facetwp-facet-instock .facetwp-checkbox.checked:before,
+.facetwp-facet-available_in_fairmined_gold .facetwp-checkbox.checked:before {
+  border: 1px solid var(--cl-primary);
+}
+.facetwp-facet-instock .facetwp-checkbox.checked:after,
+.facetwp-facet-available_in_fairmined_gold .facetwp-checkbox.checked:after {
+  left: 22px;
+  background-color: var(--cl-primary);
+}
+
+.label-type-checkboxes {
+  position: relative;
+  padding-left: 50px !important;
+  background: 0 0 !important;
+}
+.label-type-checkboxes.disabled {
+  cursor: not-allowed;
+}
+.label-type-checkboxes:before {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  content: "";
+  display: block;
+  width: 40px;
+  height: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 30px;
+}
+.label-type-checkboxes:after {
+  position: absolute;
+  left: 2px;
+  top: 4px;
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 100%;
+  z-index: 2;
+  background-color: #e3e3e3;
+  transition: left 0.2s linear;
+}
+
+/*# sourceMappingURL=facetwp-facet.css.map*/
