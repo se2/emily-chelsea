@@ -71,12 +71,12 @@ $attr = ['style' => apply_filters('body_attr_style', [])];
             <div class="toggle-nav-btn__text">CLOSE MENU</div>
         </div>
     </button>
-    <a class="header-phone header-phone--mobile" href="tel:<?php the_field("header_phone", "option"); ?>">
-        <?php echo TTG_Template::get_icon('phone'); ?>
-    </a>
     <?php echo TTG_Template::get_template_part('main-navigation'); ?>
 
     <div id="wrapper">
+        <a class="header-phone header-phone--mobile" href="tel:<?php the_field("header_phone", "option"); ?>">
+            <?php echo TTG_Template::get_icon('phone'); ?>
+        </a>
         <?php echo TTG_Template::get_template_part('header'); ?>
 
         <div id="wrapper__inner">

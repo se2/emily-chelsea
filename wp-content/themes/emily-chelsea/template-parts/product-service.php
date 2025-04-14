@@ -2,8 +2,9 @@
 global $post;
 $product_services = get_field('product_services', 'options');
 $is_special_product = get_field('is_special_product', $post->ID);
+$hide_product_service = get_field('hide_product_service', $post->ID);
 $is_stone = has_term('center-stones', 'product_cat', $post);
-if (!empty($product_services) && !$is_special_product && !$is_stone) {
+if (!empty($product_services) && !$is_special_product && !$is_stone && !$hide_product_service) {
     $product = wc_get_product($post->ID);
     $attributes = $product->get_attributes();
     $meta_type = isset($attributes['pa_metal-type']) ? $attributes['pa_metal-type'] : '';

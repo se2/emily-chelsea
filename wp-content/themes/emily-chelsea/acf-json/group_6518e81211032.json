@@ -6,6 +6,7 @@
             "key": "field_65ddba8298a34",
             "label": "Order Number",
             "name": "order_number",
+            "aria-label": "",
             "type": "number",
             "instructions": "",
             "required": 0,
@@ -27,6 +28,7 @@
             "key": "field_65e6c998605fe",
             "label": "Is Special Product",
             "name": "is_special_product",
+            "aria-label": "",
             "type": "true_false",
             "instructions": "This product don't show \"Add To Cart\" button and it will exclude from shop page. Appointment and Inquiry button will show.",
             "required": 0,
@@ -46,6 +48,7 @@
             "key": "field_66225141fa0b2",
             "label": "Hide Quantity",
             "name": "hide_quantity",
+            "aria-label": "",
             "type": "true_false",
             "instructions": "",
             "required": 0,
@@ -62,9 +65,31 @@
             "ui_off_text": ""
         },
         {
+            "key": "field_67fcb7ee0521b",
+            "label": "Hide Product Service",
+            "name": "hide_product_service",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 1,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_65f81637c2619",
             "label": "Hide product from catalog listing",
             "name": "hide_product_from_catalog_listing",
+            "aria-label": "",
             "type": "true_false",
             "instructions": "",
             "required": 0,
@@ -84,6 +109,7 @@
             "key": "field_65f847cd3972b",
             "label": "Center Stone",
             "name": "center_stone",
+            "aria-label": "",
             "type": "select",
             "instructions": "",
             "required": 0,
@@ -110,6 +136,7 @@
             "key": "field_658e274ab754a",
             "label": "CTA",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -120,12 +147,14 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_6518e81f4bfe2",
             "label": "CTAs",
             "name": "product_ctas",
+            "aria-label": "",
             "type": "relationship",
             "instructions": "",
             "required": 0,
@@ -147,12 +176,14 @@
             "elements": "",
             "min": "",
             "max": "",
-            "return_format": "object"
+            "return_format": "object",
+            "bidirectional_target": []
         },
         {
             "key": "field_65223269d751a",
             "label": "Gallery",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -163,12 +194,14 @@
                 "id": ""
             },
             "placement": "left",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_6523daef426b6",
             "label": "Anchor Title",
             "name": "anchor_title",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -188,6 +221,7 @@
             "key": "field_6523db13426b7",
             "label": "Gallery Title",
             "name": "gallery_title",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -207,6 +241,7 @@
             "key": "field_6522327ad751b",
             "label": "Gallery",
             "name": "product_gallery",
+            "aria-label": "",
             "type": "gallery",
             "instructions": "",
             "required": 0,
@@ -234,6 +269,7 @@
             "key": "field_658e27308cdbc",
             "label": "Video Gallery",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -244,12 +280,14 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_658e248626122",
             "label": "Video Gallery",
             "name": "product_video_gallery",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -263,12 +301,13 @@
             "min": 0,
             "max": 0,
             "layout": "table",
-            "button_label": "",
+            "button_label": "Add Row",
             "sub_fields": [
                 {
                     "key": "field_658e2463d9c84",
                     "label": "Type",
                     "name": "type",
+                    "aria-label": "",
                     "type": "select",
                     "instructions": "",
                     "required": 0,
@@ -278,7 +317,6 @@
                         "class": "",
                         "id": ""
                     },
-                    "aria-label": "",
                     "wpml_cf_preferences": 1,
                     "choices": {
                         "file": "Upload Video",
@@ -291,12 +329,14 @@
                     "allow_null": 0,
                     "ui": 0,
                     "ajax": 0,
-                    "placeholder": ""
+                    "placeholder": "",
+                    "parent_repeater": "field_658e248626122"
                 },
                 {
                     "key": "field_658e2463d9cc4",
                     "label": "Poster",
                     "name": "poster",
+                    "aria-label": "",
                     "type": "image",
                     "instructions": "",
                     "required": 0,
@@ -306,7 +346,6 @@
                         "class": "",
                         "id": ""
                     },
-                    "aria-label": "",
                     "wpml_cf_preferences": 1,
                     "return_format": "array",
                     "library": "all",
@@ -317,12 +356,14 @@
                     "max_height": "",
                     "max_size": "",
                     "mime_types": "",
-                    "preview_size": "medium"
+                    "preview_size": "medium",
+                    "parent_repeater": "field_658e248626122"
                 },
                 {
                     "key": "field_658e2463d9cd0",
                     "label": "File",
                     "name": "file",
+                    "aria-label": "",
                     "type": "file",
                     "instructions": "",
                     "required": 0,
@@ -340,18 +381,19 @@
                         "class": "",
                         "id": ""
                     },
-                    "aria-label": "",
                     "wpml_cf_preferences": 1,
                     "return_format": "array",
                     "library": "all",
                     "min_size": "",
                     "max_size": "",
-                    "mime_types": ""
+                    "mime_types": "",
+                    "parent_repeater": "field_658e248626122"
                 },
                 {
                     "key": "field_658e2463d9cd8",
                     "label": "Youtube Id",
                     "name": "youtube_id",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -369,18 +411,19 @@
                         "class": "",
                         "id": ""
                     },
-                    "aria-label": "",
                     "wpml_cf_preferences": 1,
                     "default_value": "",
                     "maxlength": "",
                     "placeholder": "",
                     "prepend": "",
-                    "append": ""
+                    "append": "",
+                    "parent_repeater": "field_658e248626122"
                 },
                 {
                     "key": "field_658e2463d9cdd",
                     "label": "Vimeo Id",
                     "name": "vimeo_id",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -398,15 +441,16 @@
                         "class": "",
                         "id": ""
                     },
-                    "aria-label": "",
                     "wpml_cf_preferences": 1,
                     "default_value": "",
                     "maxlength": "",
                     "placeholder": "",
                     "prepend": "",
-                    "append": ""
+                    "append": "",
+                    "parent_repeater": "field_658e248626122"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         }
     ],
     "location": [
@@ -426,5 +470,6 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1713525445
+    "show_in_rest": 0,
+    "modified": 1744615619
 }

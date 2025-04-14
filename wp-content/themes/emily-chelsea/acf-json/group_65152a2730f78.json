@@ -784,6 +784,27 @@
             "append": ""
         },
         {
+            "key": "field_67fc8d12ffbd0",
+            "label": "Header Phone Text",
+            "name": "header_phone_text",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Please select default style for header",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_651554f27e81d",
             "label": "Footer",
             "name": "",
@@ -1260,5 +1281,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1743000524
+    "modified": 1744604447
 }
