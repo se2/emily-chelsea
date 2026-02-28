@@ -9,7 +9,6 @@
     "/dist/js/components/single-product.js": "/dist/js/components/single-product.js",
     "/dist/js/components/video.js": "/dist/js/components/video.js",
     "/dist/js/pages/build-ring.js": "/dist/js/pages/build-ring.js",
-    "/dist/js/pages/cart.js": "/dist/js/pages/cart.js",
     "/dist/js/pages/checkout.js": "/dist/js/pages/checkout.js",
     "/dist/js/pages/single-product.js": "/dist/js/pages/single-product.js",
     "/dist/css/components/block-quote.css": "/dist/css/components/block-quote.css",
@@ -56,7 +55,6 @@
     "/dist/img/certify.png": "/dist/img/certify.png",
     "/dist/img/loading.gif": "/dist/img/loading.gif",
     "/dist/img/return.png": "/dist/img/return.png",
-    "/dist/img/ring.png": "/dist/img/ring.png",
     "/dist/img/search-icon.svg": "/dist/img/search-icon.svg",
     "/dist/img/video-layer-btn.png": "/dist/img/video-layer-btn.png"
 }
