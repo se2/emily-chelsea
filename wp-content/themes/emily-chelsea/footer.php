@@ -9,8 +9,8 @@
 <link href="<?php echo get_theme_file_uri('/src/fonts/newforest/stylesheet.css') ?>" rel="stylesheet">
 <?php wp_footer(); ?> 
 
-<script type="text/javascript" src="//cdn.callrail.com/companies/610408877/ef5813f66463f3076460/12/swap.js"></script> 
-
+ <script nowprocket> (function(){ var s = document.createElement('script'); var h = document.querySelector('head') || document.body; s.src = 'https://acsbapp.com/apps/app/dist/js/app.js'; s.async = true; s.onload = function(){ acsbJS.init(); }; h.appendChild(s); })(); </script>
+<script type="text/javascript" src="//cdn.callrail.com/companies/610408877/ef5813f66463f3076460/12/swap.js"></script>
 </body>
 
 </html>

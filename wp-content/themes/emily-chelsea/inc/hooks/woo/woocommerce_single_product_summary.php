@@ -16,13 +16,30 @@ remove_action('woocommerce_single_product_summary', 'woocommerce_template_single
 remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
 
 add_action('woocommerce_single_product_summary', function () {
+    global $product;
+    $stock_status = $product->get_stock_status();
+    if ($stock_status != 'outofstock') {
+?>
+        <style>
+            .available-on-backorder {
+                display: none;
+            }
+        </style>
+    <?php
+    }
+});
+
+add_action('woocommerce_single_product_summary', function () {
     global $post;
     global $product;
     $anchor_title = get_field('anchor_title', $post->ID);
+    $stock_label = '';
 
-    if ($product->get_type() === 'simple') {
-        echo wc_get_stock_html($product);
+    if (!$product->is_in_stock()) {
+        $stock_label = '<div class="summary-spacing" style="color:#fa5160; margin-bottom:20px"><span class="stock-status stock-status--out-of-stock" >Out of stock</span></div>';
     }
+
+    echo $stock_label;
 
     echo '<div class="summary-spacing">' . TTG_Template::get_template_part('add-stone-button', ['product' => $product]) . '</div>';
 
@@ -47,7 +64,7 @@ add_action('woocommerce_single_product_summary', function () {
         echo TTG_Template::get_template_part('product-custom-buttons');
     }
     if (!$product->is_in_stock() && !$is_special_product && $product->is_type('simple')) {
-?>
+    ?>
         <div class="cart"></div>
         <div class="product-line"></div>
 <?php

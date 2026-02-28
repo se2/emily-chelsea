@@ -5,7 +5,7 @@ var __webpack_exports__ = {};
   \*************************************/
 (function ($) {
   $("#order-review-wrapper").stick_in_parent({
-    recalc_every: true
+    recalc_every: false
   });
 })(jQuery);
 /******/ })()

@@ -1,3 +1,3 @@
 (function ($) {
-	$(".products-filter").stick_in_parent();
+	$(".products-filter::not(.products-filter--not-sticky)").stick_in_parent();
 })(jQuery);

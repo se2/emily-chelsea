@@ -77,20 +77,23 @@
 		}
 	});
 	(function ($) {
-		$(document).on('facetwp-loaded', function () {
-			if (FWP.loaded) { // Run only after the initial page load
-				$('html, body').animate({
-					scrollTop: $('.woocommerce-products-header').offset().top // Scroll to the top of the element with class "facetp-template"
-				}, 500);
+		$(document).on("facetwp-loaded", function () {
+			if (FWP.loaded) {
+				// Run only after the initial page load
+				$("html, body").animate(
+					{
+						scrollTop: $("#main-content").offset().top, // Scroll to the top of the element with class "facetp-template"
+					},
+					500,
+				);
 			}
 		});
 	})(jQuery);
 
-	const phoneBlock = document.querySelector('.header-phone--desktop');
-	const phoneNumber = phoneBlock.querySelector('.header-phone--number');
+	const phoneBlock = document.querySelector(".header-phone--desktop");
+	const phoneNumber = phoneBlock.querySelector(".header-phone--number");
 
-	phoneBlock.addEventListener('click', function () {
-		phoneNumber.classList.toggle('show');
+	phoneBlock.addEventListener("click", function () {
+		phoneNumber.classList.toggle("show");
 	});
-
 })(jQuery);

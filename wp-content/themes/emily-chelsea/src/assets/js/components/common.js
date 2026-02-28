@@ -17,9 +17,6 @@
 	$(document).on("facetwp-loaded", function () {
 		console.log("FWP.settings", FWP);
 		if (!FWP.settings) return;
-		$('html, body').animate({
-			scrollTop: $('.facetwp-template').offset().top - 120// Scroll to the top of the element with class "facetp-template"
-		}, 500);
 		$.each(FWP.settings.num_choices, function (key, val) {
 			// assuming each facet is wrapped within a "facet-wrap" container element
 			// this may need to change depending on your setup, for example:
@@ -102,6 +99,11 @@
 		const options = $(select).find("option");
 		const selectedOption = $(select).find("option:selected");
 		let listItems = "";
+		const currentEl = jQuery(document).find("#" + id);
+
+		if (currentEl.length) {
+			currentEl.remove();
+		}
 
 		$.each(options, function (index, el) {
 			const text = $(el).html();

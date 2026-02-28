@@ -94,7 +94,6 @@
   padding-right: 100px;
   display: block;
   color: #000;
-  font-size: 20px;
   letter-spacing: 0.15;
   text-transform: uppercase;
   -webkit-appearance: none;
@@ -109,6 +108,7 @@
 @media (min-width: 1100px) {
   .product-detail__info__right .entry-summary .variations .value select {
     padding-left: 60px;
+    font-size: 20px;
   }
 }
 .product-detail__info__line {

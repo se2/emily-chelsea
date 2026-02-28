@@ -61,6 +61,9 @@
 
 		@include media-breakpoint-up(md) {
 			width: 170px;
+			.quantity {
+				width: 170px;
+			}
 		}
 	}
 	.quantity {
