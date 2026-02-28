@@ -38,6 +38,21 @@ function pmxe_wp_ajax_wpallexport()
 
     wp_reset_postdata();
 
+	if(empty($exportOptions['cpt'])) {
+		$postTypes           = [];
+		$exportqueryPostType = [];
+
+		if ( isset( $exportOptions['exportquery'] ) && ! empty( $exportOptions['exportquery']->query['post_type'] ) ) {
+			$exportqueryPostType = [ $exportOptions['exportquery']->query['post_type'] ];
+		}
+
+		if ( empty( $postTypes ) ) {
+			$postTypes = $exportqueryPostType;
+		}
+
+		$exportOptions['cpt'] = $postTypes;
+	}
+
     XmlExportEngine::$exportOptions = $exportOptions;
     XmlExportEngine::$is_user_export = $exportOptions['is_user_export'];
     XmlExportEngine::$is_woo_customer_export = $exportOptions['is_woo_customer_export'];
@@ -152,7 +167,7 @@ function pmxe_wp_ajax_wpallexport()
                 add_filter('posts_where', 'wp_all_export_numbering_where', 15, 1);
 
 
-                if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive()) {
+                if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() || XMLExportEngine::get_addons_service()->isWooCommerceOrderAddonActive()) {
                     $exportQuery = new \Wpae\WordPress\OrderQuery();
 
                     $foundPosts = count($exportQuery->getOrders());
@@ -238,7 +253,7 @@ function pmxe_wp_ajax_wpallexport()
     else if (in_array('shop_order', $exportOptions['cpt']) && PMXE_Plugin::hposEnabled()) {
             add_filter('posts_where', 'wp_all_export_numbering_where', 15, 1);
 
-            if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive()) {
+            if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() || XMLExportEngine::get_addons_service()->isWooCommerceOrderAddonActive()) {
                 $exportQuery = new \Wpae\WordPress\OrderQuery();
 
                 $totalOrders = $exportQuery->getOrders();
@@ -254,7 +269,7 @@ function pmxe_wp_ajax_wpallexport()
     }
     else {
 
-        if(strpos($exportOptions['cpt'][0], 'custom_') === 0) {
+	    if(is_array($exportOptions['cpt']) && !empty($exportOptions['cpt']) && strpos(reset($exportOptions['cpt']), 'custom_') === 0) {
 
             $addon = GF_Export_Add_On::get_instance();
 
@@ -317,8 +332,9 @@ function pmxe_wp_ajax_wpallexport()
     }
 
     $functions = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
-    if (@file_exists($functions))
-        require_once $functions;
+	$functions = apply_filters( 'wp_all_export_functions_file_path', $functions );
+	if (@file_exists($functions))
+		\Wpae\Integrations\CodeBox::requireFunctionsFile();
 
     // Export posts
     XmlCsvExport::export();

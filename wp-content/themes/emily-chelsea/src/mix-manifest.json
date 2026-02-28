@@ -1,4 +1,5 @@
 {
+    "/dist/js/components/build-ring-selection.js": "/dist/js/components/build-ring-selection.js",
     "/dist/js/components/common.js": "/dist/js/components/common.js",
     "/dist/js/components/header.js": "/dist/js/components/header.js",
     "/dist/js/components/media.js": "/dist/js/components/media.js",
@@ -7,6 +8,8 @@
     "/dist/js/components/quantity.js": "/dist/js/components/quantity.js",
     "/dist/js/components/single-product.js": "/dist/js/components/single-product.js",
     "/dist/js/components/video.js": "/dist/js/components/video.js",
+    "/dist/js/pages/build-ring.js": "/dist/js/pages/build-ring.js",
+    "/dist/js/pages/cart.js": "/dist/js/pages/cart.js",
     "/dist/js/pages/checkout.js": "/dist/js/pages/checkout.js",
     "/dist/js/pages/single-product.js": "/dist/js/pages/single-product.js",
     "/dist/css/components/block-quote.css": "/dist/css/components/block-quote.css",
@@ -21,6 +24,7 @@
     "/dist/css/pages/my-account.css": "/dist/css/pages/my-account.css",
     "/dist/css/pages/checkout.css": "/dist/css/pages/checkout.css",
     "/dist/css/pages/cart.css": "/dist/css/pages/cart.css",
+    "/dist/css/pages/build-ring.css": "/dist/css/pages/build-ring.css",
     "/dist/css/pages/blog.css": "/dist/css/pages/blog.css",
     "/dist/css/components/wp-reset-editor-styles.css": "/dist/css/components/wp-reset-editor-styles.css",
     "/dist/css/components/woocommerce-products-header.css": "/dist/css/components/woocommerce-products-header.css",
@@ -43,6 +47,7 @@
     "/dist/css/components/container.css": "/dist/css/components/container.css",
     "/dist/css/components/cart.css": "/dist/css/components/cart.css",
     "/dist/css/components/buttons.css": "/dist/css/components/buttons.css",
+    "/dist/css/components/build-ring-selection.css": "/dist/css/components/build-ring-selection.css",
     "/dist/css/components/blog-list.css": "/dist/css/components/blog-list.css",
     "/dist/img/Group-161@2x.png": "/dist/img/Group-161@2x.png",
     "/dist/img/arrow-down.svg": "/dist/img/arrow-down.svg",
@@ -51,6 +56,7 @@
     "/dist/img/certify.png": "/dist/img/certify.png",
     "/dist/img/loading.gif": "/dist/img/loading.gif",
     "/dist/img/return.png": "/dist/img/return.png",
+    "/dist/img/ring.png": "/dist/img/ring.png",
     "/dist/img/search-icon.svg": "/dist/img/search-icon.svg",
     "/dist/img/video-layer-btn.png": "/dist/img/video-layer-btn.png"
 }

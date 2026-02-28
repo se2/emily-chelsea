@@ -45,6 +45,11 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 						'user_id' => $_GET['user_id'],
 						'access_token' => $_GET['access_token']
 					);
+					
+					if (isset($_GET['scope'])) {
+						$scope = $_GET['scope'];
+						$code['scope'] = explode(' ', $scope);
+					}
 				} else {
 					$code = array();
 				}
@@ -461,7 +466,8 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 		if ($use_master) {
 			$client_id = $this->client_id;
-			$token = 'token'.$prefixed_instance_id.$this->redirect_uri();
+			$token = 'token'.$prefixed_instance_id;
+			$token .= $this->redirect_uri();
 		} else {
 			$client_id = $opts['clientid'];
 			$token = 'token'.$prefixed_instance_id;
@@ -471,11 +477,17 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			'response_type' => 'code',
 			'client_id' => $client_id,
 			'redirect_uri' => $this->redirect_uri($use_master),
-			'scope' => apply_filters('updraft_googledrive_scope', 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/userinfo.profile'),
+			// Nov 2024 - https://www.googleapis.com/auth/drive.readonly temporarily removed for annual re-verification (for which we received no notification)
+			'scope' => apply_filters('updraft_googledrive_scope', 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile'),
 			'state' => $token,
 			'access_type' => 'offline',
-			'approval_prompt' => 'force'
+			// 'approval_prompt' => 'force', // legacy and has been deprected. It can lead to conflicts when specified along with "prompt" param
+			// Nov 2024 - changed from `true` for the same reason as a few lines earlier
+			'include_granted_scopes' => 'false',
+			'enable_granular_consent' => 'true',
+			'prompt' => 'select_account consent', // new option param as the replacement to 'approval_prompt'
 		);
+		$params = apply_filters('updraft_googledrive_auth_params', $params);
 		if (headers_sent()) {
 			$this->log(sprintf(__('The %s authentication could not go ahead, because something else on your site is breaking it.', 'updraftplus'), 'Google Drive').' '.__('Try disabling your other plugins and switching to a default theme.', 'updraftplus').' ('.__('Specifically, you are looking for the component that sends output (most likely PHP warnings/errors) before the page begins.', 'updraftplus').' '.__('Turning off any debugging settings may also help).', 'updraftplus').')', 'error');
 		} else {
@@ -499,6 +511,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$opts = $this->get_options();
 			$opts['user_id'] = base64_decode($code['user_id']);
 			$opts['tmp_access_token'] = base64_decode($code['access_token']);
+			if (isset($opts['auth_in_progress'])) $opts['scope'] = $code['scope'];
 			// Unset this value if it is set as this is a fresh auth we will set this value in the next step
 			if (isset($opts['expires_in'])) unset($opts['expires_in']);
 			// remove our flag so we know this authentication is complete
@@ -584,7 +597,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 				}
 			}
 		} else {
-			header('Location: '.UpdraftPlus_Options::admin_page_url().'?page=updraftplus&error='.urlencode(__('Authorization failed', 'updraftplus')));
+			header('Location: '.UpdraftPlus_Options::admin_page_url().'?page=updraftplus&error='.urlencode(sprintf(__('%s authorization failed', 'updraftplus'), 'Google Drive')));
 		}
 	}
 
@@ -795,7 +808,6 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 	}
 
 	public function bootstrap($access_token = false) {
-
 		$storage = $this->get_storage();
 
 		if (!empty($storage) && is_object($storage) && is_a($storage, 'UDP_Google_Service_Drive')) return $storage;
@@ -803,6 +815,8 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		$opts = $this->get_options();
 
 		$use_master = $this->use_master($opts);
+
+		$curl_exists = function_exists('curl_version') && function_exists('curl_exec');
 
 		if (!$use_master) {
 			if (empty($opts['token']) || empty($opts['clientid']) || empty($opts['secret'])) {
@@ -842,11 +856,14 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 					$body = array('result' => 'error', 'error' => $result->get_error_code(), 'error_description' => $result->get_error_message());
 				
 				} else {
-				
-					$body_json = wp_remote_retrieve_body($result);
-
-					$body = json_decode($body_json, true);
+					$response_code = wp_remote_retrieve_response_code($result);
 					
+					if ($response_code < 200 || $response_code >= 300) {
+						$body = array('result' => 'error', 'error' => $response_code, 'error_description' => sprintf(__("%s for %s", 'updraftplus'), wp_remote_retrieve_response_message($result), $this->callback_url));
+					} else {
+						$body_json = wp_remote_retrieve_body($result);
+						$body = json_decode($body_json, true);
+					}
 				}
 				
 				if (!empty($body['result']) && 'error' == $body['result']) {
@@ -910,7 +927,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		$config = new UDP_Google_Config();
 		$config->setClassConfig('UDP_Google_IO_Abstract', 'request_timeout_seconds', 60);
 		// In our testing, $storage->about->get() fails if gzip is not disabled when using the stream wrapper
-		if (!function_exists('curl_version') || !function_exists('curl_exec') || (defined('UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP') && UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP)) {
+		if (!$curl_exists || (defined('UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP') && UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP)) {
 			$config->setClassConfig('UDP_Google_Http_Request', 'disable_gzip', true);
 		}
 
@@ -922,7 +939,20 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$client_secret = '';
 		}
 
+		$proxy = new WP_HTTP_Proxy();
 		$client = new UDP_Google_Client($config);
+
+		$is_proxy_enabled = false;
+		if ($proxy->is_enabled() && $proxy->send_through_proxy($client->getBasePath())) {
+			$is_proxy_enabled = true;
+			if ($curl_exists && !defined('CURLOPT_PROXY')) {
+				$this->log('cURL transports couldn\'t be used because a proxy is set but the installed cURL version doesn\'t support proxy connections. Stream/socket transports (UDP_Google_IO_Stream) are being used instead.');
+				$config->setIoClass('UDP_Google_IO_Stream');
+				// Redeclare the client to use UDP_Google_IO_Stream
+				$client = new UDP_Google_Client($config);
+			}
+		}
+
 		$client->setClientId($client_id);
 		$client->setClientSecret($client_secret);
 		// $client->setUseObjects(true);
@@ -947,12 +977,28 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$setopts[CURLOPT_CONNECTTIMEOUT] = 15;
 			if (defined('UPDRAFTPLUS_IPV4_ONLY') && UPDRAFTPLUS_IPV4_ONLY) $setopts[CURLOPT_IPRESOLVE] = CURL_IPRESOLVE_V4;
 			$setopts[CURLOPT_HTTP_VERSION] = defined('UPDRAFTPLUS_GDRIVE_CURL_HTTP_VERSION') ? UPDRAFTPLUS_GDRIVE_CURL_HTTP_VERSION : CURL_HTTP_VERSION_1_1;
+
+			if ($is_proxy_enabled) {
+				$port = (int) $proxy->port();
+				if (empty($port)) $port = 8080;
+
+				$setopts[CURLOPT_PROXY] = $proxy->host();
+				$setopts[CURLOPT_PROXYPORT] = $port;
+				$setopts[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
+			}
 		} elseif (is_a($io, 'UDP_Google_IO_Stream')) {
 			$setopts['timeout'] = 60;
 			// We had to modify the SDK to support this
 			// https://wiki.php.net/rfc/tls-peer-verification - before PHP 5.6, there is no default CA file
 			if (!UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts') || (version_compare(PHP_VERSION, '5.6.0', '<'))) $setopts['cafile'] = UPDRAFTPLUS_DIR.'/includes/cacert.pem';
 			if (UpdraftPlus_Options::get_updraft_option('updraft_ssl_disableverify')) $setopts['disable_verify_peer'] = true;
+
+			if ($is_proxy_enabled) {
+				$port = (int) $proxy->port();
+				if (empty($port)) $port = 8080;
+
+				$setopts['proxy'] = $proxy->host().':'.$port;
+			}
 		}
 
 		$io->setOptions($setopts);
@@ -1348,7 +1394,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		fclose($handle);
 		$transkey = $transkey = 'resume_'.md5($file);
 		$this->jobdata_delete($transkey, 'gd'.$transkey);
-		if (false == $try_again) throw($e);
+		if (false == $try_again) throw $e;
 		// Reset this counter to prevent the something_useful_happened condition's possibility being sent into the far future and potentially missed
 		global $updraftplus;
 		if ($updraftplus->current_resumption > 9) $updraftplus->jobdata_set('uploaded_lastreset', $updraftplus->current_resumption);

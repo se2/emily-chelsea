@@ -98,6 +98,10 @@ function pmxe_wp_ajax_wpae_filtering_count(){
 
 	if ($post['export_type'] == 'advanced')
 	{
+
+        // Remove trailing comma from the query.
+        PMXE_Plugin::$session->set('wp_query', rtrim(PMXE_Plugin::$session->get('wp_query'), ','));
+
 		if (XmlExportEngine::$is_user_export)
 		{
 
@@ -125,7 +129,8 @@ function pmxe_wp_ajax_wpae_filtering_count(){
 		{
 			// get total comments
 			$totalQuery = eval('return new WP_Comment_Query(array(' . PMXE_Plugin::$session->get('wp_query') . ', \'number\' => 10, \'count\' => true ));');
-			$total_records = count($totalQuery->get_comments());
+            // get_comments() will return the count since the count parameter above is true.
+			$total_records = $totalQuery->get_comments();
 
 			ob_start();
 			// get comments depends on filters
@@ -183,8 +188,10 @@ function pmxe_wp_ajax_wpae_filtering_count(){
 			$exportQuery->request = $wpdb->remove_placeholder_escape($exportQuery->request);
 
             // We need to remove the placeholders from these values as well.
-			foreach( $exportQuery->query_vars['search_orderby_title'] as $key => $value ){
-				$exportQuery->query_vars['search_orderby_title'][$key] = $wpdb->remove_placeholder_escape($value);
+			if(!empty($exportQuery->query_vars['search_orderby_title'])) {
+				foreach ( $exportQuery->query_vars['search_orderby_title'] as $key => $value ) {
+					$exportQuery->query_vars['search_orderby_title'][ $key ] = $wpdb->remove_placeholder_escape( $value );
+				}
 			}
 
 			if ( ! empty($exportQuery->found_posts)){				
@@ -407,7 +414,7 @@ function pmxe_wp_ajax_wpae_filtering_count(){
                     add_filter('posts_where', 'wp_all_export_numbering_where', 15, 1);
 
 
-                    if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive()) {
+                    if(XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() || XmlExportEngine::get_addons_service()->isWooCommerceOrderAddonActive()) {
                         $ordersQuery = new \Wpae\WordPress\OrderQuery();
 
                         $foundRecords = count($ordersQuery->getOrders());

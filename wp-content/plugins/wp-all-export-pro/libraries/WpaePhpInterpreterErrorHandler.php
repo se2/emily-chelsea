@@ -9,7 +9,9 @@ class WpaePhpInterpreterErrorHandler
         if(isset($error['file'])) {
             if ($error && strpos($error['file'], 'uploads/wpallexport/functions.php') !== false) {
                 $wp_uploads = $this->getUploadsDir();
-                $functions = 'in ' . $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php:' . $error['line'];
+				$functions = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
+	            $functions = apply_filters( 'wp_all_export_functions_file_path', $functions );
+                $functions = 'in ' . $functions.':' . $error['line'];
                 $error['message'] = str_replace($functions, '', $error['message']);
                 $error['message'] = str_replace("\\n", '', $error['message']);
                 $errorParts = explode('Stack trace', $error['message']);

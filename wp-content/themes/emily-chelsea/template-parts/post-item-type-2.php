@@ -2,6 +2,16 @@
 extract($args);
 if (!empty($post)) {
     $term = TTG_Util::get_main_term($post->ID);
+    $is_product = $post->post_type == 'product' ? true : false;
+    $label = '';
+    if ($is_product) {
+        $product = wc_get_product($post->ID);
+        $label = '';
+        if ($product && $product->is_type('simple') && !$product->is_in_stock()) {
+            $label = '<span class="stock-status stock-status--out-of-stock">Out of stock</span>';
+        }
+    }
+
 ?>
     <div class="post-item post-item--style-2">
         <div class="post-item__inner">
@@ -16,6 +26,7 @@ if (!empty($post)) {
                     <?php echo wp_trim_words(get_the_excerpt($post), 15); ?>
                 </div>
             </a>
+            <?php echo $label; ?>
             <div class="post-item__line"></div>
         </div>
     </div>

@@ -68,21 +68,29 @@ class PMXE_Handler extends PMXE_Session
 	 */
 	public function get_session_data()
 	{
-		global $wpdb;
+		$session = get_option('_wpallexport_session_' . $this->_import_id . '_', []);
+		$delete_option = false;
 
-		$session = $wpdb->get_row( $wpdb->prepare("SELECT option_name, option_value FROM $wpdb->options WHERE option_name = %s", '_wpallexport_session_' . $this->_import_id . '_'), ARRAY_A );
-
-		if( !empty($session) ) {
-			if ( is_serialized( $session['option_value'] ) ) {
-				$data = unserialize( trim( $session['option_value'] ) );
-			} else {
-				$data = maybe_unserialize( base64_decode( $session['option_value'] ) );
-			}
-		}else{
-			$data = [];
+		if( false === $session ){
+			$delete_option = true;
 		}
 
-		return $data;
+		if( !empty($session) && !is_array($session) ) {
+			$session_clear = maybe_unserialize( base64_decode( $session ) );
+			if($session === $session_clear){
+				$delete_option = true;
+			}else{
+				$session = $session_clear;
+			}
+		}
+
+		if($delete_option){
+			delete_option('_wpallexport_session_' . $this->_import_id . '_');
+			delete_option('_wpallexport_session_expires_' . $this->_import_id . '_');
+			$session = [];
+		}
+
+		return $session;
 	}
 
 	/**
@@ -109,27 +117,23 @@ class PMXE_Handler extends PMXE_Session
 	 * @access public
 	 * @return void
 	 */
-	public function save_data()
-	{
+	public function save_data() {
 		// Dirty if something changed - prevents saving nothing new
-		if ( $this->_dirty && $this->has_session() )
-		{
+		if ( $this->_dirty && $this->has_session() ) {
+
 			$session_option        = '_wpallexport_session_' . $this->_import_id . '_';
 			$session_expiry_option = '_wpallexport_session_expires_' . $this->_import_id . '_';
 
-			global $wpdb;
+			wp_cache_delete( 'notoptions', 'options' );
+			wp_cache_delete( $session_option, 'options' );
+			wp_cache_delete( $session_expiry_option, 'options' );
 
-			$session = $wpdb->get_row( $wpdb->prepare("SELECT option_name, option_value FROM $wpdb->options WHERE option_name = %s", $session_option), ARRAY_A );
-
-			if ( empty($session) )
+			if ( false === get_option( $session_option ) )
 			{
-				$wpdb->query($wpdb->prepare("INSERT INTO `$wpdb->options` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, 'no')", $session_option, base64_encode(serialize($this->_data))));
-				$wpdb->query($wpdb->prepare("INSERT INTO `$wpdb->options` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, 'no')", $session_expiry_option, $this->_session_expiration));
-				// add_option( $session_option, $this->_data, '', 'no' );
-				// add_option( $session_expiry_option, $this->_session_expiration, '', 'no' );
+				add_option( $session_option, base64_encode(serialize($this->_data)), '', 'no' );
+				add_option( $session_expiry_option, $this->_session_expiration, '', 'no' );
 			} else {
-				// update_option( $session_option, $this->_data );
-				$wpdb->query($wpdb->prepare("UPDATE `$wpdb->options` SET `option_value` = %s WHERE `option_name` = %s", base64_encode(serialize($this->_data)), $session_option));
+				update_option( $session_option, base64_encode(serialize($this->_data)) );
 			}
 		}
 	}

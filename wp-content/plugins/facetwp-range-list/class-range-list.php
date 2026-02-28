@@ -4,16 +4,14 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
 {
 
     public $ui_fields;
+    public $field_defaults;
 
 
     function __construct() {
         $this->label = __( 'Range List', 'fwp' );
-        $this->fields = [ 'levels', 'ui_type' ];
-        $this->ui_fields = [
-            'checkboxes' => [ 'operator' ],
-            'dropdown' => [ 'label_any' ],
-            'fselect' => [ 'label_any', 'multiple', 'operator' ],
-            'radio' => [ 'label_any' ]
+        $this->fields = [ 'levels', 'ui_type', 'label_any', 'multiple', 'operator', 'ui_ghosts' ];
+        $this->field_defaults = [
+            'ui_type' => 'checkboxes'
         ];
     }
 
@@ -29,8 +27,10 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
         $where_clause = $params['where_clause'];
 
         // Use "OR" mode when necessary
-        $is_single = FWP()->helper->facet_is( $facet, 'multiple', 'no' );
-        $using_or = FWP()->helper->facet_is( $facet, 'operator', 'or' );
+        $ui_type = isset( $params['facet']['ui_type'] ) && '' != $params['facet']['ui_type'] ? $params['facet']['ui_type'] : 'checkboxes'; // default = checkboxes
+        $show_ghosts = FWP()->helper->facet_is( $facet, 'ui_ghosts', 'yes' );
+        $is_single = FWP()->helper->facet_is( $facet, 'multiple', 'no' ) || in_array( $ui_type, [ 'radio','dropdown' ] );
+        $using_or = FWP()->helper->facet_is( $facet, 'operator', 'or' ) && !in_array( $ui_type, [ 'radio','dropdown' ] );
 
         // Facet in "OR" mode
         if ( $is_single || $using_or ) {
@@ -50,8 +50,8 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
 
         // Build groups
         foreach ( $params['facet']['levels'] as $level => $setting ) {
-            $min = $this->get_range_value( 'min', $level, 'down', $params['facet']['levels'] );
-            $max = $this->get_range_value( 'max', $level, 'up', $params['facet']['levels'] );
+            $min = (float) $this->get_range_value( 'min', $level, 'down', $params['facet']['levels'] );
+            $max = (float) $this->get_range_value( 'max', $level, 'up', $params['facet']['levels'] );
             $auto_display = 'All';
 
             if ( ! empty( $min ) && ! empty( $max ) ) {
@@ -62,19 +62,24 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
                 $auto_display = 'Up to ' . $max;
                 $value = '0-' . $max;
             }
-            elseif ( ! empty( $min ) && empty( $max ) ) {
+            elseif ( empty( $max ) ) {
                 $auto_display = $min . ' and up';
                 $value = $min . '+';
             }
 
             $display = empty( $setting['label'] ) ? $auto_display : $setting['label'];
+            $counts = $this->get_counts( $results, $min, $max );
 
-            $output[] = [
-                'counter' => $this->get_counts( $results, $min, $max ),
-                'facet_value' => $value,
-                'facet_display_value' => $display,
-                'depth' => 0
-            ];
+            if ( $show_ghosts || 0 < $counts ) {
+
+                $output[] = [
+                    'counter' => $this->get_counts( $results, $min, $max ),
+                    'facet_value' => $value,
+                    'facet_display_value' => $display,
+                    'depth' => 0
+                ];
+
+            }
         }
 
         return $output;
@@ -85,10 +90,10 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
      * Get the lowest value
      */
     function get_range_value( $type, $level, $direction, $levels ) {
-        $val = null;
+        $val = "";
 
-        if ( ! empty( $levels[ $level ][ $type ] ) ) {
-            $val = $levels[ $level ][ $type ];
+        if ( isset( $levels[ $level ][ $type ] ) && "" != $levels[ $level ][ $type ] ) {
+            $val = (float) $levels[ $level ][ $type ];
         }
         elseif ( $level >= 0 && $level < count( $levels ) ) {
             $type = ( 'min' == $type ) ? 'max' : 'min';
@@ -108,7 +113,7 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
 
         foreach ( $results as $result ) {
             if ( $result['facet_value'] >= $start ) {
-                if ( is_null( $end ) || $result['facet_value'] <= $end ) {
+                if ( empty( $end ) || $result['facet_value'] <= $end ) {
                     $count += 1;
                 }
             }
@@ -122,7 +127,7 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
      * Generate the facet HTML
      */
     function render( $params ) {
-        return FWP()->helper->facet_types['radio']->render( $params );
+        return FWP()->helper->facet_types['checkboxes']->render( $params );
     }
 
 
@@ -168,6 +173,16 @@ class FacetWP_Facet_Range_List_Addon extends FacetWP_Facet
      */
     function front_scripts() {
         FWP()->display->assets['range-list-front.js'] = [ plugins_url( '', __FILE__ ) . '/assets/js/front.js', FACETWP_RANGE_LIST_VERSION ];
+        $facets = FWP()->helper->get_facets_by( 'type', 'range_list' );
+        $active_facets = array_keys( FWP()->display->active_facets );
+        foreach ( $facets as $facet ) {
+            if ( in_array( $facet['name'], $active_facets ) && isset( $facet['ui_type'] ) && '' != $facet['ui_type'] ) {
+                $facet_class = FWP()->helper->facet_types[ $facet['ui_type'] ];
+                if ( method_exists( $facet_class, 'front_scripts' ) ) {
+                    $facet_class->front_scripts(); 
+                }
+            }
+        }
     }
 
 
@@ -285,7 +300,8 @@ Vue.component('range-list', {
         return [
             'levels' => [
                 'label' => __( 'Ranges', 'fwp' ),
-                'html' => '<range-list :facet="facet"></range-list><input type="hidden" class="facet-levels" value="[]" />'
+                'html' => '<range-list :facet="facet"></range-list><input type="hidden" class="facet-levels" value="[]" />',
+                'notes' => 'Enter Min/Max values as a number, with or without decimals. For decimals use dots, not commas. Don\'t use thousands separators, spaces or other characters.'
             ]
         ];
     }

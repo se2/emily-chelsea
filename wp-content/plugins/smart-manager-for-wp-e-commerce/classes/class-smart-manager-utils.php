@@ -33,13 +33,7 @@ function sm_update_stock_status( $id = 0, $update_column = '', $update_value = '
   if ( ( ( !empty( Smart_Manager::$sm_is_woo21 ) && Smart_Manager::$sm_is_woo21 == 'true' ) || ( !empty( Smart_Manager::$sm_is_woo22 ) && Smart_Manager::$sm_is_woo22 == 'true' ) || ( !empty( Smart_Manager::$sm_is_woo30 ) && Smart_Manager::$sm_is_woo30 == 'true' ) ) && !empty( $id ) ) {
 	  	$parent_id = wp_get_post_parent_id( $id );
 		$woo_version = ( ( defined( 'WOOCOMMERCE_VERSION' ) ) ? WOOCOMMERCE_VERSION : $woocommerce->version );
-		$woo_prod_obj_stock_status = '';
-
-		if( $parent_id > 0 && class_exists('WC_Product_Variation') ) {
-		   $woo_prod_obj_stock_status = new WC_Product_Variation($id);
-		} else if( class_exists('WC_Product') ) {
-		   $woo_prod_obj_stock_status = new WC_Product($id);
-		}
+		$woo_prod_obj_stock_status = function_exists( 'wc_get_product' ) ? wc_get_product( absint( $id ) ) : null;
 
 		if ( empty( $woo_prod_obj_stock_status ) || ! $woo_prod_obj_stock_status instanceof WC_Product ) {
 			return false;
@@ -304,7 +298,7 @@ function sm_update_product_lookup_table( $product_ids ) {
 	$query = "SELECT post_id, meta_key, meta_value
 				FROM {$wpdb->prefix}postmeta 
 				WHERE meta_key IN ( '_sku', '_virtual', '_downloadable', '_regular_price', '_sale_price', '_price', '_manage_stock', '_stock', '_stock_status', '_wc_rating_count', '_wc_average_rating', 'total_sales'
-				". ( ( !empty( Smart_Manager::$sm_is_woo40 ) ) ? ", '_tax_status', '_tax_class'" : '' ) ." ) 
+				". ( ( !empty( Smart_Manager::$sm_is_woo40 ) ) ? ", '_tax_status', '_tax_class'" : '' ) . ( ( !empty( Smart_Manager::$sm_is_woo92 ) ) ? ", '_global_unique_id'" : '' ) ." ) 
 				AND post_id IN (".implode(",", $product_ids).")
 					GROUP BY post_id, meta_key";
 
@@ -345,6 +339,9 @@ function sm_update_product_lookup_table( $product_ids ) {
 		$sm_cache_update[$product_id]['total_sales'] 	= ( empty( $sm_cache_update[$product_id]['total_sales'] ) ) ? ( ( $meta_key == 'total_sales' ) ? $meta_value : 0 ) : $sm_cache_update[$product_id]['total_sales'];
 		$sm_cache_update[$product_id]['tax_status'] 	= ( empty( $sm_cache_update[$product_id]['tax_status'] ) ) ? ( ( $meta_key == '_tax_status' ) ? $meta_value : '' ) : $sm_cache_update[$product_id]['tax_status'];
 		$sm_cache_update[$product_id]['tax_class'] 	= ( empty( $sm_cache_update[$product_id]['tax_class'] ) ) ? ( ( $meta_key == '_tax_class' ) ? $meta_value : '' ) : $sm_cache_update[$product_id]['tax_class'];
+		if ( ! empty( Smart_Manager::$sm_is_woo92 ) ) {
+			$sm_cache_update[ $product_id ][ 'global_unique_id' ] 	= ( empty( $sm_cache_update[ $product_id ][ 'global_unique_id' ] ) ) ? ( ( '_global_unique_id' === $meta_key ) ? $meta_value : '' ) : $sm_cache_update[ $product_id ][ 'global_unique_id' ];
+		}
 		$temp = $sm_cache_update;
 		$temp[$product_id]['sku'] = (string) $temp[$product_id]['sku'];
 		$temp[$product_id]['stock_status'] = (string) $temp[$product_id]['stock_status'];

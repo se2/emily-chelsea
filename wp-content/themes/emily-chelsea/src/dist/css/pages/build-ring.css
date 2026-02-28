@@ -1,0 +1,1363 @@
+.page-build-ring-wrapper #wrapper__inner {
+  padding-left: 0;
+  position: relative;
+  z-index: 999;
+  background: #fff;
+}
+.page-build-ring-wrapper #main-content__top {
+  padding: 0;
+  border: 0;
+}
+.page-build-ring-wrapper .product:not(.product-detail) {
+  border: 0;
+  padding: 1.25rem 1.25rem;
+  list-style: none;
+}
+@media (min-width: 1100px) {
+  .page-build-ring-wrapper .product:not(.product-detail) {
+    padding: 1.25rem 1.875rem;
+  }
+}
+@media (min-width: 1480px) {
+  .page-build-ring-wrapper .product:not(.product-detail) {
+    padding: 1.25rem 1.875rem;
+  }
+}
+.page-build-ring-wrapper .product:not(.product-detail) .woocommerce-loop-product__title {
+  font-size: 1.5rem;
+  line-height: 1.17;
+  margin: 0 0 5px 0;
+  font-weight: normal;
+}
+@media (min-width: 1100px) {
+  .page-build-ring-wrapper .product:not(.product-detail) .woocommerce-loop-product__title {
+    font-size: 1.4375rem;
+  }
+}
+.page-build-ring-wrapper .product:not(.product-detail) .price {
+  display: block;
+  color: #909090;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: bold;
+}
+@media (min-width: 1100px) {
+  .page-build-ring-wrapper .product:not(.product-detail) .price {
+    font-size: 1.125rem;
+    margin-top: -0.2em;
+  }
+}
+.page-build-ring-wrapper .product__image-wrapper {
+  border: 1px solid #d7bc99;
+}
+@media (min-width: 1100px) {
+  .page-build-ring-wrapper .product__image-wrapper {
+    margin-bottom: 1.25rem;
+  }
+}
+.page-build-ring-wrapper .product .product__image-hover {
+  display: none;
+}
+.page-build-ring-wrapper #toggle-nav-checkbox:checked + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner {
+  transform: translateX(418px);
+}
+@media (min-width: 1100px) {
+  .page-build-ring-wrapper #toggle-nav-checkbox:checked + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner {
+    transform: translateX(320px);
+  }
+}
+@media (min-width: 1100px) {
+  .page-build-ring-wrapper #toggle-nav-checkbox:checked + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner .alignfull {
+    transform: translateX(200px);
+  }
+}
+.page-build-ring-wrapper .facetwp-type-reset {
+  display: none;
+}
+.page-build-ring-wrapper .product-detail #woocommerce-product-gallery__image-main {
+  aspect-ratio: initial;
+}
+
+.page-build-ring__inner {
+  overflow: hidden;
+  position: relative;
+}
+@media (min-width: 1100px) {
+  .page-build-ring__inner {
+    display: flex;
+  }
+}
+.page-build-ring .products-filter {
+  margin-bottom: 0;
+}
+.page-build-ring__left {
+  padding-left: 50%;
+  position: relative;
+}
+.page-build-ring__left::before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  bottom: 0;
+  border-left: 1px solid var(--cl-border);
+  margin-left: -2px;
+}
+@media (min-width: 1100px) {
+  .page-build-ring__left {
+    flex: 0 0 200px;
+    max-width: 200px;
+    padding-top: 80px;
+    padding-left: 0;
+    border-left: 0;
+  }
+  .page-build-ring__left::before {
+    display: none;
+  }
+}
+@media (max-width: 1099.98px) {
+  .page-build-ring__left .products-filter__items {
+    left: -10px;
+  }
+}
+.page-build-ring__center {
+  border-top: 1px solid var(--cl-border);
+  padding-top: 25px;
+}
+@media (min-width: 1100px) {
+  .page-build-ring__center {
+    flex: 0 0 calc(100% - 480px);
+    max-width: calc(100% - 480px);
+    padding: 20px 55px;
+    position: relative;
+    z-index: 10;
+    border-top: 0;
+  }
+}
+.page-build-ring__right {
+  background: rgba(215, 188, 153, 0.3803921569);
+}
+@media (min-width: 1100px) {
+  .page-build-ring__right {
+    flex: 0 0 280px;
+    max-width: 280px;
+    padding: 80px 40px 0 40px;
+  }
+}
+
+.processing {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1607843137);
+  z-index: 999;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: bold;
+  font-family: "New Forest", sans-serif;
+}
+
+.page-build-ring.loading > .processing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1099.98px) {
+  .build-ring-tray-wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    z-index: 99;
+    box-shadow: 0px -5px 6px rgba(0, 0, 0, 0.1607843137);
+    display: flex;
+  }
+}
+
+@media (max-width: 1099.98px) {
+  .build-ring-tray__inner {
+    display: flex;
+    align-items: center;
+    padding: 20px 20px;
+    background: rgba(215, 188, 153, 0.3803921569);
+  }
+}
+.build-ring-tray__title {
+  line-height: 1.16;
+  font-family: "New Forest", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  letter-spacing: 0px;
+  color: #363636;
+  opacity: 1;
+  flex: 0 0 50px;
+  max-width: 50px;
+  margin-bottom: 0;
+}
+@media (min-width: 1100px) {
+  .build-ring-tray__title {
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+.build-ring-tray__items {
+  flex: 0 0 calc(100% - 110px);
+  max-width: calc(100% - 110px);
+  display: flex;
+  gap: 15px;
+}
+@media (min-width: 1100px) {
+  .build-ring-tray__items {
+    display: block;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+.build-ring-tray__item {
+  position: relative;
+  width: 65px;
+  height: 65px;
+  flex: 0 0 65px;
+}
+@media (min-width: 1100px) {
+  .build-ring-tray__item {
+    width: 100%;
+    padding-top: 100%;
+    margin-top: 20px;
+  }
+}
+.build-ring-tray__item:hover .build-ring-tray__item-remove {
+  display: flex;
+}
+.build-ring-tray__item.loading .processing {
+  display: flex !important;
+}
+.build-ring-tray__item .processing {
+  display: none !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 14px;
+  justify-content: center;
+  align-items: center;
+}
+@media (min-width: 1100px) {
+  .build-ring-tray__item .processing {
+    border-radius: 30px;
+  }
+}
+.build-ring-tray__item-remove {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #bc8f55;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: bold;
+  z-index: 10;
+  cursor: pointer;
+}
+.build-ring-tray__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  border: 3px dashed #bc8f55;
+  border-radius: 14px;
+  opacity: 1;
+  color: #bc8f55;
+}
+@media (min-width: 1100px) {
+  .build-ring-tray__empty {
+    border-radius: 30px;
+  }
+}
+@media (max-width: 1099.98px) {
+  .build-ring-tray__empty svg {
+    width: 26px;
+  }
+}
+.build-ring-tray__product {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+}
+@media (min-width: 1100px) {
+  .build-ring-tray__product {
+    border-radius: 30px;
+  }
+}
+.build-ring-tray__product .product__image-hover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.build-ring-tray__product img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.build-ring-tray__product:hover .product__image-hover {
+  opacity: 1;
+}
+
+.build-ring-head {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.build-ring-head h2 {
+  font: normal normal normal 42px/48px New Forest;
+  letter-spacing: 0px;
+  color: #363636;
+  opacity: 1;
+}
+.build-ring-head p {
+  font: normal normal 300 16px/26px Outfit;
+  letter-spacing: 0px;
+  color: #363636;
+  opacity: 1;
+}
+
+.build-ring-mode {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+@media (min-width: 1100px) {
+  .build-ring-mode {
+    position: static;
+    margin-bottom: 25px;
+    justify-content: center;
+    padding-left: 0;
+    width: 100%;
+  }
+}
+.build-ring-mode__image {
+  display: inline-block;
+}
+.build-ring-mode__image img {
+  display: inline-block;
+  height: 30px;
+}
+.build-ring-mode__label {
+  font-size: 0;
+  letter-spacing: 1.8px;
+  line-height: 1.25;
+  font-family: "Outfit", sans-serif;
+  color: #909090;
+  text-transform: uppercase;
+  opacity: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+@media (min-width: 1100px) {
+  .build-ring-mode__label {
+    font-size: 15px;
+  }
+}
+.build-ring-mode__switch {
+  position: relative;
+  width: 30px;
+  height: 12px;
+  background: #909090 0% 0% no-repeat padding-box;
+  border: 1px solid #909090;
+  border-radius: 30px;
+  opacity: 1;
+  margin: 0 13px;
+  cursor: pointer;
+}
+.build-ring-mode__switch:before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #909090;
+  opacity: 1;
+  border-radius: 100%;
+}
+.build-ring-mode__switch.active:before {
+  right: 0px;
+  left: auto;
+}
+
+.build-ring-steps__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px 10px 20px;
+  position: relative;
+  background: #3f7f88;
+}
+@media (min-width: 1100px) {
+  .build-ring-steps__inner {
+    padding: 10px 280px 10px 200px;
+    background: #fff;
+    border-bottom: 2px solid #bc8f55;
+  }
+}
+.build-ring-steps__title {
+  display: none;
+  text-align: left;
+  font: normal normal bold 14px/18px Outfit;
+  letter-spacing: 2.1px;
+  color: #000000;
+  text-transform: uppercase;
+  opacity: 1;
+  margin: 0;
+  position: absolute;
+  left: 30px;
+}
+@media (min-width: 1100px) {
+  .build-ring-steps__title {
+    display: block;
+  }
+}
+.build-ring-steps__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  width: 150px;
+  justify-content: space-between;
+}
+@media (min-width: 1100px) {
+  .build-ring-steps__items {
+    width: 350px;
+  }
+}
+.build-ring-steps__items li.active a {
+  color: #fff;
+  background: #3f7f88 0% 0% no-repeat padding-box;
+}
+.build-ring-steps__items li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  line-height: 1;
+  font-family: "New Forest", sans-serif;
+  font-size: 32px;
+  letter-spacing: 0px;
+  color: #909090;
+  opacity: 1;
+}
+@media (min-width: 1100px) {
+  .build-ring-steps__items li a {
+    font-size: 40px;
+    width: 50px;
+    height: 50px;
+    padding-top: 5px;
+    padding-left: 3px;
+  }
+}
+
+.build-ring-confirm {
+  background: rgba(215, 188, 153, 0.3803921569);
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm__inner {
+    display: flex;
+  }
+}
+.build-ring-confirm:first-child .build-ring-confirm__left::before,
+.build-ring-confirm:first-child .build-ring-confirm__right::before {
+  display: none;
+}
+.build-ring-confirm__left {
+  padding: 30px 20px;
+  position: relative;
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm__left:before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 0;
+    border-top: 1px solid #d7bc99;
+  }
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm__left {
+    flex: 0 0 65%;
+    max-width: 65%;
+  }
+}
+.build-ring-confirm__left__title {
+  line-height: 1.14;
+  font-family: "New Forest", sans-serif;
+  font-weight: normal;
+  letter-spacing: 0px;
+  color: #363636;
+  opacity: 1;
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm__left__title {
+    flex: 0 0 65%;
+    max-width: 65%;
+    font-size: 48px;
+  }
+}
+.build-ring-confirm__right {
+  position: relative;
+  background: #bc8f55 0% 0% no-repeat padding-box;
+  padding: 30px 35px;
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm__right:before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 0;
+    border-top: 1px solid #fff;
+  }
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm__right {
+    flex: 0 0 35%;
+    max-width: 35%;
+  }
+}
+.build-ring-confirm__right__title {
+  font: normal normal normal 30px/35px New Forest;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  margin-bottom: 10px;
+}
+.build-ring-confirm__right .build-ring-collection__title {
+  color: #fff;
+}
+.build-ring-confirm .product-detail .variations {
+  width: 100%;
+  order: 2;
+}
+.build-ring-confirm .product-detail .variations tr {
+  margin-top: 15px;
+  display: block;
+}
+.build-ring-confirm .product-detail .variations tr:first-child {
+  margin-top: 0;
+}
+.build-ring-confirm .product-detail .variations .reset_variations {
+  display: none !important;
+}
+.build-ring-confirm .product-detail .variations .label {
+  display: none;
+}
+.build-ring-confirm .product-detail .variations .value {
+  width: 100%;
+  display: block;
+  border: 2px solid var(--cl-border);
+  position: relative;
+  background-color: #fff;
+}
+.build-ring-confirm .product-detail .variations .value:before {
+  content: "";
+  display: block;
+  width: 0;
+  border-width: 9px 9px 0px 9px;
+  border-color: var(--cl-gold) transparent transparent transparent;
+  border-style: solid;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.build-ring-confirm .product-detail .variations .value select {
+  width: 100%;
+  display: block;
+  border: 0;
+  height: 60px;
+  padding-left: 20px;
+  padding-right: 60px;
+  display: block;
+  color: #000;
+  font-size: 16px;
+  letter-spacing: 0.15;
+  text-transform: uppercase;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: transparent;
+  position: relative;
+  word-wrap: break-word;
+  white-space: normal;
+}
+.build-ring-confirm .product-detail .variations .value select:focus {
+  outline: none;
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm .product-detail .variations .value select {
+    padding-left: 20px;
+    font-size: 20px;
+  }
+}
+.build-ring-confirm .product-detail .variations .value .custom-select {
+  height: 60px;
+}
+.build-ring-confirm .product-detail .add-to-cart-wrapper,
+.build-ring-confirm .product-detail .quantity,
+.build-ring-confirm .product-detail .woocommerce-variation {
+  display: none !important;
+}
+
+.build-ring-collection__title {
+  text-align: left;
+  font: normal normal bold 14px/18px Outfit;
+  letter-spacing: 2.1px;
+  color: #000000;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.build-ring-collection .remove-design {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  border: 1px solid;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  position: relative;
+}
+.build-ring-collection .remove-design svg {
+  display: none !important;
+}
+.build-ring-collection .remove-design::before, .build-ring-collection .remove-design::after {
+  content: "" !important;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 2px;
+  background-color: #333;
+  transform-origin: center;
+}
+.build-ring-collection .remove-design::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.build-ring-collection .remove-design::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.build-ring-collection .remove-design:hover::before, .build-ring-collection .remove-design:hover::after {
+  background-color: #000;
+}
+@media (min-width: 1100px) {
+  .build-ring-collection__item {
+    display: flex;
+  }
+  .build-ring-collection__item__ring, .build-ring-collection__item__stone {
+    flex: 0 0 50%;
+  }
+}
+@media (max-width: 1099.98px) {
+  .build-ring-collection__item__ring {
+    margin-bottom: 25px;
+  }
+}
+.build-ring-collection__item .variation {
+  margin-top: 20px;
+}
+.build-ring-collection__item .variation p {
+  margin-bottom: 0;
+}
+.build-ring-collection__item .variation dd {
+  margin-bottom: 5px;
+}
+
+.build-ring-collection-proudct__inner {
+  display: flex;
+  align-items: center;
+}
+.build-ring-collection-proudct__image {
+  flex: 0 0 200px;
+  max-width: 200px;
+  overflow: hidden;
+  border-radius: 30px;
+  position: relative;
+}
+.build-ring-collection-proudct__image .product__image-hover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.build-ring-collection-proudct__image:hover .product__image-hover {
+  opacity: 1;
+}
+.build-ring-collection-proudct__info {
+  padding-left: 25px;
+  flex: 0 0 calc(100% - 200px);
+  max-width: calc(100% - 200px);
+}
+.build-ring-collection-proudct__info__type {
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 0px;
+  color: #bc8f55;
+  opacity: 1;
+  margin: 0 0 10px 0;
+}
+.build-ring-collection-proudct__info__title {
+  font: normal normal normal 18px/26px Outfit;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  margin: 0 0 13px 0;
+}
+.build-ring-collection-proudct__info__price {
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.build-ring-confirm-actions {
+  padding: 60px 0;
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm-actions {
+    display: flex;
+    padding: 0;
+  }
+}
+.build-ring-confirm-actions__item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid #bc8f55;
+  margin-top: 60px;
+}
+.build-ring-confirm-actions__item:first-child {
+  border-left: 0;
+  margin: 0;
+}
+.build-ring-confirm-actions__item__title {
+  font-family: "New Forest", sans-serif;
+  line-height: 1.15;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 48px;
+  letter-spacing: 0px;
+  color: #363636;
+  opacity: 1;
+  margin: 0 0 20px 0;
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm-actions__item__title {
+    font-size: 60px;
+  }
+}
+.build-ring-confirm-actions__item__btn {
+  width: 320px;
+  max-width: 100%;
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 2.7px;
+  height: 62px;
+}
+@media (min-width: 1100px) {
+  .build-ring-confirm-actions__item {
+    flex: 0 0 50%;
+    max-width: 50%;
+    border: 0;
+    min-height: 280px;
+    margin: 0;
+  }
+}
+
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-wrapper {
+    position: fixed;
+    bottom: 100px;
+    width: 100%;
+  }
+}
+
+.build-ring-mini-collection {
+  padding: 20px 20px;
+  background: #3f7f88 0% 0% no-repeat padding-box;
+  display: block;
+  position: relative;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+}
+.build-ring-mini-collection .processing {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.build-ring-mini-collection.loading .processing {
+  display: flex;
+}
+@media (min-width: 1100px) {
+  .build-ring-mini-collection {
+    padding: 20px 40px;
+    margin-left: -40px;
+    margin-right: -40px;
+    margin-top: -80px;
+    margin-bottom: 30px;
+  }
+}
+.build-ring-mini-collection-item {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-item {
+    width: 48%;
+    align-items: center;
+    margin: 5px 0;
+  }
+}
+.build-ring-mini-collection-item:hover .remove-design {
+  opacity: 1 !important;
+  cursor: pointer;
+  position: relative;
+}
+.build-ring-mini-collection-item:hover .remove-design svg {
+  display: none !important;
+}
+.build-ring-mini-collection-item:hover .remove-design::before, .build-ring-mini-collection-item:hover .remove-design::after {
+  content: "" !important;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 2px;
+  background-color: #fff;
+  transform-origin: center;
+}
+.build-ring-mini-collection-item:hover .remove-design::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.build-ring-mini-collection-item:hover .remove-design::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.build-ring-mini-collection-item:hover .remove-design:hover::before, .build-ring-mini-collection-item:hover .remove-design:hover::after {
+  background-color: #fff;
+}
+.build-ring-mini-collection-item:last-child {
+  margin-bottom: 0;
+}
+.build-ring-mini-collection-item__title {
+  font: normal normal bold 14px/18px Outfit;
+  letter-spacing: 2.1px;
+  color: #ffffff;
+  text-transform: uppercase;
+  opacity: 1;
+  flex: 0 0 100%;
+  max-width: 100%;
+  margin: 0 0 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.build-ring-mini-collection-item__title .remove-design {
+  font-size: 10px;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fff;
+  opacity: 0;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-item__title .remove-design {
+    opacity: 1 !important;
+    position: absolute !important;
+    left: 0;
+  }
+}
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-item__title {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 30px;
+    flex: 0 0 80px;
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+}
+.build-ring-mini-collection-item__ring, .build-ring-mini-collection-item__stone {
+  flex: 0 0 calc(50% - 10px);
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: #fff;
+}
+.build-ring-mini-collection-item__ring:before, .build-ring-mini-collection-item__stone:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+.build-ring-mini-collection-item__ring img, .build-ring-mini-collection-item__stone img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  -o-object-fit: cover;
+     object-fit: cover;
+  top: 0;
+  left: 0;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-item__ring, .build-ring-mini-collection-item__stone {
+    flex: 0 0 calc(50% - 50px);
+    border-radius: 100%;
+  }
+}
+
+.product-detail-build-ring__inner {
+  display: flex;
+  flex-wrap: wrap;
+}
+.product-detail-build-ring__left {
+  flex: 0 0 100%;
+  max-width: 100%;
+  order: 2;
+}
+@media (min-width: 1100px) {
+  .product-detail-build-ring__left {
+    flex: 0 0 calc(100% - 280px);
+    max-width: calc(100% - 280px);
+    order: 0;
+  }
+}
+.product-detail-build-ring__right {
+  background: rgba(215, 188, 153, 0.3803921569);
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+@media (min-width: 1100px) {
+  .product-detail-build-ring__right {
+    flex: 0 0 280px;
+    max-width: 280px;
+    padding: 80px 40px;
+    border-left: 2px solid var(--cl-border);
+  }
+}
+.product-detail-build-ring .woocommerce-breadcrumb {
+  margin-bottom: 20px;
+}
+.product-detail-build-ring .woocommerce-breadcrumb .delimiter {
+  display: none;
+}
+.product-detail-build-ring .product-detail #woocommerce-product-gallery__image-main,
+.product-detail-build-ring .product-detail .woocommerce-product-gallery {
+  border: 0;
+}
+.product-detail-build-ring .product-detail__info__left {
+  padding: 20px 30px;
+}
+.product-detail-build-ring .product-detail #woocommerce-product-gallery__image-main img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.product-detail-build-ring .product-detail__info__right {
+  padding: 20px 20px;
+}
+@media (min-width: 1100px) {
+  .product-detail-build-ring .product-detail__info__right {
+    border-left: 2px solid var(--cl-border);
+    padding: 50px 25px 0 25px;
+  }
+}
+.product-detail-build-ring .product-detail .woocommerce-product-gallery__thumbs {
+  padding: 0;
+  height: auto !important;
+  margin-top: 20px;
+}
+.product-detail-build-ring .summary-spacing,
+.product-detail-build-ring .woocommerce-product-details__short-description,
+.product-detail-build-ring .product-detail__info .price,
+.product-detail-build-ring .product-detail .product_title {
+  padding: 0;
+}
+.product-detail-build-ring .quantity,
+.product-detail-build-ring .woocommerce-variation-availability {
+  display: none !important;
+}
+.product-detail-build-ring .woocommerce-variation-price {
+  margin: 20px 0;
+}
+.product-detail-build-ring .add-to-cart-wrapper {
+  height: auto !important;
+  padding: 0;
+  justify-content: start;
+}
+.product-detail-build-ring .variations_form {
+  margin-bottom: 30px;
+}
+.product-detail-build-ring .custom-select,
+.product-detail-build-ring .product-detail__info__right .entry-summary .variations .value select {
+  height: 60px;
+  padding-left: 20px;
+  padding-right: 50px;
+}
+.product-detail-build-ring .product-detail__info__right .entry-summary .variations .value:before {
+  right: 20px;
+}
+.product-detail-build-ring .product-detail__info__right .entry-summary .variations .value {
+  display: block;
+  border: 1px solid var(--cl-border);
+  margin-bottom: 20px;
+}
+.product-detail-build-ring .product-detail__info__right .entry-summary .variations .value:after {
+  display: none;
+}
+.product-detail-build-ring .product-detail__info .single_add_to_cart_button,
+.product-detail-build-ring .btn-return-list {
+  width: 350px;
+  flex: 0 0 350px;
+  max-width: 100%;
+}
+.product-detail-build-ring .btn-return-list {
+  margin-top: 15px;
+  margin-bottom: 60px;
+}
+
+.build-ring-stone-options {
+  margin-bottom: 30px;
+}
+.build-ring-stone-options__title {
+  text-align: left;
+  font: normal normal normal 18px/21px Outfit;
+  letter-spacing: 0px;
+  opacity: 1;
+  margin-bottom: 15px;
+}
+.build-ring-stone-options__title span {
+  text-align: left;
+  font: normal normal normal 18px/21px Outfit;
+  letter-spacing: 0px;
+  color: #909090;
+}
+.build-ring-stone-options__item {
+  display: flex;
+  margin-bottom: 15px;
+}
+.build-ring-stone-options__item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.build-ring-stone-options__item label strong {
+  font: normal normal bold 18px/21px Outfit;
+  letter-spacing: 0px;
+  color: #3f7f88;
+  opacity: 1;
+  margin-bottom: 5px;
+  display: block;
+}
+.build-ring-stone-options__item label div {
+  font: normal normal normal 18px/21px Outfit;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+.build-ring-stone-options__item__image {
+  flex: 0 0 85px;
+  max-width: 85px;
+  height: 85px;
+  position: relative;
+  margin: 0 15px;
+}
+@media (min-width: 1100px) {
+  .build-ring-stone-options__item__image {
+    flex: 0 0 120px;
+    max-width: 120px;
+    height: 120px;
+  }
+}
+.build-ring-stone-options__item__image img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  -o-object-fit: cover;
+     object-fit: cover;
+  top: 0;
+  left: 0;
+  border-radius: 100%;
+}
+.build-ring-stone-options__item .stone-custom-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #909090;
+  border: 1px solid #3f7f88;
+  border-radius: 100%;
+}
+.build-ring-stone-options__item .stone-custom-image svg {
+  width: 71px;
+  height: 71px;
+}
+
+.subtotal-wrapper {
+  text-align: left;
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  padding: 25px 0;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 1099.98px) {
+  .build-ring-tray-product-info {
+    display: none;
+  }
+}
+
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra-wrapper {
+    background: rgba(215, 188, 153, 0.3803921569);
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra-wrapper #build-ring-stone-options__item--1-wrapper .build-ring-stone-options__item__label div {
+    display: block;
+    font-size: 10px;
+    padding-left: 5px;
+    line-height: 1.1;
+  }
+}
+
+#build-ring-tray-extra {
+  padding: 5px 0px;
+}
+@media (min-width: 1100px) {
+  #build-ring-tray-extra {
+    margin-top: 25px;
+    padding: 25px 0;
+    border-top: 1px solid var(--cl-border);
+    border-bottom: 1px solid var(--cl-border);
+  }
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra .build-ring-stone-options__title {
+    font-size: 12px;
+    margin-bottom: 0;
+  }
+  #build-ring-tray-extra .build-ring-stone-options__title span {
+    font-size: 12px;
+    display: none;
+  }
+}
+#build-ring-tray-extra .build-ring-stone-options {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid var(--cl-border);
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra .build-ring-stone-options {
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-bottom: 0;
+    border: 0;
+  }
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra .build-ring-stone-options__items {
+    gap: 10px;
+  }
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra .build-ring-stone-options__item__image {
+    flex: 0 0 30px;
+    height: 30px;
+    display: none;
+  }
+}
+#build-ring-tray-extra .build-ring-stone-options__item {
+  margin-bottom: 5px;
+}
+@media (min-width: 1100px) {
+  #build-ring-tray-extra .build-ring-stone-options__item {
+    margin-bottom: 15px;
+  }
+}
+#build-ring-tray-extra .build-ring-stone-options__item label {
+  display: block;
+  padding-left: 10px;
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra .build-ring-stone-options__item label {
+    display: flex !important;
+    padding-left: 0;
+  }
+}
+#build-ring-tray-extra .build-ring-stone-options__item label strong {
+  font: normal normal bold 16px/19px Outfit;
+  letter-spacing: 0px;
+  color: #3f7f88;
+  opacity: 1;
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra .build-ring-stone-options__item label strong {
+    font-size: 11px;
+    padding-left: 5px;
+    line-height: 1.1;
+    margin: 0;
+  }
+}
+#build-ring-tray-extra .build-ring-stone-options__item label div {
+  font: normal normal normal 16px/19px Outfit;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+#build-ring-tray-extra .build-ring-stone-options__item__image {
+  margin: 0 0 10px 0;
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra .build-ring-stone-options__item__label div {
+    display: none;
+  }
+}
+
+.build-ring-tray-product-info__type {
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 0px;
+  color: #bc8f55;
+  opacity: 1;
+  margin-bottom: 15px;
+}
+.build-ring-tray-product-info__title {
+  text-align: left;
+  font: normal normal normal 20px/26px Outfit;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+.build-ring-tray-product-info__price {
+  font: normal normal bold 20px/26px Outfit;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.build-ring-anchors {
+  border-top: 1px solid var(--cl-border);
+}
+.build-ring-anchors a {
+  display: block;
+  font: normal normal bold 16px/26px Outfit;
+  letter-spacing: 0px;
+  color: #000000;
+  padding: 40px 0;
+}
+
+.build-ring-content {
+  padding: 20px 20px;
+}
+.build-ring-content__title {
+  margin-bottom: 20px;
+  font: normal normal bold 20px/26px Outfit;
+  letter-spacing: 3px;
+  color: #000000;
+  text-transform: uppercase;
+}
+@media (min-width: 1100px) {
+  .build-ring-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5rem 3.125rem;
+  }
+  .build-ring-content__left {
+    flex: 0 0 51%;
+    max-width: 51%;
+  }
+  .build-ring-content__right {
+    flex: 0 0 45%;
+    max-width: 45%;
+  }
+}
+
+.product-error-message {
+  padding: 10px 0 0 0;
+  font: normal normal normal 16px/26px Outfit;
+  letter-spacing: 0px;
+  color: #fff;
+  opacity: 1;
+}
+
+/*# sourceMappingURL=build-ring.css.map*/

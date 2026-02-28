@@ -105,6 +105,24 @@ if (class_exists('TTG_Blocks')) {
             ]
         ]
     );
+
+    $blocks->add(
+        'build-ring-selection',
+        'TTG Build Ring Selection',
+        'TTG Build Ring Selection',
+        [
+            [
+                'handle' => 'build-ring-selection',
+                'url' => TTG_Util::get_assets_url('dist/css/components/build-ring-selection.css')
+            ],
+        ],
+        [
+            [
+                'handle' => 'build-ring-selection',
+                'url' => TTG_Util::get_assets_url('dist/js/components/build-ring-selection.js')
+            ],
+        ]
+    );
 }
 
 // add style for core block

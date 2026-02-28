@@ -5,8 +5,8 @@ Plugin Name:  Post Meta Data Manager
 Plugin URI: http://www.wpexpertplugins.com/
 Tags: custom post meta editor, meta fiedls editor, meta, post meta, inspector, custom fields, debug, tools
 Requires at least: 3.0
-Tested up to: 6.4
-Stable tag: 1.2.3
+Tested up to: 6.5.4
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC tested up to: 4.8.0
@@ -61,8 +61,31 @@ The plugin is simple to install:
 3. Edit multi fields value.
 
 == Changelog ==
+= 1.4.3 - 2024-09-18 = 
+* Resolved a support ticket.
+* Fixed edit & delete not working issue when wc installed and hpos not enabled.
+* Date paid support provided in wc order
 
-- 1.2.3 - 2023-12-21
+
+= 1.4.2 - 2024-07-23 = 
+* Resolved a support ticket.
+* https://wordpress.org/support/topic/cant-see-metadata-section-on-1-4-1/
+
+= 1.4.1 - 2024-07-14 = 
+* Resolved a support ticket.
+* https://wordpress.org/support/topic/breaks-when-real3d-pdf-is-installed/
+
+= 1.4.0 - 2024-07-10 = 
+* Resolved all support tickets.
+* https://wordpress.org/support/topic/fatal-error-on-coupons-because-of-wrong-data-type/
+* https://wordpress.org/support/topic/incompatible-with-high-performance-order-storage-17/
+* https://wordpress.org/support/topic/plugin-conflict-with-postx-pro-taxonomy-image-function/
+* https://wordpress.org/support/topic/bug-woocommerce-price-not-update-if-sale-price-is-earlier-set-and-removed/
+
+= 1.3.0 - 2024-06-29 = 
+* Vulnerability fixes
+
+= 1.2.3 - 2023-12-21
 * Resolved the issue of storing unnecessary metadata.
 * https://wordpress.org/support/topic/plugin-corrupted-post_meta-table/
 

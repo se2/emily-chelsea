@@ -1,0 +1,504 @@
+@import "../base-components";
+
+#main-content__top {
+	display: none;
+}
+
+.build-ring-step {
+	border: 1px solid var(--cl-gold);
+	border-left: 0px;
+	&__item {
+		flex: 1 0 0;
+		display: flex;
+		align-items: center;
+		padding: 10px 25px;
+		border-bottom: 1px solid var(--cl-gold);
+		&:last-child {
+			border-bottom: 0;
+		}
+		@include media-breakpoint-up(md) {
+			padding: 20px 25px;
+			border-right: 1px solid var(--cl-gold);
+			border-bottom: 0;
+		}
+
+		&:last-child {
+			border-right: 0;
+		}
+		&__number {
+			color: var(--cl-gold);
+			font: normal normal normal 40px/46px New Forest;
+			letter-spacing: 0px;
+			display: block;
+			margin-right: pxToRem(25);
+		}
+		&__label {
+			font: normal normal normal 14px/18px Outfit;
+			letter-spacing: 0px;
+		}
+		&--active {
+			background: #efe4d6 0% 0% no-repeat padding-box;
+		}
+		&--active-2 {
+			background: #efe4d6 0% 0% no-repeat padding-box;
+			color: #fdf9f4;
+			background: #bc8f55;
+			.build-ring-step__item__number {
+				color: #fdf9f4;
+			}
+		}
+	}
+}
+
+.current-build-ring-step {
+	padding: 35px 50px;
+	border-bottom: 1px solid var(--cl-gold);
+	position: relative;
+	.facetwp-facet {
+		@include media-breakpoint-up(md) {
+			position: absolute;
+			right: 90px;
+			top: 60px;
+		}
+	}
+	&__number {
+		color: var(--cl-gold);
+		font: normal normal bold 22px/26px Outfit;
+		letter-spacing: 1.76px;
+		text-transform: uppercase;
+	}
+	&__label {
+		font: normal normal normal 54px/62px New Forest;
+		letter-spacing: 0px;
+		color: #363636;
+	}
+}
+
+.is-ring-summary {
+	.cart {
+		padding-left: pxToRem(20);
+		padding-right: pxToRem(20);
+		@include media-breakpoint-up(md) {
+			padding-left: pxToRem(60);
+			padding-right: pxToRem(60);
+		}
+		body,
+		tr,
+		td {
+			display: block;
+		}
+		tr {
+			margin-bottom: 15px;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		.quantity,
+		.woocommerce-variation .woocommerce-variation-availability,
+		.woocommerce-variation .woocommerce-variation-price {
+			display: none !important;
+		}
+		.add-to-cart-wrapper {
+			padding: 0 !important;
+			height: auto;
+			margin-top: 30px;
+		}
+
+		.choose-this-setting-btn {
+			margin-top: 30px;
+		}
+	}
+
+	.entry-summary {
+		.variations {
+			.value {
+				width: 100%;
+				border: 2px solid var(--cl-border);
+				position: relative;
+				select,
+				.custom-select {
+					height: 60px !important;
+				}
+				&::after {
+					display: none !important;
+				}
+			}
+		}
+	}
+
+	.product-services {
+		margin-top: 35px;
+	}
+
+	.woocommerce-product-details__short-description {
+		margin-top: 20px !important;
+	}
+}
+
+.build-ring-anchors {
+	margin-top: 190px;
+	border-top: 1px solid var(--cl-border);
+	a {
+		display: block;
+		font: normal normal bold 16px/26px Outfit;
+		letter-spacing: 0px;
+		color: #000000;
+		padding: 40px 0;
+	}
+}
+
+.product-detail {
+	.woocommerce-product-gallery {
+		@include media-breakpoint-up(md) {
+			border-right: 0;
+		}
+	}
+
+	#woocommerce-product-gallery__image-main {
+		@include media-breakpoint-up(md) {
+			border-bottom: 0px;
+		}
+	}
+
+	.product-detail__info__left {
+		border-right: 2px solid var(--cl-border);
+	}
+	.woocommerce-product-details__short-description {
+		margin: 20px 0 !important;
+	}
+	.quantity {
+		display: none !important;
+	}
+}
+
+.product-detail__info {
+	.single_add_to_cart_button,
+	.buy-now {
+		@include media-breakpoint-up(md) {
+			flex: 0 0 auto;
+		}
+	}
+
+	.add-to-cart-wrapper {
+		height: auto !important;
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+		@include media-breakpoint-up(md) {
+			padding-left: 3.75rem;
+			padding-right: 3.75rem;
+		}
+	}
+}
+
+.build-ring-modal {
+	max-width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 9999;
+	overflow: hidden;
+	&__bg {
+		background: #00000066 0% 0% no-repeat padding-box;
+		overflow: auto;
+		margin-right: -50px;
+		margin-left: -50px;
+		padding: 50px 50px;
+		height: 100vh;
+	}
+	&__inner {
+		background: #3f7f88 0% 0% no-repeat padding-box;
+		box-shadow: 0px 10px 20px #00000041;
+		border: 2px solid #3f7f88;
+		border-radius: 34px;
+		width: 955px;
+		margin: 0 auto;
+		padding: 90px 80px;
+		position: relative;
+	}
+	&__close {
+		width: 51px;
+		height: 51px;
+		background: #d7bc99 0% 0% no-repeat padding-box;
+		border-radius: 26px;
+		color: #fff;
+		position: absolute;
+		top: 25px;
+		right: 25px;
+		cursor: pointer;
+	}
+	&__head {
+		display: flex;
+		gap: 70px;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 50px;
+	}
+	&__body {
+		&__title {
+			text-align: center;
+			font: normal normal normal 54px/60px New Forest;
+			letter-spacing: 0px;
+			color: #ffffff;
+			margin: 0 0 25px 0;
+		}
+		&__content,
+		&__note {
+			text-align: center;
+			font: normal normal 300 16px/26px Outfit;
+			letter-spacing: 0px;
+			color: #ffffff;
+			margin-bottom: 35px;
+		}
+		&__content {
+			margin-bottom: 35px;
+		}
+		&__actions {
+			margin-bottom: 40px;
+
+			.no-stone {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				gap: 25px;
+
+				span {
+					font: normal normal normal 36px/60px New Forest;
+					letter-spacing: 0px;
+					color: #ffffff;
+				}
+			}
+
+			.have-stone {
+				&__inner {
+					display: flex;
+					justify-content: space-between;
+				}
+				&__item {
+					flex: 0 0 calc(50% - 45px);
+					max-width: calc(50% - 45px);
+					padding: 30px 0;
+					img {
+						display: block;
+						height: 213px;
+						width: auto;
+						margin: 0px auto 45px auto;
+					}
+				}
+				&__sep {
+					flex: 0 0 130px;
+					max-width: 130px;
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					align-items: center;
+					font: normal normal normal 36px/60px New Forest;
+					letter-spacing: 0px;
+					color: #ffffff;
+					position: relative;
+					text-transform: uppercase;
+					&:before,
+					&::after {
+						content: "";
+						display: block;
+						width: 1px;
+						height: calc(50% - 40px);
+						background: #fff;
+					}
+				}
+			}
+
+			.btn {
+				font-weight: normal;
+			}
+		}
+	}
+
+	@include media-breakpoint-down(md) {
+		&__close {
+			width: 30px;
+			height: 30px;
+			top: 15px;
+			right: 15px;
+		}
+
+		&__head {
+			gap: 20px;
+			svg {
+				width: 30px;
+				height: auto;
+				max-height: 30px;
+			}
+		}
+
+		&__inner {
+			max-width: 90%;
+			padding: 30px 20px;
+		}
+
+		&__body {
+			&__title {
+				font-size: 30px;
+				line-height: 1.1;
+				margin: 0 0 15px 0;
+			}
+			&__content {
+				margin-bottom: 25px;
+			}
+			&__actions {
+				margin-bottom: 20px;
+
+				.no-stone {
+					gap: 15px;
+				}
+
+				.btn {
+					font-size: 15px;
+				}
+			}
+		}
+	}
+}
+
+.confirm-rings {
+	padding-bottom: 75px;
+
+	&__title {
+		font: normal normal normal 36px/42px New Forest;
+		letter-spacing: 0px;
+		color: #363636;
+		margin-bottom: 20px;
+	}
+	&__list {
+		&__item {
+			display: flex;
+			padding: 30px 30px;
+			border: 1px solid var(--cl-gold);
+			&__left,
+			&__right {
+				flex: 0 0 50%;
+				max-width: 50%;
+			}
+		}
+	}
+	&__subtotal {
+		border: 1px solid var(--cl-gold);
+		border-top: 0;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		padding: 25px 30px;
+		font: normal normal normal 20px/26px Outfit;
+		letter-spacing: 0px;
+		color: #000000;
+		strong {
+			display: block;
+			margin-right: 60px;
+		}
+	}
+	&__actions {
+		display: flex;
+		justify-content: space-between;
+		padding-top: 20px;
+	}
+	&__add-another-ring {
+		padding-left: 5px;
+		svg {
+			display: block;
+			margin-right: 20px;
+		}
+	}
+}
+
+.confirm-rings-product {
+	display: flex;
+	justify-content: space-between;
+
+	&__img,
+	&__content {
+		flex: 0 0 calc(50% - 13px);
+		max-width: calc(50% - 13px);
+	}
+	&__img {
+		border: 1px solid var(--cl-gold);
+
+		position: relative;
+		&:before {
+			content: "";
+			display: block;
+			padding-top: 100%;
+		}
+		img {
+			position: absolute;
+			top: 0px;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__content {
+		padding-top: 35px;
+	}
+
+	&__label {
+		color: var(--cl-gold);
+		font: normal normal bold 18px/26px Outfit;
+		letter-spacing: 0px;
+		margin-bottom: 20px;
+	}
+	&__title {
+		font: normal normal normal 20px/26px Outfit;
+		letter-spacing: 0px;
+		color: #000000;
+		margin: 0;
+	}
+
+	.amount {
+		font: normal normal bold 20px/26px Outfit;
+		letter-spacing: 0px;
+		color: #000000;
+	}
+
+	&__actions {
+		margin-top: 25px;
+		a {
+			display: block;
+			text-decoration: underline !important;
+			font: normal normal 600 16px/26px Outfit;
+			letter-spacing: 0px;
+			color: #3f7f88;
+		}
+	}
+}
+
+.build-rings-step-3 {
+	.current-build-ring-step {
+		border-bottom: 0;
+	}
+}
+
+.build-ring-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: pxToRem(80) pxToRem(50);
+	&__left {
+		flex: 0 0 51%;
+		max-width: 51%;
+	}
+	&__right {
+		flex: 0 0 45%;
+		max-width: 45%;
+	}
+	&__title {
+		margin-bottom: 20px;
+		font: normal normal bold 20px/26px Outfit;
+		letter-spacing: 3px;
+		color: #000000;
+		text-transform: uppercase;
+	}
+}

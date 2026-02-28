@@ -49,7 +49,7 @@ class FilteringCPT extends FilteringBase
     public function getExcludeQueryWhere($postsToExclude)
     {
 
-        return " AND ({$this->wpdb->posts}.ID NOT IN (" . implode(',', $postsToExclude) . "))";
+        return " AND ({$this->wpdb->posts}.ID NOT IN (". $postsToExclude . "))";
 
     }
 
@@ -67,7 +67,7 @@ class FilteringCPT extends FilteringBase
 
         apply_filters('wp_all_export_single_filter_rule', $rule);
 
-        // If WooCommerce Prdoducts are exported, alter the way featured meta is filtered
+        // If WooCommerce Products are exported, alter the way featured meta is filtered
         if ( ! empty(\XmlExportEngine::$post_types) and class_exists('WooCommerce')){
             if (@in_array("product", \XmlExportEngine::$post_types)){
                 $this->fixRuleForFeaturedProduct($rule);

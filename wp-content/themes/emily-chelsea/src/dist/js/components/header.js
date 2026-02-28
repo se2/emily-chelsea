@@ -73,6 +73,21 @@ var __webpack_exports__ = {};
       $(".header-search__form input").focus();
     }
   });
+  (function ($) {
+    $(document).on("facetwp-loaded", function () {
+      if (FWP.loaded) {
+        // Run only after the initial page load
+        $("html, body").animate({
+          scrollTop: $("#main-content").offset().top // Scroll to the top of the element with class "facetp-template"
+        }, 500);
+      }
+    });
+  })(jQuery);
+  var phoneBlock = document.querySelector(".header-phone--desktop");
+  var phoneNumber = phoneBlock.querySelector(".header-phone--number");
+  phoneBlock.addEventListener("click", function () {
+    phoneNumber.classList.toggle("show");
+  });
 })(jQuery);
 /******/ })()
 ;

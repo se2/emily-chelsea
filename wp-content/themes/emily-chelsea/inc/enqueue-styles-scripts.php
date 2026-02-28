@@ -3,6 +3,9 @@
 /**
  * Enqueue scripts and styles.
  */
+
+use TTG\Build_Ring\Controller;
+
 function ttg_wp_scripts()
 {
 
@@ -41,7 +44,14 @@ function ttg_wp_scripts()
     }
 
 
-    if (is_tax() || is_post_type_archive('product') || is_shop() || is_page_template('page-special-products.php')) {
+    if (
+        is_tax()
+        || is_post_type_archive('product')
+        || is_shop()
+        || is_page_template('page-special-products.php')
+        || is_page_template('page-build-ring.php')
+
+    ) {
         wp_enqueue_style('custom-facetwp-facet', get_template_directory_uri() . '/src/dist/css/components/facetwp-facet.css');
         wp_enqueue_style('custom-woocommerce-pagination', get_template_directory_uri() . '/src/dist/css/components/woocommerce-pagination.css');
         wp_enqueue_style('custom-breadcrumb', get_template_directory_uri() . '/src/dist/css/components/woocommerce-breadcrumb.css');
@@ -98,6 +108,7 @@ function ttg_wp_scripts()
         wp_enqueue_style('page-cart', get_template_directory_uri() . '/src/dist/css/pages/cart.css');
 
         wp_enqueue_script('quantity', get_template_directory_uri() . '/src/dist/js/components/quantity.js', [], false, true);
+        wp_enqueue_script('custom-cart', get_template_directory_uri() . '/src/dist/js/pages/cart.js', [], false, true);
     }
 
     if (is_checkout()) {
@@ -119,6 +130,14 @@ function ttg_wp_scripts()
         wp_enqueue_style('custom-woocommerce-pagination', get_template_directory_uri() . '/src/dist/css/components/woocommerce-pagination.css');
         wp_enqueue_style('blog-list', get_template_directory_uri() . '/src/dist/css/components/blog-list.css');
         wp_enqueue_style('search-page', get_template_directory_uri() . '/src/dist/css/pages/search.css');
+    }
+
+    if (is_page_template('page-build-ring.php') || Controller::is_building_ring()) {
+        wp_enqueue_style('build-ring', get_template_directory_uri() . '/src/dist/css/pages/build-ring.css');
+        wp_enqueue_script('jquery-ui-draggable');
+        wp_enqueue_script('jquery-ui-droppable');
+        wp_enqueue_script('build-ring', get_template_directory_uri() . '/src/dist/js/pages/build-ring.js', ['jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'], false, true);
+        wp_enqueue_script('jquery-ui-touch-punch', get_template_directory_uri() . '/src/libs/jquery.ui.touch-punch.min.js', ['jquery-ui-draggable', 'jquery-ui-droppable'], false, true);
     }
 }
 add_action('wp_enqueue_scripts', 'ttg_wp_scripts', 9999);

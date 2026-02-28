@@ -21,6 +21,9 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
+use TTG\Build_Ring\MODE;
+use TTG\Build_Ring\Controller;
+
 
 if (is_singular('product')) {
 	global $post;
@@ -52,6 +55,17 @@ if (is_singular('product')) {
 		array($shop_title, $shop_url),
 		array('Special Products', ''),
 	];
+}
+
+if (Controller::is_building_ring()) {
+	if (is_singular('product')) {
+		$breadcrumb_title = Controller::get_mode() == MODE::START_WITH_STONE ? '« Return to Stone Listing' : '« Return to Setting Listing';
+		$breadcrumb_url = "/build-ring/";
+		$breadcrumb = [
+			array($breadcrumb_title, $breadcrumb_url),
+			array('', ''),
+		];
+	}
 }
 
 if (!empty($breadcrumb)) {

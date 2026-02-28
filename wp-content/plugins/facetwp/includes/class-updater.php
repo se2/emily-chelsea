@@ -16,9 +16,10 @@ class FacetWP_Updater
     function get_plugins_to_check() {
         $output = [];
         $plugins = get_plugins();
-        $active_plugins = get_option( 'active_plugins', [] );
+        $all_plugin_paths = array_keys( $plugins );
 
-        foreach ( $active_plugins as $plugin_path ) {
+        foreach ( $all_plugin_paths as $plugin_path ) {
+
             if ( isset( $plugins[ $plugin_path ] ) ) {
                 $info = $plugins[ $plugin_path ];
                 $slug = trim( dirname( $plugin_path ), '/' );
@@ -93,8 +94,9 @@ class FacetWP_Updater
         $response = get_option( 'facetwp_updater_response', '' );
         $ts = (int) get_option( 'facetwp_updater_last_checked' );
         $plugins = $this->get_plugins_to_check();
+        $force_check = ! empty( $_GET['force-check'] ); // 'Check again' link on Dashboard > Updates page
 
-        if ( empty( $response ) || $ts + 14400 < $now ) {
+        if ( empty( $response ) || $ts + 14400 < $now || $force_check ) {
 
             $request = wp_remote_post( 'https://api.facetwp.com', [
                 'body' => [
@@ -130,6 +132,8 @@ class FacetWP_Updater
                         'plugin'        => $plugin_path,
                         'new_version'   => $info['version'],
                         'package'       => $info['package'],
+                        'requires'      => $info['requires'],
+                        'tested'        => $info['tested']
                     ];
 
                     if ( version_compare( $plugins[ $slug ]['version'], $info['version'], '<' ) ) {

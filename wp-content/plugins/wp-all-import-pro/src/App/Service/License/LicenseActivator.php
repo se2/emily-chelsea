@@ -69,7 +69,8 @@ class LicenseActivator
                 $api_params = array(
                     'edd_action' => 'check_license',
                     'license' => PMXI_Plugin::decode($options[$licenseField]),
-                    'item_name' => urlencode($productName)
+                    'item_name' => urlencode($productName),
+                    'url' => home_url()
                 );
 
                 // Call the custom API.

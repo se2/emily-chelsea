@@ -41,7 +41,7 @@ add_filter('body_attr_style', function ($attr) {
     $attr['--header-background-color'] = $config['header_background_color'];
     $attr['--header-line-color'] = $config['header_line_color'];
 
-    $header_sticky = $config['header_sticky'];
+    $header_sticky = $config['header_sticky'] ?? [];
     $attr['--header-sticky-background-color'] = $header_sticky['background_color'];
 
     $attr['--hero-banner-height-mobile-default'] = '160px';

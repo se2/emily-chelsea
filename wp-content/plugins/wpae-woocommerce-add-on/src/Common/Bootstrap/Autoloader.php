@@ -44,6 +44,10 @@ class Autoloader
     private function legacyAutoload($className)
     {
 
+	    if ( ! preg_match('/XmlExportWooCommerce|PMWE/m', $className) ) {
+		    return false;
+	    }
+
         $is_prefix = false;
         $filePath = str_replace('_', '/', preg_replace('%^' . preg_quote($this->prefix, '%') . '%', '', strtolower($className), 1, $is_prefix)) . '.php';
         if (!$is_prefix) { // also check file with original letter case

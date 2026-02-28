@@ -167,6 +167,7 @@
 .products-filter__item__toggle:checked + div + .products-filter__item__content {
   opacity: 1;
   visibility: visible;
+  display: block;
 }
 .products-filter__item__label {
   font-size: 0.875rem;
@@ -204,6 +205,7 @@
 .products-filter__item__content {
   visibility: hidden;
   opacity: 0;
+  display: none;
   background-color: #fff;
   position: absolute;
   width: calc(100% - 20px);
@@ -216,6 +218,34 @@
 }
 .products-filter__item__content .facetwp-slider-reset {
   display: none !important;
+}
+.products-filter--aside {
+  border-bottom: 0;
+}
+@media (min-width: 1100px) {
+  .products-filter--aside {
+    padding: 0rem 0rem;
+  }
+}
+.products-filter--aside .products-filter__title {
+  padding: 0 20px;
+}
+.products-filter--aside .products-filter__items {
+  width: 100%;
+  display: block;
+}
+.products-filter--aside .products-filter__item {
+  padding: 5px 20px;
+}
+.products-filter--aside .products-filter__item__content {
+  position: relative;
+  padding: 5px 0 0 0;
+  border: 0;
+}
+.products-filter--aside .fs-dropdown {
+  position: relative;
+  border: 0;
+  padding: 5px 0 0 0;
 }
 
 .facetwp-selections ul {

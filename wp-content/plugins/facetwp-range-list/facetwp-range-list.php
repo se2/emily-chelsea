@@ -2,15 +2,14 @@
 /*
 Plugin Name: FacetWP - Range List
 Description: Range list facet type
-Version: 0.7.2
+Version: 0.9.1
 Author: FacetWP, LLC
 Author URI: https://facetwp.com/
-GitHub URI: facetwp/facetwp-range-list
 */
 
 defined( 'ABSPATH' ) or exit;
 
-define( 'FACETWP_RANGE_LIST_VERSION', '0.7.2' );
+define( 'FACETWP_RANGE_LIST_VERSION', '0.9.1' );
 
 
 /**

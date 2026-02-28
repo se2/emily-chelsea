@@ -115,7 +115,8 @@ if ( ! class_exists( 'Smart_Manager_Product_Stock_Log' ) ) {
 				'id'   => _x( 'Task ID', 'task id', 'smart-manager-for-wp-e-commerce' ),
 				'type' => _x( 'Type', 'task type', 'smart-manager-for-wp-e-commerce' ),
 				'status'   => _x( 'Status', 'task status', 'smart-manager-for-wp-e-commerce' ),
-				'completed_date' => _x( 'Date', 'task completed date', 'smart-manager-for-wp-e-commerce' )
+				'completed_date' => _x( 'Date', 'task completed date', 'smart-manager-for-wp-e-commerce' ),
+				'author' => _x( 'Author', 'name and email address of the user who created the task', 'smart-manager-for-wp-e-commerce' )
 			);
 			$column_model = array();
 			$column_model = &$dashboard_model['columns'];

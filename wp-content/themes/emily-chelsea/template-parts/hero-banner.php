@@ -12,6 +12,7 @@ if (!empty($id)) {
         $hero_banner_image_position_x = get_field('hero_banner_image_position_x', $id);
         $hero_banner_image_position_y = get_field('hero_banner_image_position_y', $id);
         $image = get_field('hero_banner_image', $id);
+        $image = apply_filters('ttg_hero_banner_image', $image, $id);
         $image_html = !empty($image['id']) ? wp_get_attachment_image($image['id'], 'full') : '';
 
         if (empty($image_html) && is_numeric($id)) {

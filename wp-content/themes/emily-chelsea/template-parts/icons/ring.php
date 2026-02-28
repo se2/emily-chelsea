@@ -1,0 +1,1 @@
+<img alt="ring" src="<?php echo get_theme_file_uri('src/dist/img/ring.png') ?>" />

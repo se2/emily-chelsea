@@ -3,7 +3,7 @@
 Plugin Name: WP All Export - WooCommerce Export Add-On Pro
 Plugin URI: http://www.wpallimport.com/
 Description: Export WooCommerce Products, Orders and Reviews from WordPress. Requires WP All Export Pro.
-Version: 1.0.10-beta-1.3
+Version: 1.0.10-beta-2.5
 Author: Soflyy
 */
 /**
@@ -24,7 +24,7 @@ define('PMWE_ROOT_URL', rtrim(plugin_dir_url(__FILE__), '/'));
  */
 define('PMWE_PREFIX', 'pmwe_');
 
-define('PMWE_VERSION', '1.0.10-beta-1.3');
+define('PMWE_VERSION', '1.0.10-beta-2.5');
 
 if ( class_exists('PMWE_Plugin') and PMWE_EDITION == "free"){
 
@@ -188,9 +188,13 @@ else {
 			$page = strtolower($input->getpost('page', ''));
             $action = $input->getpost('action', 'index');
 
-            // IF PMXE_VERSION is less than 1.8.5-beta-1.0
-            if(defined('PMXE_VERSION') && version_compare(PMXE_VERSION, '1.8.5-beta-1.0', '<' )) {
-                PMXE_Plugin::getInstance()->showDismissibleNotice('<strong>WP All Export WooCommerce Add-On:</strong> The latest version of WP All Export Pro (1.8.5+) is required. Any exports that require this add-on will not run correctly until you update WP All Export Pro.', 'woocommerce_add_on_minimum_version_hpos');
+            // IF PMXE_VERSION is less than 1.8.5-beta-1.0 and HPOS is in use.
+            if(defined('PMXE_VERSION') && defined('PMXE_EDITION') && class_exists('Automattic\WooCommerce\Utilities\OrderUtil') && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()) {
+                if('pro' == PMXE_EDITION && version_compare(PMXE_VERSION, '1.8.5-beta-1.0', '<' )) {
+	                PMXE_Plugin::getInstance()->showDismissibleNotice( '<strong>WP All Export WooCommerce Add-On:</strong> The latest version of WP All Export Pro (1.8.5+) is required to export Orders. Any Order exports will not run correctly until you update WP All Export Pro.', 'woocommerce_add_on_minimum_version_hpos' );
+                } elseif( 'free' == PMXE_EDITION && version_compare(PMXE_VERSION, '1.4.5', '<' )){
+	                PMXE_Plugin::getInstance()->showDismissibleNotice( '<strong>WP All Export WooCommerce Add-On:</strong> The latest version of WP All Export (1.4.5+) is required to export Orders. Any Order exports will not run correctly until you update WP All Export.', 'woocommerce_add_on_minimum_version_hpos' );
+                }
             }
 
             $adminDispatcher->dispatch($page, $action);
