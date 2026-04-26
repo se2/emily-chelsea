@@ -45,12 +45,14 @@ do_action('woocommerce_before_cart'); ?>
 
 				<?php
 				$cart = Controller::sort_cart(WC()->cart->get_cart());
+
 				foreach ($cart as $cart_item_key => $cart_item) {
 					$_product   = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
 					$product_id = apply_filters('woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key);
 					$is_ring = isset($cart_item['is_ring']) ? $cart_item['is_ring'] : false;
 					$is_stone = isset($cart_item['is_stone']) ? $cart_item['is_stone'] : false;
-					$is_couple = $is_ring || $is_stone ? true : false;
+					$is_finish_design = isset($cart_item['is_finish_design']) ? $cart_item['is_finish_design'] : false;
+					$is_couple = ($is_ring || $is_stone) ? true : false;
 					$uuid = isset($cart_item['uuid']) ? $cart_item['uuid'] : '';
 
 					/**
@@ -120,41 +122,40 @@ do_action('woocommerce_before_cart'); ?>
 							</td>
 
 							<?php
-							if ($is_couple) {
+							if ($is_finish_design && $is_ring) {
 							?>
-								<?php
-								if ($is_ring) {
-								?>
-									<td rowspan="2" class="product-quantity" data-title="<?php esc_attr_e('Quantity', 'woocommerce'); ?>">
-										<?php
-										if ($_product->is_sold_individually()) {
-											$min_quantity = 1;
-											$max_quantity = 1;
-										} else {
-											$min_quantity = 0;
-											$max_quantity = $_product->get_max_purchase_quantity();
-										}
+								<td rowspan="2" class="product-quantity" data-title="<?php esc_attr_e('Quantity', 'woocommerce'); ?>">
+									<?php
+									if ($_product->is_sold_individually()) {
+										$min_quantity = 1;
+										$max_quantity = 1;
+									} else {
+										$min_quantity = 1;
+										$max_quantity = $_product->get_max_purchase_quantity();
+									}
 
-										$product_quantity = woocommerce_quantity_input(
-											array(
-												'input_name'   => "cart[{$cart_item_key}][qty]",
-												'input_value'  => $cart_item['quantity'],
-												'max_value'    => $max_quantity,
-												'min_value'    => $min_quantity,
-												'product_name' => $product_name,
-											),
-											$_product,
-											false
-										);
+									$product_quantity = woocommerce_quantity_input(
+										array(
+											'input_name'   => "cart[{$cart_item_key}][qty]",
+											'input_value'  => $cart_item['quantity'],
+											'max_value'    => $max_quantity,
+											'min_value'    => $min_quantity,
+											'product_name' => $product_name,
+											"readonly" => true
+										),
+										$_product,
+										false
+									);
 
-										echo apply_filters('woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item); // PHPCS: XSS ok.
-										?>
-									</td>
-								<?php
-								}
-								?>
+									echo apply_filters('woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item); // PHPCS: XSS ok.
+									?>
+								</td>
 							<?php
-							} else {
+							}
+							?>
+
+							<?php
+							if (!$is_couple || (!$is_finish_design && ($is_stone || $is_ring))) {
 							?>
 								<td class="product-quantity" data-title="<?php esc_attr_e('Quantity', 'woocommerce'); ?>">
 									<?php
@@ -190,32 +191,59 @@ do_action('woocommerce_before_cart'); ?>
 								echo apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key); // PHPCS: XSS ok.
 								?>
 							</td>
+
 							<?php
-							if ($is_couple) {
-								if ($is_ring) {
+							if ($is_finish_design && $is_ring) {
 							?>
-									<td rowspan="2" class="product-remove">
-										<?php
-										echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-											'woocommerce_cart_item_remove_link',
-											sprintf(
-												'<a data-uuid="%s" href="#" class="remove remove-design-from-cart" aria-label="%s" data-product_id="%s" data-product_sku="%s">%s</a>',
-												$uuid,
-												/* translators: %s is the product name */
-												esc_attr(sprintf(__('Remove %s from cart', 'woocommerce'), wp_strip_all_tags($product_name))),
-												esc_attr($product_id),
-												esc_attr($_product->get_sku()),
-												TTG_Template::get_icon('remove')
-											),
-											$cart_item_key
-										);
-										?>
-									</td>
-								<?php
-								}
-								?>
+								<td rowspan="2" class="product-remove">
+									<?php
+									echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										'woocommerce_cart_item_remove_link',
+										sprintf(
+											'<a data-uuid="%s" href="#" class="remove remove-design-from-cart" aria-label="%s" data-product_id="%s" data-product_sku="%s">%s</a>',
+											$uuid,
+											/* translators: %s is the product name */
+											esc_attr(sprintf(__('Remove %s from cart', 'woocommerce'), wp_strip_all_tags($product_name))),
+											esc_attr($product_id),
+											esc_attr($_product->get_sku()),
+											TTG_Template::get_icon('remove')
+										),
+										$cart_item_key
+									);
+									?>
+								</td>
 							<?php
-							} else {
+							}
+							?>
+
+							<?php
+							if (!$is_finish_design && ($is_stone || $is_ring)) {
+								$tray_item = TTG\Build_Ring\Controller::get_tray_item_by_cart_line_item($cart_item_key);
+								$uuid = $tray_item['uuid'] ?? '';
+							?>
+								<td class="product-remove">
+									<?php
+									echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										'woocommerce_cart_item_remove_link',
+										sprintf(
+											'<a data-uuid="%s" href="#" class="remove remove-tray-item-from-cart" aria-label="%s" data-product_id="%s" data-product_sku="%s">%s</a>',
+											$uuid,
+											/* translators: %s is the product name */
+											esc_attr(sprintf(__('Remove %s from cart', 'woocommerce'), wp_strip_all_tags($product_name))),
+											esc_attr($product_id),
+											esc_attr($_product->get_sku()),
+											TTG_Template::get_icon('remove')
+										),
+										$cart_item_key
+									);
+									?>
+								</td>
+							<?php
+							}
+							?>
+
+							<?php
+							if (!$is_couple) {
 							?>
 								<td class="product-remove">
 									<?php
@@ -237,7 +265,6 @@ do_action('woocommerce_before_cart'); ?>
 							<?php
 							}
 							?>
-
 						</tr>
 				<?php
 					}

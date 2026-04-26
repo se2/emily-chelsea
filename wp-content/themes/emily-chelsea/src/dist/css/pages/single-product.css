@@ -407,9 +407,6 @@
   justify-content: center;
   pointer-events: none;
 }
-.product-detail #woocommerce-product-gallery__image-main .woocommerce-product-gallery__image.hide {
-  display: none;
-}
 .product-detail #woocommerce-product-gallery__image-main .woocommerce-product-gallery__video {
   flex: 0 0 100%;
   z-index: 2;

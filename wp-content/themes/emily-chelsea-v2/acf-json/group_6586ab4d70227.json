@@ -1,0 +1,50 @@
+{
+    "key": "group_6586ab4d70227",
+    "title": "Hero Banner Config",
+    "fields": [
+        {
+            "key": "field_6586ab5bbbbb3",
+            "label": "Is Independence Header Config",
+            "name": "is_independence_header_config",
+            "type": "true_false",
+            "instructions": "The default uses the header of the shop page. Mark This option for independent Header Config",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "product"
+            }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "product_cat"
+            }
+        ]
+    ],
+    "menu_order": 1,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1703391823
+}

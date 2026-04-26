@@ -1,0 +1,117 @@
+.blog-list {
+  width: 100%;
+}
+.blog-list__inner {
+  margin: -1.25rem -0.5rem;
+}
+@media (min-width: 1100px) {
+  .blog-list__inner {
+    margin: -2.5rem -0.9375rem;
+  }
+}
+@media (min-width: 1100px) {
+  .blog-list.columns-3 .post-item {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+  }
+}
+@media (min-width: 1100px) {
+  .blog-list.gutter-large .blog-list__inner {
+    margin: -1.5rem -1.5625rem;
+  }
+}
+@media (min-width: 1100px) {
+  .blog-list.gutter-large .post-item__inner {
+    padding: 1.5rem 1.5625rem;
+  }
+}
+
+.post-item {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.post-item__inner {
+  padding: 1.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+@media (min-width: 1100px) {
+  .post-item__inner {
+    padding: 2.5rem 0.9375rem;
+  }
+}
+.post-item__thumbnail {
+  padding-top: 66%;
+  background: var(--cl-background-image);
+  margin: 0 0 0.9375rem 0;
+  position: relative;
+  opacity: 0.75;
+  transition: opacity 0.2s linear;
+  will-change: opacity;
+}
+@media (min-width: 1100px) {
+  .post-item__thumbnail {
+    margin: 0 0 1.875rem 0;
+  }
+}
+.post-item__thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.post-item__title {
+  margin: 0 0 0.5rem 0;
+  transition: opacity 0.2s linear;
+}
+@media (min-width: 1100px) {
+  .post-item__title {
+    margin: 0 0 1.125rem 0;
+  }
+}
+.post-item__desc {
+  margin: 0 0 1.25rem 0;
+}
+.post-item__link {
+  text-decoration: none;
+}
+.post-item__cat {
+  border-top: 2px solid var(--cl-border);
+  margin-top: auto;
+  padding: 0.5rem 0 0 0;
+}
+@media (min-width: 1100px) {
+  .post-item__cat {
+    padding: 1.125rem 0 0 0;
+  }
+}
+.post-item:hover .post-item__thumbnail {
+  opacity: 1;
+}
+.post-item:hover .post-item__title {
+  color: var(--cl-primary);
+}
+.post-item--style-2 .post-item__title {
+  color: #3f7f88;
+}
+@media (min-width: 1100px) {
+  .post-item--style-2 .post-item__title {
+    margin: 0 0 0.5rem 0;
+  }
+}
+.post-item--style-2 .post-item__thumbnail {
+  padding-top: 100%;
+}
+@media (min-width: 1100px) {
+  .post-item--style-2 .post-item__thumbnail {
+    margin: 0 0 0.9375rem 0;
+  }
+}
+.post-item__line {
+  border-top: 2px solid var(--cl-border);
+  margin-top: auto;
+}
+
+/*# sourceMappingURL=blog-list.css.map*/

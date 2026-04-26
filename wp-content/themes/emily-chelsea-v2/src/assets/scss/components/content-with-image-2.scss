@@ -1,0 +1,171 @@
+@import "../base-components";
+
+.ttg-content-with-image-2 {
+	$this: &;
+	padding-left: pxToRem(15);
+	padding-right: pxToRem(15);
+	width: 100%;
+	@include media-breakpoint-up(md) {
+		display: flex;
+		padding-left: 0;
+		padding-right: 0;
+	}
+	&__image {
+		&__inner {
+			height: var(--ttg-content-with-image-bg-height, auto);
+			max-height: var(--ttg-content-with-image-bg-max-height, 100%);
+		}
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			max-height: inherit;
+			object-fit: cover;
+		}
+		@include media-breakpoint-up(md) {
+			flex: 0 0 100%;
+			max-width: 100%;
+		}
+	}
+	&__content {
+		position: relative;
+		z-index: 2;
+		&__inner {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			position: relative;
+			color: #fff;
+			padding: pxToRem(20) pxToRem(20);
+			&:before {
+				content: "";
+				display: block;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 100%;
+				background: var(--ttg-content-with-image-2-bg-color-m);
+				z-index: 0;
+				@include media-breakpoint-up(md) {
+					background: var(--ttg-content-with-image-2-bg-color);
+					backdrop-filter: blur(
+						var(--ttg-content-with-image-2-bg-blur)
+					);
+				}
+			}
+
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				color: inherit;
+			}
+			@include media-breakpoint-up(md) {
+				width: var(--ttg-content-with-image-2-outer-width, 600px);
+				max-width: 100%;
+				padding: pxToRem(55) pxToRem(45);
+			}
+
+			& > .ttg-post {
+				position: relative;
+				z-index: 2;
+				@include media-breakpoint-up(md) {
+					width: var(--ttg-content-with-image-2-width, 300px);
+					max-width: 100%;
+				}
+			}
+		}
+		@include media-breakpoint-up(md) {
+			flex: 0 0 100%;
+			max-width: 100%;
+			transform: translateX(-100%);
+			display: flex;
+		}
+		&--right {
+			#{$this} {
+				&__content {
+					&__inner {
+						@include media-breakpoint-up(md) {
+							align-items: flex-end;
+						}
+					}
+				}
+			}
+		}
+		&--center {
+			#{$this} {
+				&__content {
+					&__inner {
+						@include media-breakpoint-up(md) {
+							align-items: center;
+						}
+					}
+				}
+			}
+		}
+		&--left-top {
+			#{$this} {
+				&__content {
+					&__inner {
+						@include media-breakpoint-up(md) {
+							align-items: flex-start;
+							justify-content: flex-start;
+						}
+					}
+				}
+			}
+		}
+		&--right-top {
+			#{$this} {
+				&__content {
+					&__inner {
+						@include media-breakpoint-up(md) {
+							align-items: flex-end;
+							justify-content: flex-start;
+						}
+					}
+				}
+			}
+		}
+
+		&--left-bottom {
+			#{$this} {
+				&__content {
+					&__inner {
+						@include media-breakpoint-up(md) {
+							align-items: flex-start;
+							justify-content: flex-end;
+						}
+					}
+				}
+			}
+		}
+
+		&--right-bottom {
+			#{$this} {
+				&__content {
+					&__inner {
+						@include media-breakpoint-up(md) {
+							align-items: flex-end;
+							justify-content: flex-end;
+						}
+					}
+				}
+			}
+		}
+
+		&--outer-right {
+			@include media-breakpoint-up(md) {
+				justify-content: flex-end;
+			}
+		}
+		&--outer-center {
+			@include media-breakpoint-up(md) {
+				justify-content: center;
+			}
+		}
+	}
+}

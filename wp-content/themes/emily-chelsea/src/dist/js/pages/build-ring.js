@@ -41,6 +41,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       removeDesign(uuid, function () {
         getInitData();
         $(parent).removeClass("loading");
+        refreshCart();
       });
     });
     getInitData(function (data) {
@@ -108,6 +109,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     });
   }
+  function alertMessage() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var _params$message = params.message,
+      message = _params$message === void 0 ? "" : _params$message,
+      _params$title = params.title,
+      title = _params$title === void 0 ? "" : _params$title,
+      _params$type = params.type,
+      type = _params$type === void 0 ? "success" : _params$type;
+    var $alert = null;
+    $alert = $("\n\t\t\t<div class=\"build-ring-alert ".concat(type, "\">\n\t\t\t\t<div class=\"build-ring-alert__inner\">\n\t\t\t\t\t<button class=\"build-ring-alert__close\">x</button>\n\t\t\t\t\t<div class=\"build-ring-alert__content\">\n\t\t\t\t\t\t<h2 class=\"build-ring-alert__title\">").concat(title, "</h2>\n\t\t\t\t\t\t<div class=\"build-ring-alert__message\">").concat(message, "</div>\n\t\t\t\t\t\t<button class=\"build-ring-alert__confirm\">OK</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t")).appendTo("body");
+    var closeBtn = $alert.find(".build-ring-alert__close, .build-ring-alert__confirm");
+    closeBtn.on("click", function () {
+      $alert.fadeOut(300, function () {
+        $(this).remove();
+      });
+    });
+  }
   function processLoading() {
     return {
       start: function start() {
@@ -161,6 +179,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return params;
   }
   var refreshTimer = null;
+  var cartRefreshTimer = null;
+  function refreshCart() {
+    if (cartRefreshTimer) {
+      clearTimeout(cartRefreshTimer);
+    }
+    cartRefreshTimer = setTimeout(function () {
+      jQuery.ajax({
+        url: "/build-ring?step=" + new Date().getTime(),
+        success: function success(res) {
+          var cartCount = jQuery(res).find(".header-cart__count").html();
+          jQuery(document).find(".header-cart__count").html(cartCount);
+        }
+      });
+    }, 100);
+  }
   function refresh() {
     var onSuccess = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
     var loading = processLoading();
@@ -170,8 +203,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         url: "/build-ring?step=" + new Date().getTime(),
         success: function success(res) {
           var oldFilter = jQuery(document).find(".page-build-ring");
+          var cartCount = jQuery(res).find(".header-cart__count").html();
           var filter = jQuery(res).find(".page-build-ring");
           oldFilter.replaceWith(filter);
+          jQuery(document).find(".header-cart__count").html(cartCount);
           onSuccess();
           jQuery(document).find(".variations_form").each(function () {
             jQuery(this).wc_variation_form();
@@ -188,6 +223,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   var timer = null;
   function refreshFWP() {
     if (FWP) {
+      FWP.reset();
       FWP.refresh();
     }
   }
@@ -223,9 +259,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
   }
   function parseData(data) {
+    console.log("data", data.trayItems);
     $("#build-ring-tray").html(data.trayItems);
     $("#build-ring-tray-extra-wrapper").html(data.trayExtra);
-    $("#build-ring-mini-collection").replaceWith(data.miniCollection);
+    $(".build-ring-mini-collection-wrapper").replaceWith(data.miniCollection);
+    initStickyTray();
   }
   function refreshCollectionRing(uuid) {
     jQuery.ajax({
@@ -310,6 +348,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
     return "";
   }
+  function isValidCollections(_ref) {
+    var _ref$onSuccess = _ref.onSuccess,
+      onSuccess = _ref$onSuccess === void 0 ? function () {} : _ref$onSuccess,
+      error = _ref.error;
+    jQuery.ajax({
+      url: ajaxUrl + "?action=is_valid_collections",
+      success: onSuccess,
+      dataType: "json",
+      error: error
+    });
+  }
   function selectProduct(productId, type) {
     var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {};
     var extraParams = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
@@ -348,6 +397,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     });
   });
+  $(".header-cart").on("click", function (e) {
+    e.preventDefault();
+    var href = $(this).attr("href");
+    isValidCollections({
+      onSuccess: function onSuccess(res) {
+        var isValid = res.isValid;
+        var message = res.message;
+        if (isValid) {
+          window.location.href = href;
+          return;
+        }
+        alertMessage({
+          message: message,
+          title: "Error",
+          type: "error"
+        });
+      }
+    });
+  });
   $(document).on("click", "#build-ring-mode--stone", function () {
     setMode({
       mode: MODE.START_WITH_STONE,
@@ -369,14 +437,63 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       console.warn("jQuery UI Draggable/Droppable not loaded");
       return;
     }
-    if ($(document).find(".center-stones-list").length) {
-      $(document).find(".center-stones-list .product").draggable({
-        revert: "invalid",
-        helper: "clone",
-        cursor: "move",
-        zIndex: 9999,
-        appendTo: "body"
+
+    // Add drag handle zone (center 50% of image)
+    function addDragHandle($products) {
+      // Add keyframes animation if not already added
+      if (!document.getElementById("drag-handle-animation-style")) {
+        var style = document.createElement("style");
+        style.id = "drag-handle-animation-style";
+        style.textContent = "\n\t\t\t\t\t@keyframes slide-horizontal {\n\t\t\t\t\t\t0% { transform: translateX(0px); }\n\t\t\t\t\t\t100% { transform: translateX(0px); }\n\t\t\t\t\t}\n\t\t\t\t\t@keyframes glow {\n\t\t\t\t\t\t0%, 100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.5)); }\n\t\t\t\t\t\t50% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.9)); }\n\t\t\t\t\t}\n\t\t\t\t\t.drag-handle-zone svg {\n\t\t\t\t\t\tanimation: slide-horizontal 1s ease-in-out infinite alternate, glow 2s ease-in-out infinite;\n\t\t\t\t\t}\n\t\t\t\t";
+        document.head.appendChild(style);
+      }
+      $products.each(function () {
+        var $product = $(this);
+        var $img = $product.find("img").first();
+
+        // Remove existing handle if any
+        $product.find(".drag-handle-zone").remove();
+        if ($img.length) {
+          // Create drag handle zone (square: 50% width x 50% width, centered)
+          var $handle = $("<div>").addClass("drag-handle-zone");
+
+          // Make image container relative
+          $img.closest(".product-image, .product").css("position", "relative");
+          $img.parent().css("position", "relative");
+
+          // Insert handle after image
+          $img.parent().append($handle);
+
+          // Show handle on hover
+          $img.parent().on("mouseenter", function () {
+            $(this).find(".drag-handle-zone").css("opacity", 1);
+          });
+          $img.parent().on("mouseleave", function () {
+            $(this).find(".drag-handle-zone").css("opacity", 0);
+          });
+        }
       });
+    }
+    var draggableConfig = {
+      revert: "invalid",
+      helper: function helper() {
+        var $original = $(this);
+        var $clone = $original.clone();
+        $clone.css({
+          width: $original.find("img").first().outerWidth(),
+          height: $original.find("img").first().outerHeight() - 2
+        });
+        return $clone;
+      },
+      cursor: "move",
+      zIndex: 9999,
+      appendTo: "#wrapper__inner",
+      handle: ".drag-handle-zone"
+    };
+    if ($(document).find(".center-stones-list").length) {
+      var $stoneProducts = $(document).find(".center-stones-list .product");
+      addDragHandle($stoneProducts);
+      $stoneProducts.draggable(draggableConfig);
       $(document).find("#build-ring-tray").droppable({
         accept: ".center-stones-list .product",
         hoverClass: "ui-state-hover",
@@ -387,13 +504,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     }
     if ($(document).find(".rings-list").length) {
-      $(document).find(".rings-list .product").draggable({
-        revert: "invalid",
-        helper: "clone",
-        cursor: "move",
-        zIndex: 9999,
-        appendTo: "body"
-      });
+      var $ringProducts = $(document).find(".rings-list .product");
+      addDragHandle($ringProducts);
+      $ringProducts.draggable(draggableConfig);
       $(document).find("#build-ring-tray").droppable({
         accept: ".rings-list .product",
         hoverClass: "ui-state-hover",
@@ -444,7 +557,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           parseData(res.data);
         });
       } else {
-        window.alert(message);
+        alertMessage({
+          message: message,
+          title: "Error",
+          type: "error"
+        });
       }
     });
   }
@@ -470,6 +587,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             redirect();
           }
         });
+      } else {
+        alertMessage({
+          message: res.message,
+          title: "Error",
+          type: "error"
+        });
       }
     }, _objectSpread(_objectSpread({}, formObj), {}, {
       stone_option: formObj.stone_option
@@ -485,7 +608,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (res.isSuccess) {
         redirect();
       } else {
-        window.alert(res.message || "");
+        alertMessage({
+          message: message,
+          title: "Error",
+          type: "error"
+        });
       }
     });
   });
@@ -508,7 +635,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     });
     if (!isValid) {
-      window.alert("Please select select Metal and Ring Size before continuing");
+      alertMessage({
+        message: "Please select the Metal Type and Ring Size for your setting before continuing.",
+        title: "Did you forget?",
+        type: "error"
+      });
       return;
     }
     window.location.href = "/checkout/";
@@ -541,9 +672,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var formData = $(form).serialize();
     var formObj = parseQSToObject(formData);
     var errorEl = $(container).find(".product-error-message");
-    if (!productId) {
-      return;
-    }
     delete formObj["add-to-cart"];
     selectProduct(productId, PRODUCT_TYPES.RING, function (res) {
       var message = res.message || "";
@@ -560,6 +688,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
       refreshCollectionRing(uuid);
+      refreshCart();
     }, _objectSpread({}, formObj));
   });
   jQuery(document).on("click", ".build-ring-tray__item-remove", function (e) {
@@ -571,11 +700,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (res.isSuccess) {
         getInitData();
       } else {
-        window.alert(res.message || "");
+        alertMessage({
+          message: res.message || "",
+          title: "Error",
+          type: "error"
+        });
       }
       $item.removeClass("loading");
+      refreshCart();
     });
   });
+
+  // add js sticky for .build-ring-tray
+  function initStickyTray() {
+    // disable sticky on mobile
+    if ($(window).width() < 768) {
+      return;
+    }
+    var $tray = $(".build-ring-tray-wrapper");
+    if ($tray.length && $.fn.stick_in_parent) {
+      $tray.stick_in_parent({
+        parent: "#build-ring-tray-slots",
+        offset_top: 20
+      });
+    }
+  }
   init();
 })(jQuery);
 /******/ })()

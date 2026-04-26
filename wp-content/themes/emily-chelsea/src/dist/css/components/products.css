@@ -132,7 +132,13 @@
   padding: 0 !important;
   border: 0 !important;
   background: #fff;
-  width: 200px;
+  z-index: 102;
+}
+.product.ui-draggable-dragging .drag-handle-zone {
+  opacity: 0 !important;
+}
+.product.ui-draggable-dragging img {
+  display: block;
 }
 @media (min-width: 1100px) {
   .product.ui-draggable-dragging {
@@ -142,6 +148,12 @@
 @media (min-width: 1480px) {
   .product.ui-draggable-dragging {
     padding: 0;
+  }
+}
+@media (min-width: 1960px) {
+  .product.ui-draggable-dragging {
+    padding: 0;
+    width: 17vw;
   }
 }
 .product.ui-draggable-dragging .product__image-wrapper {

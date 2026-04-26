@@ -127,12 +127,25 @@
 		padding: 0 !important;
 		border: 0 !important;
 		background: #fff;
-		width: 200px;
+		z-index: 102;
+		//width: 200px;
+		.drag-handle-zone {
+			opacity: 0 !important;
+		}
+		img {
+			display: block;
+		}
 		@include media-breakpoint-up(md) {
 			padding: 0;
 		}
+
 		@include media-breakpoint-up(lg) {
 			padding: 0;
+		}
+
+		@include media-breakpoint-up(xxl) {
+			padding: 0;
+			width: 17vw;
 		}
 
 		.product__image-wrapper {

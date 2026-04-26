@@ -27,6 +27,14 @@ if (post_password_required()) {
 
 use TTG\Build_Ring\Controller;
 
+add_filter('woocommerce_loop_product_link', function ($post_link, $post) {
+
+	if (isset($_GET['mode']) && $_GET['mode'] === 'build-ring') {
+		return $post_link .= '?mode=build-ring';
+	}
+
+	return $post_link;
+}, 10, 2);
 
 if (Controller::is_building_ring()) {
 	echo TTG_Template::get_template_part('content-single-product-build-ring');

@@ -35,6 +35,7 @@
 				removeDesign(uuid, () => {
 					getInitData();
 					$(parent).removeClass("loading");
+					refreshCart();
 				});
 			},
 		);
@@ -124,6 +125,35 @@
 		});
 	}
 
+	function alertMessage(params = {}) {
+		const { message = "", title = "", type = "success" } = params;
+		let $alert = null;
+		$alert = $(
+			`
+			<div class="build-ring-alert ${type}">
+				<div class="build-ring-alert__inner">
+					<button class="build-ring-alert__close">x</button>
+					<div class="build-ring-alert__content">
+						<h2 class="build-ring-alert__title">${title}</h2>
+						<div class="build-ring-alert__message">${message}</div>
+						<button class="build-ring-alert__confirm">OK</button>
+					</div>
+				</div>
+			</div>
+			`,
+		).appendTo("body");
+
+		const closeBtn = $alert.find(
+			".build-ring-alert__close, .build-ring-alert__confirm",
+		);
+
+		closeBtn.on("click", function () {
+			$alert.fadeOut(300, function () {
+				$(this).remove();
+			});
+		});
+	}
+
 	function processLoading() {
 		return {
 			start: () => {
@@ -179,6 +209,26 @@
 	}
 
 	var refreshTimer = null;
+	var cartRefreshTimer = null;
+	function refreshCart() {
+		if (cartRefreshTimer) {
+			clearTimeout(cartRefreshTimer);
+		}
+		cartRefreshTimer = setTimeout(() => {
+			jQuery.ajax({
+				url: "/build-ring?step=" + new Date().getTime(),
+				success: (res) => {
+					const cartCount = jQuery(res)
+						.find(".header-cart__count")
+						.html();
+					jQuery(document)
+						.find(".header-cart__count")
+						.html(cartCount);
+				},
+			});
+		}, 100);
+	}
+
 	function refresh(onSuccess = () => {}) {
 		const loading = processLoading();
 		loading.start();
@@ -187,8 +237,14 @@
 				url: "/build-ring?step=" + new Date().getTime(),
 				success: (res) => {
 					const oldFilter = jQuery(document).find(".page-build-ring");
+					const cartCount = jQuery(res)
+						.find(".header-cart__count")
+						.html();
 					const filter = jQuery(res).find(".page-build-ring");
 					oldFilter.replaceWith(filter);
+					jQuery(document)
+						.find(".header-cart__count")
+						.html(cartCount);
 					onSuccess();
 					jQuery(document)
 						.find(".variations_form")
@@ -209,6 +265,7 @@
 	var timer = null;
 	function refreshFWP() {
 		if (FWP) {
+			FWP.reset();
 			FWP.refresh();
 		}
 	}
@@ -242,9 +299,14 @@
 	}
 
 	function parseData(data) {
+		console.log("data", data.trayItems);
 		$("#build-ring-tray").html(data.trayItems);
 		$("#build-ring-tray-extra-wrapper").html(data.trayExtra);
-		$("#build-ring-mini-collection").replaceWith(data.miniCollection);
+		$(".build-ring-mini-collection-wrapper").replaceWith(
+			data.miniCollection,
+		);
+
+		initStickyTray();
 	}
 
 	function refreshCollectionRing(uuid) {
@@ -325,6 +387,15 @@
 		return "";
 	}
 
+	function isValidCollections({ onSuccess = () => {}, error }) {
+		jQuery.ajax({
+			url: ajaxUrl + "?action=is_valid_collections",
+			success: onSuccess,
+			dataType: "json",
+			error,
+		});
+	}
+
 	function selectProduct(
 		productId,
 		type,
@@ -373,6 +444,27 @@
 		});
 	});
 
+	$(".header-cart").on("click", function (e) {
+		e.preventDefault();
+		const href = $(this).attr("href");
+		isValidCollections({
+			onSuccess: (res) => {
+				const isValid = res.isValid;
+				const message = res.message;
+				if (isValid) {
+					window.location.href = href;
+					return;
+				}
+
+				alertMessage({
+					message: message,
+					title: "Error",
+					type: "error",
+				});
+			},
+		});
+	});
+
 	$(document).on("click", "#build-ring-mode--stone", function () {
 		setMode({
 			mode: MODE.START_WITH_STONE,
@@ -397,14 +489,83 @@
 			return;
 		}
 
-		if ($(document).find(".center-stones-list").length) {
-			$(document).find(".center-stones-list .product").draggable({
-				revert: "invalid",
-				helper: "clone",
-				cursor: "move",
-				zIndex: 9999,
-				appendTo: "body",
+		// Add drag handle zone (center 50% of image)
+		function addDragHandle($products) {
+			// Add keyframes animation if not already added
+			if (!document.getElementById("drag-handle-animation-style")) {
+				const style = document.createElement("style");
+				style.id = "drag-handle-animation-style";
+				style.textContent = `
+					@keyframes slide-horizontal {
+						0% { transform: translateX(0px); }
+						100% { transform: translateX(0px); }
+					}
+					@keyframes glow {
+						0%, 100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.5)); }
+						50% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.9)); }
+					}
+					.drag-handle-zone svg {
+						animation: slide-horizontal 1s ease-in-out infinite alternate, glow 2s ease-in-out infinite;
+					}
+				`;
+				document.head.appendChild(style);
+			}
+
+			$products.each(function () {
+				const $product = $(this);
+				const $img = $product.find("img").first();
+
+				// Remove existing handle if any
+				$product.find(".drag-handle-zone").remove();
+
+				if ($img.length) {
+					// Create drag handle zone (square: 50% width x 50% width, centered)
+					const $handle = $("<div>").addClass("drag-handle-zone");
+
+					// Make image container relative
+					$img.closest(".product-image, .product").css(
+						"position",
+						"relative",
+					);
+					$img.parent().css("position", "relative");
+
+					// Insert handle after image
+					$img.parent().append($handle);
+
+					// Show handle on hover
+					$img.parent().on("mouseenter", function () {
+						$(this).find(".drag-handle-zone").css("opacity", 1);
+					});
+					$img.parent().on("mouseleave", function () {
+						$(this).find(".drag-handle-zone").css("opacity", 0);
+					});
+				}
 			});
+		}
+
+		const draggableConfig = {
+			revert: "invalid",
+			helper: function () {
+				const $original = $(this);
+				const $clone = $original.clone();
+				$clone.css({
+					width: $original.find("img").first().outerWidth(),
+					height: $original.find("img").first().outerHeight() - 2,
+				});
+				return $clone;
+			},
+			cursor: "move",
+			zIndex: 9999,
+			appendTo: "#wrapper__inner",
+			handle: ".drag-handle-zone",
+		};
+
+		if ($(document).find(".center-stones-list").length) {
+			const $stoneProducts = $(document).find(
+				".center-stones-list .product",
+			);
+			addDragHandle($stoneProducts);
+			$stoneProducts.draggable(draggableConfig);
 
 			$(document)
 				.find("#build-ring-tray")
@@ -419,13 +580,9 @@
 		}
 
 		if ($(document).find(".rings-list").length) {
-			$(document).find(".rings-list .product").draggable({
-				revert: "invalid",
-				helper: "clone",
-				cursor: "move",
-				zIndex: 9999,
-				appendTo: "body",
-			});
+			const $ringProducts = $(document).find(".rings-list .product");
+			addDragHandle($ringProducts);
+			$ringProducts.draggable(draggableConfig);
 			$(document)
 				.find("#build-ring-tray")
 				.droppable({
@@ -480,7 +637,11 @@
 					parseData(res.data);
 				});
 			} else {
-				window.alert(message);
+				alertMessage({
+					message: message,
+					title: "Error",
+					type: "error",
+				});
 			}
 		});
 	}
@@ -515,6 +676,12 @@
 								redirect();
 							}
 						});
+					} else {
+						alertMessage({
+							message: res.message,
+							title: "Error",
+							type: "error",
+						});
 					}
 				},
 				{
@@ -537,7 +704,11 @@
 				if (res.isSuccess) {
 					redirect();
 				} else {
-					window.alert(res.message || "");
+					alertMessage({
+						message: message,
+						title: "Error",
+						type: "error",
+					});
 				}
 			});
 		},
@@ -565,9 +736,13 @@
 			}
 		});
 		if (!isValid) {
-			window.alert(
-				"Please select select Metal and Ring Size before continuing",
-			);
+			alertMessage({
+				message:
+					"Please select the Metal Type and Ring Size for your setting before continuing.",
+				title: "Did you forget?",
+				type: "error",
+			});
+
 			return;
 		}
 		window.location.href = "/checkout/";
@@ -611,10 +786,6 @@
 			const formObj = parseQSToObject(formData);
 			const errorEl = $(container).find(".product-error-message");
 
-			if (!productId) {
-				return;
-			}
-
 			delete formObj["add-to-cart"];
 
 			selectProduct(
@@ -636,6 +807,7 @@
 						},
 					});
 					refreshCollectionRing(uuid);
+					refreshCart();
 				},
 				{
 					...formObj,
@@ -653,11 +825,33 @@
 			if (res.isSuccess) {
 				getInitData();
 			} else {
-				window.alert(res.message || "");
+				alertMessage({
+					message: res.message || "",
+					title: "Error",
+					type: "error",
+				});
 			}
 			$item.removeClass("loading");
+			refreshCart();
 		});
 	});
+
+	// add js sticky for .build-ring-tray
+	function initStickyTray() {
+		// disable sticky on mobile
+		if ($(window).width() < 768) {
+			return;
+		}
+
+		const $tray = $(".build-ring-tray-wrapper");
+
+		if ($tray.length && $.fn.stick_in_parent) {
+			$tray.stick_in_parent({
+				parent: "#build-ring-tray-slots",
+				offset_top: 20,
+			});
+		}
+	}
 
 	init();
 })(jQuery);

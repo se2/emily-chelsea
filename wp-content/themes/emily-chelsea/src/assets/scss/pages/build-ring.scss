@@ -1,18 +1,6 @@
 @import "../base-components";
 
 .page-build-ring-wrapper {
-	#wrapper__inner {
-		padding-left: 0;
-		position: relative;
-		z-index: 999;
-		background: #fff;
-	}
-
-	#main-content__top {
-		padding: 0;
-		border: 0;
-	}
-
 	.product {
 		&:not(.product-detail) {
 			border: 0;
@@ -59,27 +47,26 @@
 		}
 	}
 
-	#toggle-nav-checkbox {
-		&:checked {
-			& + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner {
-				transform: translateX(418px);
-				@include media-breakpoint-up(md) {
-					transform: translateX(320px);
-				}
-				.alignfull {
-					@include media-breakpoint-up(md) {
-						transform: translateX(200px);
-					}
-				}
-			}
-		}
-	}
 	.facetwp-type-reset {
 		display: none;
 	}
 
 	.product-detail #woocommerce-product-gallery__image-main {
 		aspect-ratio: initial;
+	}
+
+	.drag-handle-zone {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		aspect-ratio: 1 / 1;
+		cursor: url("../../img/drag.png"), auto;
+		z-index: 10;
+		background: #0000000d 0% 0% no-repeat padding-box;
+		opacity: 0;
+		transition: opacity 0.2s ease;
 	}
 }
 
@@ -167,14 +154,26 @@
 	justify-content: center;
 }
 
-.build-ring-tray-wrapper {
+.build-ring-tray-collection {
 	@include media-breakpoint-down(md) {
 		position: fixed;
 		left: 0;
-		right: 0;
 		bottom: 0;
-		background: #fff;
+		right: 0;
+		display: flex;
+		flex-direction: column;
 		z-index: 99;
+	}
+}
+
+.build-ring-tray-wrapper {
+	@include media-breakpoint-down(md) {
+		// position: fixed;
+		// left: 0;
+		// right: 0;
+		// bottom: 0;
+		background: #fff;
+		// z-index: 99;
 		box-shadow: 0px -5px 6px #00000029;
 		display: flex;
 	}
@@ -185,8 +184,9 @@
 		@include media-breakpoint-down(md) {
 			display: flex;
 			align-items: center;
-			padding: 20px 20px;
+			padding: 5px 20px;
 			background: #d7bc9961;
+			height: 100%;
 		}
 	}
 	&__title {
@@ -335,6 +335,8 @@
 .build-ring-head {
 	text-align: center;
 	margin-bottom: 30px;
+	max-width: 465px;
+	margin: 0 auto;
 	h2 {
 		font: normal normal normal 42px/48px New Forest;
 		letter-spacing: 0px;
@@ -346,6 +348,11 @@
 		letter-spacing: 0px;
 		color: #363636;
 		opacity: 1;
+	}
+
+	@include media-breakpoint-down(md) {
+		padding-left: 20px;
+		padding-right: 20px;
 	}
 }
 
@@ -825,13 +832,13 @@
 	}
 }
 
-.build-ring-mini-collection-wrapper {
-	@include media-breakpoint-down(md) {
-		position: fixed;
-		bottom: 100px;
-		width: 100%;
-	}
-}
+// .build-ring-mini-collection-wrapper {
+// 	@include media-breakpoint-down(md) {
+// 		position: fixed;
+// 		bottom: 91px;
+// 		width: 100%;
+// 	}
+// }
 
 .build-ring-mini-collection {
 	padding: 20px 20px;
@@ -843,6 +850,8 @@
 		display: flex;
 		justify-content: space-between;
 		flex-wrap: wrap;
+		padding-top: 0px;
+		padding-bottom: 5px;
 	}
 
 	.processing {
@@ -867,6 +876,8 @@
 		margin-right: -40px;
 		margin-top: -80px;
 		margin-bottom: 30px;
+		max-height: 300px;
+		overflow: auto;
 	}
 
 	&-item {
@@ -884,33 +895,6 @@
 				opacity: 1 !important;
 				cursor: pointer;
 				position: relative;
-				svg {
-					display: none !important;
-				}
-				&::before,
-				&::after {
-					content: "" !important;
-					position: absolute;
-					left: 50%;
-					top: 50%;
-					width: 10px;
-					height: 2px;
-					background-color: #fff;
-					transform-origin: center;
-				}
-
-				&::before {
-					transform: translate(-50%, -50%) rotate(45deg);
-				}
-
-				&::after {
-					transform: translate(-50%, -50%) rotate(-45deg);
-				}
-
-				&:hover::before,
-				&:hover::after {
-					background-color: #fff;
-				}
 			}
 		}
 		&:last-child {
@@ -939,6 +923,33 @@
 				justify-content: center;
 				border: 1px solid #fff;
 				opacity: 0;
+				svg {
+					display: none !important;
+				}
+				&::before,
+				&::after {
+					content: "" !important;
+					position: absolute;
+					left: 50%;
+					top: 50%;
+					width: 10px;
+					height: 2px;
+					background-color: #fff;
+					transform-origin: center;
+				}
+
+				&::before {
+					transform: translate(-50%, -50%) rotate(45deg);
+				}
+
+				&::after {
+					transform: translate(-50%, -50%) rotate(-45deg);
+				}
+
+				&:hover::before,
+				&:hover::after {
+					background-color: #fff;
+				}
 
 				@include media-breakpoint-down(md) {
 					opacity: 1 !important;
@@ -1189,6 +1200,10 @@
 				height: 71px;
 			}
 		}
+		&.disabled {
+			opacity: 0.7;
+			pointer-events: none;
+		}
 	}
 }
 
@@ -1387,4 +1402,118 @@
 	letter-spacing: 0px;
 	color: #fff;
 	opacity: 1;
+}
+
+.build-ring-alert {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #00000052;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	&__inner {
+		width: 814px;
+		max-width: 95%;
+		background: #fa5160 0% 0% no-repeat padding-box;
+		padding: 30px 30px;
+		border-radius: 30px;
+		position: relative;
+	}
+	&__close {
+		width: 37px;
+		height: 37px;
+		border-radius: 100%;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid #fff;
+		position: absolute;
+		font-size: 0;
+		background: none;
+		right: 30px;
+		top: 30px;
+
+		&::before,
+		&::after {
+			content: "";
+			position: absolute;
+			width: 3px;
+			height: 18px;
+			background-color: #fff;
+			top: 8px;
+			left: 15px;
+			transform: rotate(45deg);
+		}
+
+		&::after {
+			transform: rotate(-45deg);
+		}
+
+		@include media-breakpoint-down(md) {
+			right: 15px;
+			top: 15px;
+		}
+	}
+	&__content {
+		text-align: center;
+		padding: 80px 0 40px 0;
+		@include media-breakpoint-down(md) {
+			padding: 30px 0 0px 0;
+		}
+	}
+	&__title {
+		text-align: center;
+		font-family: $headings-font-family;
+		font-size: 60px;
+		line-height: 1.15;
+		font-weight: normal;
+		font-style: normal;
+		letter-spacing: 0px;
+		color: #ffffff;
+		opacity: 1;
+		margin: 0 0 20px 0;
+
+		@include media-breakpoint-down(md) {
+			font-size: 40px;
+		}
+	}
+	&__message {
+		text-align: center;
+		font-family: $font-body;
+		font-size: 24px;
+		line-height: 1.45;
+		letter-spacing: 0px;
+		color: #ffffff;
+		opacity: 1;
+		width: 555px;
+		max-width: 100%;
+		margin: 0 auto;
+
+		@include media-breakpoint-down(md) {
+			font-size: 18px;
+		}
+	}
+	&__confirm {
+		background: #ffffff 0% 0% no-repeat padding-box;
+		border-radius: 34px;
+		opacity: 1;
+		width: 320px;
+		height: 62px;
+		border: 0;
+		margin: 50px 0 0 0;
+
+		font: normal normal bold 18px/26px Outfit;
+		letter-spacing: 2.7px;
+		color: #3f7f88;
+		text-transform: uppercase;
+
+		@include media-breakpoint-down(md) {
+			margin: 30px 0 0 0;
+		}
+	}
 }

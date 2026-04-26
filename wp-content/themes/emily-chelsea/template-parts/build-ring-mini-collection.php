@@ -17,6 +17,7 @@ if (!empty($newCollection)) {
             <?php foreach ($newCollection as $key => $item): ?>
                 <?php
                 $ring = $item['ring'];
+                $variation_id = $item['variation_id'] ?? 0;
                 $stone = $item['stone'];
                 ?>
                 <div class="build-ring-mini-collection-item">
@@ -28,20 +29,16 @@ if (!empty($newCollection)) {
                     </h2>
                     <div class="build-ring-mini-collection-item__ring">
                         <?php
-                        $hover_image_ring = get_field('hover_feature_image', $ring);
-                        echo get_the_post_thumbnail($ring, 'full', array(
+                        $image = get_the_post_thumbnail($variation_id, 'full', array(
                             'class' => 'product__image'
                         ));
-                        if (empty($hover_image_ring)) {
-                            echo get_the_post_thumbnail($ring, 'full', array(
-                                'class' => 'product__image-hover'
+                        if (empty($image)) {
+                            $image = get_the_post_thumbnail($ring, 'full', array(
+                                'class' => 'product__image'
                             ));
                         }
-                        if (!empty($hover_image_ring)) {
-                            echo wp_get_attachment_image($hover_image_ring['id'], 'full', false, array(
-                                'class' => 'product__image-hover'
-                            ));
-                        }
+
+                        echo $image;
                         ?>
                     </div>
                     <div class="build-ring-mini-collection-item__stone">

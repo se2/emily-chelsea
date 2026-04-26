@@ -45,7 +45,8 @@ wc_clear_notices();
                                     echo TTG_Template::render('build-ring-collection-item-ring', array(
                                         'product_id' => $ring,
                                         'type' => 'Setting',
-                                        'cart_line_item' => $item['ring_cart_item_line']
+                                        'cart_line_item' => $item['ring_cart_item_line'],
+                                        'variation_id' => $item['variation_id'] ?? 0,
                                     ));
                                     ?>
                                 </div>

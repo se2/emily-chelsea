@@ -123,8 +123,11 @@ add_action('woocommerce_single_product_summary', function () {
             <?php do_action('woocommerce_after_single_product'); ?>
         </div>
         <div class="product-detail-build-ring__right">
-            <?php echo TTG_Template::render("build-ring-mini-collection") ?>
-            <?php echo TTG_Template::render("build-ring-tray") ?>
+            <div class="build-ring-tray-collection">
+                <?php echo TTG_Template::render("build-ring-mini-collection") ?>
+                <?php echo TTG_Template::render("build-ring-tray") ?>
+            </div>
+
         </div>
     </div>
 </div>

@@ -93,7 +93,9 @@ class Controller
         $variation_id = $newItem["variation_id"] ?? 0;
         $attrs = $newItem["attrs"] ?? [];
 
-        $cart_line_item = WC()->cart->add_to_cart($productId, 1,  $variation_id, $attrs);
+        $cart_line_item = WC()->cart->add_to_cart($productId, 1, $variation_id, $attrs, [
+            'unique_key' => $item['uuid'],
+        ]);
 
         $item = array_merge($item, $newItem);
         $item["cart_line_item"] = $cart_line_item;
@@ -102,6 +104,21 @@ class Controller
         $tray[$uuid] = $item;
 
         return Model::set_session("tray", $tray);
+    }
+
+    public static function get_tray_item_by_cart_line_item($cart_line_item = '')
+    {
+        $tray = self::get_tray();
+        $tray_item = [];
+        if (!empty($tray)) {
+            foreach ($tray as $item) {
+                if (($item['cart_line_item'] ?? '') === $cart_line_item) {
+                    $tray_item = $item;
+                }
+            }
+        }
+
+        return $tray_item;
     }
 
     public static function get_tray()
@@ -409,11 +426,13 @@ class Controller
             foreach ($collections as $uuid => $collection) {
                 $ring_cart_item_line = $collection['ring_cart_item_line'] ?? '';
                 $stone_cart_item_line = $collection['stone_cart_item_line'] ?? '';
+                $is_finish_design = !empty($ring_cart_item_line) && !empty($stone_cart_item_line) ? true : false;
 
                 if (isset($cart[$ring_cart_item_line])) {
                     $newCart[$ring_cart_item_line] = $cart[$ring_cart_item_line];
                     $newCart[$ring_cart_item_line]['is_ring'] = true;
                     $newCart[$ring_cart_item_line]['uuid'] = $uuid;
+                    $newCart[$ring_cart_item_line]['is_finish_design'] = $is_finish_design;
                     $cart[$ring_cart_item_line] = null;
                 }
 
@@ -421,6 +440,7 @@ class Controller
                     $newCart[$stone_cart_item_line] = $cart[$stone_cart_item_line];
                     $newCart[$stone_cart_item_line]['is_stone'] = true;
                     $cart[$stone_cart_item_line] = null;
+                    $newCart[$stone_cart_item_line]['is_finish_design'] = $is_finish_design;
                     $newCart[$stone_cart_item_line]['uuid'] = $uuid;
                 }
             }
@@ -430,9 +450,11 @@ class Controller
                     $newCart[$key] = $item;
                 }
             }
+
+            return $newCart;
         }
 
-        return $newCart;
+        return $cart;
     }
 
     public static function set_cart_item_lines($cart_item_lines = [])
@@ -453,6 +475,13 @@ class Controller
         self::set_product_variation(0);
         self::clear_uuid();
         self::clear_tray();
+    }
+
+    public static function reset_page_data()
+    {
+        self::set_init_mode('');
+        self::set_mode('');
+        self::set_active_step(1);
     }
 
     public static function get_data()
@@ -479,6 +508,26 @@ class Controller
             'trayItems' => $tray_html,
             'miniCollection' => $mini_collection_html,
         ];
+    }
+
+    public static function is_valid_collections()
+    {
+        $collections = self::get_collections();
+        $is_valid = true;
+
+        if (!empty($collections)) {
+            foreach ($collections as $key => $value) {
+                $stone = $value['stone'];
+                $variation_id = $value['variation_id'];
+
+                if (!$variation_id) {
+                    $is_valid = false;
+                    return $is_valid;
+                }
+            }
+        }
+
+        return $is_valid;
     }
 }
 
@@ -587,7 +636,9 @@ class Ajax
                         WC()->cart->remove_cart_item($ring_cart_item_line);
                     }
 
-                    $ring_cart_item_line = WC()->cart->add_to_cart($productId, 1,  $variation_id, $attrs);
+                    $ring_cart_item_line = WC()->cart->add_to_cart($productId, 1, $variation_id, $attrs, [
+                        'unique_key' => $uuid . '_ring',
+                    ]);
                     $currentCollection['ring_cart_item_line'] = $ring_cart_item_line;
                     $currentCollection['ring'] = $productId;
                     $currentCollection['attrs'] = $attrs;
@@ -603,8 +654,8 @@ class Ajax
                     Controller::add_item_to_tray([
                         "type" => PRODUCT_TYPES::STONE,
                         "product_id" => $stone_option,
-                        "variation_id" => $variation_id,
-                        "attrs" => $attrs,
+                        "variation_id" => 0,
+                        "attrs" => [],
                     ]);
                 }
 
@@ -615,7 +666,9 @@ class Ajax
                         WC()->cart->remove_cart_item($stone_cart_item_line);
                     }
 
-                    $stone_cart_item_line = WC()->cart->add_to_cart($stone_option, 1,  $variation_id, $attrs);
+                    $stone_cart_item_line = WC()->cart->add_to_cart($stone_option, 1, 0, [], [
+                        'unique_key' => $uuid . '_stone_option',
+                    ]);
                     $currentCollection['stone_cart_item_line'] = $stone_cart_item_line;
                     $currentCollection['stone'] = $stone_option;
                 }
@@ -639,7 +692,9 @@ class Ajax
                     if (!empty($stone_cart_item_line)) {
                         WC()->cart->remove_cart_item($stone_cart_item_line);
                     }
-                    $stone_cart_item_line = WC()->cart->add_to_cart($productId, 1,  $variation_id, $attrs);
+                    $stone_cart_item_line = WC()->cart->add_to_cart($productId, 1, $variation_id, $attrs, [
+                        'unique_key' => $uuid . '_stone',
+                    ]);
                     $currentCollection['stone_cart_item_line'] = $stone_cart_item_line;
                     $currentCollection['stone'] = $productId;
                 }
@@ -694,6 +749,8 @@ class Ajax
         if ($nextStep === 3 && Controller::is_finish_design()) {
             Controller::reset();
         }
+
+        wc_clear_notices();
 
         echo wp_json_encode([
             'reload' => true,
@@ -834,9 +891,11 @@ class Ajax
     public static function reset()
     {
         Controller::reset();
+        Controller::reset_page_data();
 
         echo wp_json_encode([
-            "isSuccess" => true
+            "isSuccess" => true,
+            "data" => Controller::get_data(),
         ]);
         wp_die();
     }
@@ -881,6 +940,7 @@ class Ajax
                 'product_id' => $collection['ring'],
                 'cart_line_item' => $collection['ring_cart_item_line'],
                 'type' => 'Setting',
+                'variation_id' => $collection['variation_id'],
             ]
         );
 
@@ -890,7 +950,60 @@ class Ajax
         ]);
         wp_die();
     }
+
+    public static function clear_uncomplete_design()
+    {
+        $collections = Controller::get_collections();
+
+        if (!empty($collections)) {
+            foreach ($collections as $uuid => $collection) {
+                $ring = $collection['ring'] ?? 0;
+                $stone = $collection['stone'] ?? 0;
+                $ring_cart_item_line = $collection['ring_cart_item_line'] ?? '';
+                $stone_cart_item_line = $collection['stone_cart_item_line'] ?? '';
+                $is_uncomplete_design = empty($ring) || empty($stone) ? true : false;
+
+                if ($is_uncomplete_design) {
+                    if (!empty($ring_cart_item_line)) {
+                        WC()->cart->remove_cart_item($ring_cart_item_line);
+                    }
+
+                    if (!empty($stone_cart_item_line)) {
+                        WC()->cart->remove_cart_item($stone_cart_item_line);
+                    }
+
+                    unset($collections[$uuid]);
+                    Controller::set_collections($collections);
+                    continue;
+                }
+            }
+        }
+
+        echo wp_json_encode([
+            "isSuccess" => true
+        ]);
+        wp_die();
+    }
+
+    public static function is_valid_collections()
+    {
+        $is_valid = Controller::is_valid_collections();
+        $message = $is_valid ? '' : 'Some ring designs are still incomplete. Please complete them to continue.';
+
+        echo wp_json_encode([
+            "isSuccess" => true,
+            "isValid" => $is_valid,
+            "message" => $message
+        ]);
+        wp_die();
+    }
 }
+
+add_action("wp_ajax_is_valid_collections", "TTG\Build_Ring\Ajax::is_valid_collections");
+add_action("wp_ajax_nopriv_is_valid_collections", "TTG\Build_Ring\Ajax::is_valid_collections");
+
+add_action("wp_ajax_clear_uncomplete_design", "TTG\Build_Ring\Ajax::clear_uncomplete_design");
+add_action("wp_ajax_nopriv_clear_uncomplete_design", "TTG\Build_Ring\Ajax::clear_uncomplete_design");
 
 add_action("wp_ajax_refresh_collection_ring", "TTG\Build_Ring\Ajax::refresh_collection_ring");
 add_action("wp_ajax_nopriv_refresh_collection_ring", "TTG\Build_Ring\Ajax::refresh_collection_ring");

@@ -28,12 +28,25 @@
       error: error
     });
   }
-  function reset() {
+  function clearUncompleteDesign() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var _params$success2 = params.success,
       success = _params$success2 === void 0 ? function () {} : _params$success2,
       _params$error2 = params.error,
       error = _params$error2 === void 0 ? function () {} : _params$error2;
+    jQuery.ajax({
+      url: ajaxUrl + "?action=clear_uncomplete_design",
+      success: success,
+      dataType: "json",
+      error: error
+    });
+  }
+  function reset() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var _params$success3 = params.success,
+      success = _params$success3 === void 0 ? function () {} : _params$success3,
+      _params$error3 = params.error,
+      error = _params$error3 === void 0 ? function () {} : _params$error3;
     jQuery.ajax({
       url: ajaxUrl + "?action=reset",
       success: success,
@@ -45,8 +58,10 @@
     e.preventDefault();
     var parent = $(this).closest(".build-ring-selection");
     parent.addClass("loading");
+    clearUncompleteDesign();
     reset({
       success: function success(response) {
+        console.log("reset response", response);
         setMode({
           mode: MODE.START_WITH_STONE,
           success: function success(response) {
@@ -61,8 +76,10 @@
     e.preventDefault();
     var parent = $(this).closest(".build-ring-selection");
     parent.addClass("loading");
+    clearUncompleteDesign();
     reset({
       success: function success(response) {
+        console.log("reset response", response);
         setMode({
           mode: MODE.START_WITH_SETTING,
           success: function success(response) {

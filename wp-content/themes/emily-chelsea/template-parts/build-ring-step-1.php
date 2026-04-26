@@ -40,7 +40,8 @@ add_filter('woocommerce_loop_product_link', function ($post_link, $post) {
                 ]
             ],
             "meta_query" =>  $meta_query,
-            "facetwp"        => true
+            "facetwp"        => true,
+            "posts_per_page" => 24,
         ));
         ?>
         <ul class="products columns-3 facetwp-template <?php echo $terms ?>-list">
@@ -65,7 +66,10 @@ add_filter('woocommerce_loop_product_link', function ($post_link, $post) {
         </nav>
     </div>
     <div class="page-build-ring__right" id="build-ring-tray-slots">
-        <?php echo TTG_Template::render("build-ring-mini-collection") ?>
-        <?php echo TTG_Template::render("build-ring-tray") ?>
+        <div class="build-ring-tray-collection">
+            <?php echo TTG_Template::render("build-ring-mini-collection") ?>
+            <?php echo TTG_Template::render("build-ring-tray") ?>
+        </div>
+
     </div>
 </div>

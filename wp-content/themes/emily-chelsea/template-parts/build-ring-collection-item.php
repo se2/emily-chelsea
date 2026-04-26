@@ -1,16 +1,22 @@
 <?php
 extract($args);
 if ($product_id > 0) {
-    $hover_image = get_field('hover_feature_image', $product_id);
-    $product = wc_get_product($product_id);
+    $product = $variation_id ? wc_get_product($variation_id) : wc_get_product($product_id);
+    $image = get_the_post_thumbnail($variation_id, 'full', array(
+        'class' => 'product__image'
+    ));
+    if (empty($image)) {
+        $image = get_the_post_thumbnail($product_id, 'full', array(
+            'class' => 'product__image'
+        ));
+    }
+
 ?>
     <div class="build-ring-collection-proudct">
         <div class="build-ring-collection-proudct__inner">
             <div class="build-ring-collection-proudct__image">
                 <?php
-                echo get_the_post_thumbnail($product_id, 'full', array(
-                    'class' => 'product__image'
-                ));
+                echo $image;
                 ?>
             </div>
             <div class="build-ring-collection-proudct__info">
@@ -19,9 +25,6 @@ if ($product_id > 0) {
                 </h4>
                 <h3 class="build-ring-collection-proudct__info__title">
                     <?php echo get_the_title($product_id); ?></h3>
-                <div class="build-ring-collection-proudct__info__price">
-                    <?php echo $product->get_price_html(); ?>
-                </div>
                 <div class="build-ring-collection-proudct__info__attrs">
                     <?php
                     if (!empty($cart_line_item)) {
@@ -30,6 +33,10 @@ if ($product_id > 0) {
                     }
                     ?>
                 </div>
+                <div class="build-ring-collection-proudct__info__price">
+                    <?php echo $product->get_price_html(); ?>
+                </div>
+
             </div>
         </div>
     </div>

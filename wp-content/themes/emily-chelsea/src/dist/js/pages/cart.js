@@ -17,6 +17,24 @@ var __webpack_exports__ = {};
       dataType: "json"
     });
   }
+  function removeTrayItem(id) {
+    var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
+    jQuery.ajax({
+      url: ajaxUrl + "?action=remove_tray_item&id=" + id.toString(),
+      success: function success(res) {
+        callback(res);
+      },
+      dataType: "json"
+    });
+  }
+  $(".remove-tray-item-from-cart").off("click");
+  $(document).on("click", ".remove-tray-item-from-cart", function (e) {
+    e.preventDefault();
+    var id = $(this).data("uuid");
+    removeTrayItem(id, function () {
+      location.reload();
+    });
+  });
   $(".remove-design-from-cart").off("click");
   $(document).on("click", ".remove-design-from-cart", function (e) {
     e.preventDefault();
