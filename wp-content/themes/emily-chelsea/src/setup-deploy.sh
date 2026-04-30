@@ -9,7 +9,7 @@ cat > "$HOOK_FILE" << 'EOF'
 #!/bin/bash
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-THEME_SRC="$REPO_ROOT/wp-content/themes/ttg-v2/src"
+THEME_SRC="$REPO_ROOT/wp-content/themes/emily-chelsea/src"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
