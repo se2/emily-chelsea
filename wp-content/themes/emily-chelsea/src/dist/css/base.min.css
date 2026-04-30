@@ -7692,12 +7692,26 @@ body:not(.wp-admin) .select2-container--default .select2-selection--single .sele
   color: #fff;
 }
 
-.heading-xsmall {
+.heading-xxsmall,
+.has-xx-small-font-size {
+  font-size: 1.125rem;
+  line-height: 1.16;
+}
+@media (min-width: 1100px) {
+  .heading-xxsmall,
+  .has-xx-small-font-size {
+    font-size: 1.25rem;
+  }
+}
+
+.heading-xsmall,
+.has-x-small-font-size {
   font-size: 1.25rem;
   line-height: 1.16;
 }
 @media (min-width: 1100px) {
-  .heading-xsmall {
+  .heading-xsmall,
+  .has-x-small-font-size {
     font-size: 1.875rem;
   }
 }
@@ -7735,6 +7749,30 @@ body:not(.wp-admin) .select2-container--default .select2-selection--single .sele
   .heading-large,
   .has-large-font-size {
     font-size: 3.75rem;
+  }
+}
+
+.heading-xlarge,
+.has-x-large-font-size {
+  font-size: 3rem;
+  line-height: 1.1;
+}
+@media (min-width: 1100px) {
+  .heading-xlarge,
+  .has-x-large-font-size {
+    font-size: 4.5rem;
+  }
+}
+
+.heading-xxlarge,
+.has-xx-large-font-size {
+  font-size: 3.75rem;
+  line-height: 1.05;
+}
+@media (min-width: 1100px) {
+  .heading-xxlarge,
+  .has-xx-large-font-size {
+    font-size: 6rem;
   }
 }
 

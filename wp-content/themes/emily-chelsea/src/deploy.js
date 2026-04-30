@@ -13,7 +13,7 @@ const SFTP_CONFIG = {
 
 const GIT_ROOT = path.resolve(__dirname, "../../../.."); // app/public/
 const REMOTE_THEME = "/wp-content/themes/emily-chelsea-v2";
-const THEME_PREFIX = "wp-content/themes/emily-chelsea-v2/";
+const THEME_PREFIX = "wp-content/themes/emily-chelsea/";
 
 const EXCLUDES = [
 	"node_modules",
