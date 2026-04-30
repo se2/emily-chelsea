@@ -7541,6 +7541,34 @@ p {
   font-family: "New Forest", sans-serif !important;
 }
 
+.ls-0 {
+  letter-spacing: 0 !important;
+}
+
+.ls-1 {
+  letter-spacing: 0.01em !important;
+}
+
+.ls-2 {
+  letter-spacing: 0.05em !important;
+}
+
+.ls-3 {
+  letter-spacing: 0.1em !important;
+}
+
+.ls-4 {
+  letter-spacing: 0.15em !important;
+}
+
+.ls-5 {
+  letter-spacing: 0.2em !important;
+}
+
+.ls-wide {
+  letter-spacing: 0.3em !important;
+}
+
 .mt-0 {
   margin-top: 0px !important;
 }
