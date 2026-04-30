@@ -7523,11 +7523,22 @@ p {
   }
 }
 
+.wp-block-list {
+  padding-left: 1em;
+}
 .wp-block-list li {
   margin-bottom: 20px;
 }
 .wp-block-list li:last-child {
   margin-bottom: 0;
+}
+
+.font-primary {
+  font-family: "Outfit", sans-serif !important;
+}
+
+.font-heading {
+  font-family: "New Forest", sans-serif !important;
 }
 
 .mt-0 {
