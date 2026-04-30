@@ -87,19 +87,39 @@
 			"fontSize": "1rem",
 			"fontSizes": [
 				{
+					"slug": "x-small",
+					"size": "16px",
+					"name": "X-Small"
+				},
+				{
 					"slug": "small",
-					"size": "36px",
+					"size": "24px",
 					"name": "Small"
 				},
 				{
 					"slug": "medium",
-					"size": "48px",
+					"size": "36px",
 					"name": "Medium"
 				},
 				{
 					"slug": "large",
-					"size": "60px",
+					"size": "48px",
 					"name": "Large"
+				},
+				{
+					"slug": "x-large",
+					"size": "60px",
+					"name": "X-Large"
+				},
+				{
+					"slug": "xx-large",
+					"size": "72px",
+					"name": "XX-Large"
+				},
+				{
+					"slug": "xxx-large",
+					"size": "96px",
+					"name": "XXX-Large"
 				}
 			]
 		},

@@ -7523,6 +7523,13 @@ p {
   }
 }
 
+.wp-block-list li {
+  margin-bottom: 30px;
+}
+.wp-block-list li:last-child {
+  margin-bottom: 0;
+}
+
 .modal {
   display: none;
   position: fixed;
