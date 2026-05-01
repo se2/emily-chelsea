@@ -467,6 +467,81 @@ class Controller
         return Model::get_session('cart_item_lines');
     }
 
+    public static function restore_collection_to_tray($uuid, $mode)
+    {
+        $collections = self::get_collections();
+        $collection  = $collections[$uuid] ?? [];
+
+        if (empty($collection)) return false;
+
+        // Handle existing in-progress tray before overwriting
+        $existing_tray = self::get_tray();
+        if (!empty($existing_tray)) {
+            $existing_ring  = self::get_ring_from_tray($existing_tray);
+            $existing_stone = self::get_stone_from_tray($existing_tray);
+
+            if (!empty($existing_ring['product_id']) && !empty($existing_stone['product_id'])) {
+                // Complete design — update its collection with current tray state
+                $existing_uuid               = self::get_uuid() ?: uniqid();
+                $updated_collections         = self::get_collections();
+                $updated_collections[$existing_uuid] = self::parse_tray_to_collection($existing_tray);
+                self::set_collections($updated_collections);
+            } else {
+                // Incomplete — remove from WC cart
+                foreach ($existing_tray as $item) {
+                    $cart_key = $item['cart_line_item'] ?? '';
+                    if (!empty($cart_key)) {
+                        WC()->cart->remove_cart_item($cart_key);
+                    }
+                }
+            }
+        }
+        self::clear_uuid();
+
+        $tray = [];
+
+        if (!empty($collection['ring'])) {
+            $ring_uuid        = uniqid();
+            $tray[$ring_uuid] = [
+                'uuid'           => $ring_uuid,
+                'order'          => 0,
+                'type'           => PRODUCT_TYPES::RING,
+                'product_id'     => $collection['ring'],
+                'variation_id'   => $collection['variation_id'] ?? 0,
+                'attrs'          => $collection['attrs'] ?? [],
+                'cart_line_item' => $collection['ring_cart_item_line'] ?? '',
+            ];
+        }
+
+        if (!empty($collection['stone'])) {
+            $stone_uuid        = uniqid();
+            $tray[$stone_uuid] = [
+                'uuid'           => $stone_uuid,
+                'order'          => 1,
+                'type'           => PRODUCT_TYPES::STONE,
+                'product_id'     => $collection['stone'],
+                'variation_id'   => 0,
+                'attrs'          => [],
+                'cart_line_item' => $collection['stone_cart_item_line'] ?? '',
+            ];
+        }
+
+        // Restore tray + uuid (keep collection intact until user finishes editing)
+        Model::set_session('tray', $tray);
+        Model::set_session('uuid', $uuid);
+
+        // Determine step from initMode, fallback to START_WITH_SETTING if missing
+        $initMode = self::get_init_mode() ?: MODE::START_WITH_SETTING;
+        $steps    = self::get_steps($initMode);
+        $index    = array_search($mode, $steps);
+        $step     = $index !== false ? $index + 1 : 1;
+
+        self::set_mode($mode);
+        self::set_active_step($step);
+
+        return true;
+    }
+
     public static function reset()
     {
         self::set_ring(0);
@@ -482,6 +557,25 @@ class Controller
         self::set_init_mode('');
         self::set_mode('');
         self::set_active_step(1);
+    }
+
+    public static function go_back_step()
+    {
+        $currentStep = self::get_active_step();
+
+        if ($currentStep <= 1) {
+            return ['step' => 1, 'mode' => self::get_mode(), 'isFirstStep' => true];
+        }
+
+        $prevStep = $currentStep - 1;
+        $initMode = self::get_init_mode();
+        $steps = self::get_steps($initMode);
+        $mode = $steps[$prevStep - 1] ?? $initMode;
+
+        self::set_active_step($prevStep);
+        self::set_mode($mode);
+
+        return ['step' => $prevStep, 'mode' => $mode, 'isFirstStep' => false];
     }
 
     public static function get_data()
@@ -516,9 +610,8 @@ class Controller
         $is_valid = true;
 
         if (!empty($collections)) {
-            foreach ($collections as $key => $value) {
-                $stone = $value['stone'];
-                $variation_id = $value['variation_id'];
+            foreach ($collections as $value) {
+                $variation_id = $value['variation_id'] ?? 0;
 
                 if (!$variation_id) {
                     $is_valid = false;
@@ -589,10 +682,11 @@ class Ajax
 
     public static function select_product()
     {
-        $productId = intval($_POST["product_id"]);
+        $productId    = intval($_POST["product_id"]);
         $variation_id = !empty($_POST["variation_id"]) ? intval($_POST["variation_id"]) : 0;
         $current_uuid = !empty($_POST["uuid"]) ? $_POST["uuid"] : '';
-        $attrs = [];
+        $message      = '';
+        $attrs        = [];
         if (!empty($_POST)) {
             foreach ($_POST as $key => $value) {
                 $is_attr = strpos($key, "attribute_");
@@ -890,11 +984,77 @@ class Ajax
 
     public static function reset()
     {
+        $force = !empty($_GET['force']);
+        $tray  = Controller::get_tray();
+        $uuid  = Controller::get_uuid();
+
+        if (!$force && !empty($tray)) {
+            $collections = Controller::get_collections();
+            $isEditing   = !empty($uuid) && !empty($collections[$uuid]);
+
+            echo wp_json_encode([
+                'isSuccess' => false,
+                'isEditing' => $isEditing,
+            ]);
+            wp_die();
+        }
+
         Controller::reset();
         Controller::reset_page_data();
 
         echo wp_json_encode([
             "isSuccess" => true,
+            "data"      => Controller::get_data(),
+        ]);
+        wp_die();
+    }
+
+    public static function change_item()
+    {
+        $uuid  = $_GET['uuid']  ?? '';
+        $mode  = $_GET['mode']  ?? '';
+        $force = !empty($_GET['force']);
+
+        if (empty($uuid) || empty($mode)) {
+            echo wp_json_encode(['isSuccess' => false, 'message' => 'Missing params']);
+            wp_die();
+        }
+
+        if (!$force && !empty(Controller::get_tray())) {
+            echo wp_json_encode(['isSuccess' => false, 'hasPendingTray' => true]);
+            wp_die();
+        }
+
+        $result = Controller::restore_collection_to_tray($uuid, $mode);
+
+        echo wp_json_encode([
+            'isSuccess' => $result,
+            'data'      => Controller::get_data(),
+        ]);
+        wp_die();
+    }
+
+    public static function cancel_editing()
+    {
+        // Only clear tray session + uuid — do NOT touch WC cart
+        // (tray items reference the same cart items as the collection)
+        Controller::clear_tray();
+        Controller::clear_uuid();
+
+        echo wp_json_encode([
+            'isSuccess' => true,
+            'data'      => Controller::get_data(),
+        ]);
+        wp_die();
+    }
+
+    public static function go_back_step()
+    {
+        $result = Controller::go_back_step();
+
+        echo wp_json_encode([
+            "isSuccess" => true,
+            "isFirstStep" => $result['isFirstStep'],
             "data" => Controller::get_data(),
         ]);
         wp_die();
@@ -941,6 +1101,8 @@ class Ajax
                 'cart_line_item' => $collection['ring_cart_item_line'],
                 'type' => 'Setting',
                 'variation_id' => $collection['variation_id'],
+                'mode'           => \TTG\Build_Ring\MODE::START_WITH_SETTING,
+                'uuid'          => $uuid ?? '',
             ]
         );
 
@@ -1040,6 +1202,15 @@ add_action("wp_ajax_nopriv_update_product_attrs", "TTG\Build_Ring\Ajax::update_p
 
 add_action("wp_ajax_get_init_data", "TTG\Build_Ring\Ajax::get_init_data");
 add_action("wp_ajax_nopriv_get_init_data", "TTG\Build_Ring\Ajax::get_init_data");
+
+add_action("wp_ajax_cancel_editing", "TTG\Build_Ring\Ajax::cancel_editing");
+add_action("wp_ajax_nopriv_cancel_editing", "TTG\Build_Ring\Ajax::cancel_editing");
+
+add_action("wp_ajax_change_item", "TTG\Build_Ring\Ajax::change_item");
+add_action("wp_ajax_nopriv_change_item", "TTG\Build_Ring\Ajax::change_item");
+
+add_action("wp_ajax_go_back_step", "TTG\Build_Ring\Ajax::go_back_step");
+add_action("wp_ajax_nopriv_go_back_step", "TTG\Build_Ring\Ajax::go_back_step");
 
 add_action("wp_ajax_toggle_mode", "TTG\Build_Ring\Ajax::toggle_mode");
 add_action("wp_ajax_nopriv_toggle_mode", "TTG\Build_Ring\Ajax::toggle_mode");

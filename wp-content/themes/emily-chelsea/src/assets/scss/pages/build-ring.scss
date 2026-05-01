@@ -1,5 +1,34 @@
 @import "../base-components";
 
+.facetwp-selections {
+	padding-left: 20px;
+	ul {
+		li {
+			.facetwp-selection-value {
+				display: flex;
+				background-image: none;
+				background-color: #909090;
+				padding: 5px 5px;
+				font-size: 11px;
+				color: #fff;
+				align-items: center;
+				&:before {
+					background-image: url(../../img/remove.png);
+					background-size: contain;
+					content: "";
+					display: block;
+					margin-right: 3px;
+					width: 15px;
+					height: 15px;
+				}
+			}
+			.facetwp-selection-label {
+				display: none;
+			}
+		}
+	}
+}
+
 .page-build-ring-wrapper {
 	.product {
 		&:not(.product-detail) {
@@ -100,6 +129,7 @@
 			padding-top: 80px;
 			padding-left: 0;
 			border-left: 0;
+			border-right: 2px solid var(--cl-border);
 			&::before {
 				display: none;
 			}
@@ -364,6 +394,19 @@
 	display: flex;
 	align-items: center;
 	padding-left: 10px;
+	&__inner {
+		display: flex;
+		width: 170px;
+
+		padding: 5px 5px;
+		border-radius: 30px;
+		background: #3f7f88;
+		justify-content: space-between;
+
+		@include media-breakpoint-up(md) {
+			width: 260px;
+		}
+	}
 
 	@include media-breakpoint-up(md) {
 		position: static;
@@ -377,25 +420,58 @@
 		display: inline-block;
 		img {
 			display: inline-block;
-			height: 30px;
+			width: 13px;
+			height: auto;
+			filter: brightness(0) invert(1);
+			@include media-breakpoint-up(md) {
+				width: 13px;
+			}
 		}
 	}
 
 	&__label {
-		font-size: 0;
+		flex: 0 0 50%;
+		max-width: 50%;
+		font-size: 8px;
 		letter-spacing: 1.8px;
-		line-height: 1.25;
+		line-height: 0;
 		font-family: $font-body;
-		color: #909090;
+		color: #ffffff;
 		text-transform: uppercase;
 		opacity: 1;
 		cursor: pointer;
 		display: flex;
+		justify-content: center;
 		align-items: center;
-		gap: 5px;
+		gap: 8px;
+		border-radius: 30px;
+		height: 27px;
+		svg {
+			width: 13px;
+			height: auto;
+			@include media-breakpoint-up(md) {
+				width: 13px;
+			}
+		}
+		path {
+			fill: #fff;
+		}
 
 		@include media-breakpoint-up(md) {
-			font-size: 15px;
+			font-size: 12px;
+			letter-spacing: 1.8px;
+			text-transform: uppercase;
+			opacity: 1;
+		}
+		&.active {
+			background: #fff;
+			color: #3f7f88;
+			path {
+				fill: #3f7f88;
+			}
+			img {
+				filter: none !important;
+			}
 		}
 	}
 	&__switch {
@@ -453,6 +529,11 @@
 		margin: 0;
 		position: absolute;
 		left: 30px;
+		cursor: pointer;
+		user-select: none;
+		&:hover {
+			opacity: 0.7;
+		}
 
 		@include media-breakpoint-up(md) {
 			display: block;
@@ -728,6 +809,40 @@
 				margin-bottom: 5px;
 			}
 		}
+	}
+}
+
+.build-ring-editing-badge {
+	background: none;
+	padding: 0;
+	border: 0;
+	font: normal normal bold 11px/1 Outfit;
+	text-transform: capitalize;
+	color: var(--cl-gold);
+	cursor: pointer;
+}
+
+.is-editing {
+	position: relative;
+	outline: 2px solid var(--cl-primary);
+	border-radius: 14px;
+}
+
+.build-ring-collection__change {
+	display: inline-block;
+	margin-top: 12px;
+	background: none;
+	border: none;
+	padding: 0;
+	text-align: center;
+	text-decoration: underline;
+	font: normal normal bold 12px/26px Outfit;
+	letter-spacing: 0px;
+	color: #3f7f88;
+	opacity: 1;
+	width: 200px;
+	&:hover {
+		color: #000;
 	}
 }
 
@@ -1498,22 +1613,50 @@
 			font-size: 18px;
 		}
 	}
-	&__confirm {
-		background: #ffffff 0% 0% no-repeat padding-box;
-		border-radius: 34px;
-		opacity: 1;
-		width: 320px;
-		height: 62px;
-		border: 0;
+	&__actions {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+		flex-wrap: wrap;
 		margin: 50px 0 0 0;
 
+		@include media-breakpoint-down(md) {
+			margin: 30px 0 0 0;
+		}
+	}
+	&__confirm {
+		background: #ffffff;
+		border-radius: 34px;
+		width: 220px;
+		height: 62px;
+		border: 2px solid #ffffff;
 		font: normal normal bold 18px/26px Outfit;
 		letter-spacing: 2.7px;
 		color: #3f7f88;
 		text-transform: uppercase;
-
-		@include media-breakpoint-down(md) {
-			margin: 30px 0 0 0;
+		cursor: pointer;
+		transition: all 0.2s linear;
+		&:hover {
+			background: transparent;
+			color: #ffffff;
+		}
+	}
+	&__cancel {
+		background: transparent;
+		border-radius: 34px;
+		width: 220px;
+		height: 62px;
+		border: 2px solid #ffffff;
+		font: normal normal bold 18px/26px Outfit;
+		letter-spacing: 2.7px;
+		color: #ffffff;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: all 0.2s linear;
+		&:hover {
+			background: #ffffff;
+			color: #3f7f88;
 		}
 	}
 }

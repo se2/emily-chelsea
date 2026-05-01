@@ -40,5 +40,10 @@ if ($product_id > 0) {
             </div>
         </div>
     </div>
+    <?php if (!empty($mode) && !empty($uuid)) : ?>
+        <button class="build-ring-collection__change" data-mode="<?php echo esc_attr($mode); ?>" data-uuid="<?php echo esc_attr($uuid); ?>">
+            <?php echo $type === 'Stone' ? 'Change Stone' : 'Change Setting'; ?>
+        </button>
+    <?php endif; ?>
 <?php
 }

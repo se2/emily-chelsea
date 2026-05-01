@@ -126,7 +126,9 @@
 	}
 
 	function alertMessage(params = {}) {
-		const { message = "", title = "", type = "success" } = params;
+		const { message = "", title = "", type = "success", onConfirm = null } = params;
+		const confirmLabel = onConfirm ? "Yes, proceed" : "OK";
+		const cancelBtn   = onConfirm ? `<button class="build-ring-alert__cancel">Cancel</button>` : "";
 		let $alert = null;
 		$alert = $(
 			`
@@ -136,21 +138,23 @@
 					<div class="build-ring-alert__content">
 						<h2 class="build-ring-alert__title">${title}</h2>
 						<div class="build-ring-alert__message">${message}</div>
-						<button class="build-ring-alert__confirm">OK</button>
+						<div class="build-ring-alert__actions">
+							${cancelBtn}
+							<button class="build-ring-alert__confirm">${confirmLabel}</button>
+						</div>
 					</div>
 				</div>
 			</div>
 			`,
 		).appendTo("body");
 
-		const closeBtn = $alert.find(
-			".build-ring-alert__close, .build-ring-alert__confirm",
-		);
+		const close = () => $alert.fadeOut(300, function () { $(this).remove(); });
 
-		closeBtn.on("click", function () {
-			$alert.fadeOut(300, function () {
-				$(this).remove();
-			});
+		$alert.find(".build-ring-alert__close, .build-ring-alert__cancel").on("click", close);
+
+		$alert.find(".build-ring-alert__confirm").on("click", function () {
+			close();
+			if (onConfirm) onConfirm();
 		});
 	}
 
@@ -163,6 +167,18 @@
 				jQuery(".page-build-ring").removeClass("loading");
 			},
 		};
+	}
+
+	function goBackStep(callback = () => {}) {
+		jQuery.ajax({
+			url: ajaxUrl + "?action=go_back_step",
+			success: (res) => {
+				if (res.isSuccess) {
+					callback(res);
+				}
+			},
+			dataType: "json",
+		});
 	}
 
 	function setStep(step, callback = () => {}) {
@@ -716,9 +732,38 @@
 
 	jQuery(document).on("click", "#start-new-design", function (e) {
 		e.preventDefault();
-		setStep(1, () => {
-			refresh();
-		});
+
+		function doReset(force = false) {
+			jQuery.ajax({
+				url: ajaxUrl + "?action=reset" + (force ? "&force=1" : ""),
+				success: (res) => {
+					if (!res.isSuccess && !res.isEditing && !force) {
+						alertMessage({
+							title: "Design In Progress",
+							message: "You have an incomplete design in your tray. Starting new will discard it. Continue?",
+							type: "warning",
+							onConfirm: () => doReset(true),
+						});
+						return;
+					}
+					if (!res.isSuccess && res.isEditing) {
+						alertMessage({
+							title: "Editing In Progress",
+							message: "You are currently editing a design. Starting new will cancel your edits. Continue?",
+							type: "warning",
+							onConfirm: () => doReset(true),
+						});
+						return;
+					}
+					if (res.isSuccess) {
+						refresh();
+					}
+				},
+				dataType: "json",
+			});
+		}
+
+		doReset();
 	});
 
 	jQuery(document).on("click", "#continue-to-checkout", function (e) {
@@ -764,6 +809,60 @@
 			}
 		},
 	);
+
+	jQuery(document).on("click", ".build-ring-steps__title", function (e) {
+		e.preventDefault();
+		goBackStep((res) => {
+			if (res.isFirstStep) {
+				window.history.back();
+				return;
+			}
+			refresh();
+		});
+	});
+
+	jQuery(document).on("click", ".build-ring-editing-badge", function (e) {
+		e.preventDefault();
+		jQuery.ajax({
+			url: ajaxUrl + "?action=cancel_editing",
+			success: (res) => {
+				if (res.isSuccess) {
+					refresh();
+				}
+			},
+			dataType: "json",
+		});
+	});
+
+	jQuery(document).on("click", ".build-ring-collection__change", function (e) {
+		e.preventDefault();
+		const mode = $(this).data("mode");
+		const uuid = $(this).data("uuid");
+		const alreadyEditing = $(this).closest(".is-editing").length > 0;
+
+		function doChangeItem(force = false) {
+			jQuery.ajax({
+				url: ajaxUrl + "?action=change_item&uuid=" + uuid + "&mode=" + mode + (force ? "&force=1" : ""),
+				success: (res) => {
+					if (res.hasPendingTray) {
+						alertMessage({
+							title: "Design In Progress",
+							message: "You have a design in progress in your tray. Continuing will discard it. Do you want to proceed?",
+							type: "warning",
+							onConfirm: () => doChangeItem(true),
+						});
+						return;
+					}
+					if (res.isSuccess) {
+						refresh();
+					}
+				},
+				dataType: "json",
+			});
+		}
+
+		doChangeItem(alreadyEditing);
+	});
 
 	jQuery(document).on("click", ".set-step", function (e) {
 		e.preventDefault();

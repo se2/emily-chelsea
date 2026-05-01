@@ -3,7 +3,8 @@
 use TTG\Build_Ring\Controller;
 ?>
 <?php
-$collection = Controller::get_collections();
+$collection   = Controller::get_collections();
+$editing_uuid = Controller::get_uuid();
 $newCollection = [];
 if (!empty($collection)) {
     foreach ($collection as $key => $item) {
@@ -20,10 +21,11 @@ wc_clear_notices();
         $count = 1;
         $length = count($newCollection);
         foreach ($newCollection as $key => $item) {
-            $ring = $item['ring'];
-            $stone = $item['stone'];
+            $ring       = $item['ring'];
+            $stone      = $item['stone'];
+            $is_editing = !empty($editing_uuid) && $editing_uuid === $key;
     ?>
-            <div class="build-ring-confirm" data-uuid="<?php echo $key; ?>">
+            <div class="build-ring-confirm <?php echo $is_editing ? 'is-editing' : ''; ?>" data-uuid="<?php echo $key; ?>">
                 <div class="build-ring-confirm__inner">
                     <div class="build-ring-confirm__left">
                         <?php
@@ -33,7 +35,11 @@ wc_clear_notices();
                         <?php } ?>
                         <div class="build-ring-collection">
                             <div class="build-ring-collection__title">
-                                Design <?php echo $count; ?>
+                                <span>
+                                    Design <?php echo $count; ?>
+                                    <?php if ($is_editing): ?><button class="build-ring-editing-badge">(Cancel Editing)</button><?php endif; ?>
+                                </span>
+
                                 <a data-uuid="<?php echo $key; ?>" href="#<?php echo $key; ?>" class="remove-design">
                                     <?php echo TTG_Template::get_icon('close'); ?>
                                 </a>
@@ -43,17 +49,20 @@ wc_clear_notices();
                                 <div class="build-ring-collection__item__ring">
                                     <?php
                                     echo TTG_Template::render('build-ring-collection-item-ring', array(
-                                        'product_id' => $ring,
-                                        'type' => 'Setting',
+                                        'product_id'     => $ring,
                                         'cart_line_item' => $item['ring_cart_item_line'],
-                                        'variation_id' => $item['variation_id'] ?? 0,
+                                        'variation_id'   => $item['variation_id'] ?? 0,
+                                        'mode'           => \TTG\Build_Ring\MODE::START_WITH_SETTING,
+                                        'uuid'           => $key,
                                     ));
                                     ?>
                                 </div>
                                 <div class="build-ring-collection__item__stone">
                                     <?php echo \TTG_Template::render('build-ring-collection-item', array(
                                         'product_id' => $stone,
-                                        'type' => 'Stone',
+                                        'type'       => 'Stone',
+                                        'mode'       => \TTG\Build_Ring\MODE::START_WITH_STONE,
+                                        'uuid'       => $key,
                                     )) ?>
                                 </div>
                             </div>

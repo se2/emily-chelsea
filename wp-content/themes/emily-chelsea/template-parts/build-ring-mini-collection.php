@@ -2,7 +2,8 @@
 
 use TTG\Build_Ring\Controller;
 
-$collection = Controller::get_collections();
+$collection    = Controller::get_collections();
+$editing_uuid  = Controller::get_uuid();
 $count = 1;
 ?>
 <?php
@@ -16,13 +17,18 @@ if (!empty($newCollection)) {
             <div class="processing">Processing...</div>
             <?php foreach ($newCollection as $key => $item): ?>
                 <?php
-                $ring = $item['ring'];
+                $ring         = $item['ring'];
                 $variation_id = $item['variation_id'] ?? 0;
-                $stone = $item['stone'];
+                $stone        = $item['stone'];
+                $is_editing   = !empty($editing_uuid) && $editing_uuid === $key;
                 ?>
-                <div class="build-ring-mini-collection-item">
+                <div class="build-ring-mini-collection-item <?php echo $is_editing ? 'is-editing' : ''; ?>">
                     <h2 class="build-ring-mini-collection-item__title">
-                        DESIGN <?php echo $count++; ?>
+                        <span>
+                            DESIGN <?php echo $count++; ?>
+                            <?php if ($is_editing): ?><button class="build-ring-editing-badge">(Cancel Editing)</button><?php endif; ?>
+                        </span>
+
                         <span class="remove-design" data-uuid="<?php echo $key; ?>" href="#<?php echo $key; ?>">
                             <?php echo TTG_Template::get_icon('close'); ?>
                         </span>

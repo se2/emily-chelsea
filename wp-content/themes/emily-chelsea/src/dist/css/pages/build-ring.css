@@ -1,3 +1,28 @@
+.facetwp-selections {
+  padding-left: 20px;
+}
+.facetwp-selections ul li .facetwp-selection-value {
+  display: flex;
+  background-image: none;
+  background-color: #909090;
+  padding: 5px 5px;
+  font-size: 11px;
+  color: #fff;
+  align-items: center;
+}
+.facetwp-selections ul li .facetwp-selection-value:before {
+  background-image: url(../../img/remove.png);
+  background-size: contain;
+  content: "";
+  display: block;
+  margin-right: 3px;
+  width: 15px;
+  height: 15px;
+}
+.facetwp-selections ul li .facetwp-selection-label {
+  display: none;
+}
+
 .page-build-ring-wrapper .product:not(.product-detail) {
   border: 0;
   padding: 1.25rem 1.25rem;
@@ -101,6 +126,7 @@
     padding-top: 80px;
     padding-left: 0;
     border-left: 0;
+    border-right: 2px solid var(--cl-border);
   }
   .page-build-ring__left::before {
     display: none;
@@ -367,6 +393,19 @@
   align-items: center;
   padding-left: 10px;
 }
+.build-ring-mode__inner {
+  display: flex;
+  width: 170px;
+  padding: 5px 5px;
+  border-radius: 30px;
+  background: #3f7f88;
+  justify-content: space-between;
+}
+@media (min-width: 1100px) {
+  .build-ring-mode__inner {
+    width: 260px;
+  }
+}
 @media (min-width: 1100px) {
   .build-ring-mode {
     position: static;
@@ -381,25 +420,62 @@
 }
 .build-ring-mode__image img {
   display: inline-block;
-  height: 30px;
+  width: 13px;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+@media (min-width: 1100px) {
+  .build-ring-mode__image img {
+    width: 13px;
+  }
 }
 .build-ring-mode__label {
-  font-size: 0;
+  flex: 0 0 50%;
+  max-width: 50%;
+  font-size: 8px;
   letter-spacing: 1.8px;
-  line-height: 1.25;
+  line-height: 0;
   font-family: "Outfit", sans-serif;
-  color: #909090;
+  color: #ffffff;
   text-transform: uppercase;
   opacity: 1;
   cursor: pointer;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  border-radius: 30px;
+  height: 27px;
+}
+.build-ring-mode__label svg {
+  width: 13px;
+  height: auto;
+}
+@media (min-width: 1100px) {
+  .build-ring-mode__label svg {
+    width: 13px;
+  }
+}
+.build-ring-mode__label path {
+  fill: #fff;
 }
 @media (min-width: 1100px) {
   .build-ring-mode__label {
-    font-size: 15px;
+    font-size: 12px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    opacity: 1;
   }
+}
+.build-ring-mode__label.active {
+  background: #fff;
+  color: #3f7f88;
+}
+.build-ring-mode__label.active path {
+  fill: #3f7f88;
+}
+.build-ring-mode__label.active img {
+  filter: none !important;
 }
 .build-ring-mode__switch {
   position: relative;
@@ -454,6 +530,13 @@
   margin: 0;
   position: absolute;
   left: 30px;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.build-ring-steps__title:hover {
+  opacity: 0.7;
 }
 @media (min-width: 1100px) {
   .build-ring-steps__title {
@@ -716,6 +799,40 @@
 }
 .build-ring-collection__item .variation dd {
   margin-bottom: 5px;
+}
+
+.build-ring-editing-badge {
+  background: none;
+  padding: 0;
+  border: 0;
+  font: normal normal bold 11px/1 Outfit;
+  text-transform: capitalize;
+  color: var(--cl-gold);
+  cursor: pointer;
+}
+
+.is-editing {
+  position: relative;
+  outline: 2px solid var(--cl-primary);
+  border-radius: 14px;
+}
+
+.build-ring-collection__change {
+  display: inline-block;
+  margin-top: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: center;
+  text-decoration: underline;
+  font: normal normal bold 12px/26px Outfit;
+  letter-spacing: 0px;
+  color: #3f7f88;
+  opacity: 1;
+  width: 200px;
+}
+.build-ring-collection__change:hover {
+  color: #000;
 }
 
 .build-ring-collection-proudct__inner {
@@ -1463,23 +1580,52 @@
     font-size: 18px;
   }
 }
-.build-ring-alert__confirm {
-  background: #ffffff 0% 0% no-repeat padding-box;
-  border-radius: 34px;
-  opacity: 1;
-  width: 320px;
-  height: 62px;
-  border: 0;
+.build-ring-alert__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
   margin: 50px 0 0 0;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-alert__actions {
+    margin: 30px 0 0 0;
+  }
+}
+.build-ring-alert__confirm {
+  background: #ffffff;
+  border-radius: 34px;
+  width: 220px;
+  height: 62px;
+  border: 2px solid #ffffff;
   font: normal normal bold 18px/26px Outfit;
   letter-spacing: 2.7px;
   color: #3f7f88;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s linear;
 }
-@media (max-width: 1099.98px) {
-  .build-ring-alert__confirm {
-    margin: 30px 0 0 0;
-  }
+.build-ring-alert__confirm:hover {
+  background: transparent;
+  color: #ffffff;
+}
+.build-ring-alert__cancel {
+  background: transparent;
+  border-radius: 34px;
+  width: 220px;
+  height: 62px;
+  border: 2px solid #ffffff;
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 2.7px;
+  color: #ffffff;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.build-ring-alert__cancel:hover {
+  background: #ffffff;
+  color: #3f7f88;
 }
 
 /*# sourceMappingURL=build-ring.css.map*/

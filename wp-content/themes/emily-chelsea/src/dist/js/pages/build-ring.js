@@ -116,14 +116,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _params$title = params.title,
       title = _params$title === void 0 ? "" : _params$title,
       _params$type = params.type,
-      type = _params$type === void 0 ? "success" : _params$type;
+      type = _params$type === void 0 ? "success" : _params$type,
+      _params$onConfirm = params.onConfirm,
+      onConfirm = _params$onConfirm === void 0 ? null : _params$onConfirm;
+    var confirmLabel = onConfirm ? "Yes, proceed" : "OK";
+    var cancelBtn = onConfirm ? "<button class=\"build-ring-alert__cancel\">Cancel</button>" : "";
     var $alert = null;
-    $alert = $("\n\t\t\t<div class=\"build-ring-alert ".concat(type, "\">\n\t\t\t\t<div class=\"build-ring-alert__inner\">\n\t\t\t\t\t<button class=\"build-ring-alert__close\">x</button>\n\t\t\t\t\t<div class=\"build-ring-alert__content\">\n\t\t\t\t\t\t<h2 class=\"build-ring-alert__title\">").concat(title, "</h2>\n\t\t\t\t\t\t<div class=\"build-ring-alert__message\">").concat(message, "</div>\n\t\t\t\t\t\t<button class=\"build-ring-alert__confirm\">OK</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t")).appendTo("body");
-    var closeBtn = $alert.find(".build-ring-alert__close, .build-ring-alert__confirm");
-    closeBtn.on("click", function () {
-      $alert.fadeOut(300, function () {
+    $alert = $("\n\t\t\t<div class=\"build-ring-alert ".concat(type, "\">\n\t\t\t\t<div class=\"build-ring-alert__inner\">\n\t\t\t\t\t<button class=\"build-ring-alert__close\">x</button>\n\t\t\t\t\t<div class=\"build-ring-alert__content\">\n\t\t\t\t\t\t<h2 class=\"build-ring-alert__title\">").concat(title, "</h2>\n\t\t\t\t\t\t<div class=\"build-ring-alert__message\">").concat(message, "</div>\n\t\t\t\t\t\t<div class=\"build-ring-alert__actions\">\n\t\t\t\t\t\t\t").concat(cancelBtn, "\n\t\t\t\t\t\t\t<button class=\"build-ring-alert__confirm\">").concat(confirmLabel, "</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t")).appendTo("body");
+    var close = function close() {
+      return $alert.fadeOut(300, function () {
         $(this).remove();
       });
+    };
+    $alert.find(".build-ring-alert__close, .build-ring-alert__cancel").on("click", close);
+    $alert.find(".build-ring-alert__confirm").on("click", function () {
+      close();
+      if (onConfirm) onConfirm();
     });
   }
   function processLoading() {
@@ -135,6 +143,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         jQuery(".page-build-ring").removeClass("loading");
       }
     };
+  }
+  function goBackStep() {
+    var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+    jQuery.ajax({
+      url: ajaxUrl + "?action=go_back_step",
+      success: function success(res) {
+        if (res.isSuccess) {
+          callback(res);
+        }
+      },
+      dataType: "json"
+    });
   }
   function setStep(step) {
     var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
@@ -618,9 +638,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   });
   jQuery(document).on("click", "#start-new-design", function (e) {
     e.preventDefault();
-    setStep(1, function () {
-      refresh();
-    });
+    function doReset() {
+      var force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      jQuery.ajax({
+        url: ajaxUrl + "?action=reset" + (force ? "&force=1" : ""),
+        success: function success(res) {
+          if (!res.isSuccess && !res.isEditing && !force) {
+            alertMessage({
+              title: "Design In Progress",
+              message: "You have an incomplete design in your tray. Starting new will discard it. Continue?",
+              type: "warning",
+              onConfirm: function onConfirm() {
+                return doReset(true);
+              }
+            });
+            return;
+          }
+          if (!res.isSuccess && res.isEditing) {
+            alertMessage({
+              title: "Editing In Progress",
+              message: "You are currently editing a design. Starting new will cancel your edits. Continue?",
+              type: "warning",
+              onConfirm: function onConfirm() {
+                return doReset(true);
+              }
+            });
+            return;
+          }
+          if (res.isSuccess) {
+            refresh();
+          }
+        },
+        dataType: "json"
+      });
+    }
+    doReset();
   });
   jQuery(document).on("click", "#continue-to-checkout", function (e) {
     e.preventDefault();
@@ -655,6 +707,58 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
     }
+  });
+  jQuery(document).on("click", ".build-ring-steps__title", function (e) {
+    e.preventDefault();
+    goBackStep(function (res) {
+      if (res.isFirstStep) {
+        window.history.back();
+        return;
+      }
+      refresh();
+    });
+  });
+  jQuery(document).on("click", ".build-ring-editing-badge", function (e) {
+    e.preventDefault();
+    jQuery.ajax({
+      url: ajaxUrl + "?action=cancel_editing",
+      success: function success(res) {
+        if (res.isSuccess) {
+          refresh();
+        }
+      },
+      dataType: "json"
+    });
+  });
+  jQuery(document).on("click", ".build-ring-collection__change", function (e) {
+    e.preventDefault();
+    var mode = $(this).data("mode");
+    var uuid = $(this).data("uuid");
+    var alreadyEditing = $(this).closest(".is-editing").length > 0;
+    function doChangeItem() {
+      var force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      jQuery.ajax({
+        url: ajaxUrl + "?action=change_item&uuid=" + uuid + "&mode=" + mode + (force ? "&force=1" : ""),
+        success: function success(res) {
+          if (res.hasPendingTray) {
+            alertMessage({
+              title: "Design In Progress",
+              message: "You have a design in progress in your tray. Continuing will discard it. Do you want to proceed?",
+              type: "warning",
+              onConfirm: function onConfirm() {
+                return doChangeItem(true);
+              }
+            });
+            return;
+          }
+          if (res.isSuccess) {
+            refresh();
+          }
+        },
+        dataType: "json"
+      });
+    }
+    doChangeItem(alreadyEditing);
   });
   jQuery(document).on("click", ".set-step", function (e) {
     e.preventDefault();

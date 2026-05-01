@@ -16,6 +16,7 @@ if (!empty($tray)) {
 ?>
 <div class="build-ring-tray__inner">
     <h2 class="build-ring-tray__title">Your <br class="d-md-none" />Design Tray:</h2>
+    <p class="d-none d-md-block">Language telling users how to edit their designs from the setting/stone selection screens</p>
     <div class="build-ring-tray__items">
         <?php
         foreach ($items as $item) {
