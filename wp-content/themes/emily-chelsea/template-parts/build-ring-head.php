@@ -25,7 +25,7 @@ if ($mode === MODE::START_WITH_STONE) {
 ?>
     <div class="build-ring-head">
         <h2>Select a Stone</h2>
-        <p>Drag your selection to the tray to choose a stone, click to view more information, or go with <?php if ($stone_url): ?><a href="<?php echo esc_url($stone_url); ?>">our recommended stone</a><?php else: ?>our recommended stone<?php endif; ?>.</p>
+        <p>Drag your selection to the tray to choose a stone, click to view more information, or go with <?php if ($stone_url): ?><a href="<?php echo esc_url($stone_url); ?>?mode=build-ring"><u>our recommended stone</u></a><?php else: ?>our recommended stone<?php endif; ?>.</p>
     </div>
 
 <?php
