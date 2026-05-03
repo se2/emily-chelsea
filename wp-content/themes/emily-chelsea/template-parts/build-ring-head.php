@@ -19,10 +19,13 @@ if ($mode === MODE::START_WITH_SETTING) {
 
 <?php
 if ($mode === MODE::START_WITH_STONE) {
+    $ring_id = Controller::get_ring();
+    $stone_id = Controller::get_default_stone($ring_id);
+    $stone_url = $stone_id ? get_permalink($stone_id) : '';
 ?>
     <div class="build-ring-head">
         <h2>Select a Stone</h2>
-        <p>Drag your selection to the tray to choose a stone, click to view more information, or go with our recommended stone.</p>
+        <p>Drag your selection to the tray to choose a stone, click to view more information, or go with <?php if ($stone_url): ?><a href="<?php echo esc_url($stone_url); ?>">our recommended stone</a><?php else: ?>our recommended stone<?php endif; ?>.</p>
     </div>
 
 <?php
