@@ -85,6 +85,7 @@
   border: 2px solid var(--cl-primary);
   background: var(--cl-primary);
   color: #fff;
+  margin-bottom: 40px;
 }
 #place_order:hover {
   background-color: #000;
