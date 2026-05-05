@@ -121,8 +121,8 @@
 }
 @media (min-width: 1100px) {
   .page-build-ring__left {
-    flex: 0 0 200px;
-    max-width: 200px;
+    flex: 0 0 230px;
+    max-width: 230px;
     padding-top: 80px;
     padding-left: 0;
     border-left: 0;
@@ -143,8 +143,8 @@
 }
 @media (min-width: 1100px) {
   .page-build-ring__center {
-    flex: 0 0 calc(100% - 480px);
-    max-width: calc(100% - 480px);
+    flex: 0 0 calc(100% - 510px);
+    max-width: calc(100% - 510px);
     padding: 20px 55px;
     position: relative;
     z-index: 10;
