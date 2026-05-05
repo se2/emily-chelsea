@@ -31,8 +31,8 @@ if (!empty($custom_filter)) {
 if ($mode === MODE::START_WITH_SETTING) {
 ?>
     <style>
-        .products-filter--aside .products-filter__item:nth-child(2),
-        .products-filter--aside .products-filter__item:nth-child(3) {
+        .products-filter--aside .products-filter__item:nth-child(3),
+        .products-filter--aside .products-filter__item:nth-child(4) {
             display: none !important;
         }
     </style>
