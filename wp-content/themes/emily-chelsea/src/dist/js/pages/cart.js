@@ -27,6 +27,27 @@ var __webpack_exports__ = {};
       dataType: "json"
     });
   }
+  $(document).on("click", ".build-ring-collection__change", function (e) {
+    e.preventDefault();
+    var uuid = $(this).data("uuid");
+    var mode = $(this).data("mode");
+    var $btn = $(this);
+    $btn.prop("disabled", true);
+    $.ajax({
+      url: jsData.ajaxUrl + "?action=change_item&uuid=" + uuid + "&mode=" + mode + "&force=1",
+      success: function success(res) {
+        if (res.isSuccess && jsData.buildRingUrl) {
+          window.location.href = jsData.buildRingUrl;
+        } else {
+          $btn.prop("disabled", false);
+        }
+      },
+      error: function error() {
+        $btn.prop("disabled", false);
+      },
+      dataType: "json"
+    });
+  });
   $(".remove-tray-item-from-cart").off("click");
   $(document).on("click", ".remove-tray-item-from-cart", function (e) {
     e.preventDefault();

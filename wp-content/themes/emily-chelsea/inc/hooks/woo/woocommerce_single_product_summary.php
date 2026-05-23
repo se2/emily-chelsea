@@ -66,12 +66,6 @@ add_action('woocommerce_single_product_summary', function () {
     echo TTG_Template::get_template_part('product-service');
 }, 21);
 
-add_action('woocommerce_single_product_summary', function () {
-    global $product;
-    echo '<div class="summary-spacing">'
-        . TTG_Template::get_template_part('not-include-stone', ['product' => $product]) . '</div>';
-}, 11);
-
 
 add_action('woocommerce_single_product_summary', function () {
 

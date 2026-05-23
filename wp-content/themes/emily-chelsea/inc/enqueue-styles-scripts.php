@@ -32,8 +32,10 @@ function ttg_wp_scripts()
     }
 
     wp_enqueue_script('ttg-common', get_template_directory_uri() . '/src/dist/js/components/common.js', [], time(), true);
+    $build_ring_pages = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-build-ring.php']);
     wp_localize_script('ttg-common', 'jsData', array(
-        'ajaxUrl' => admin_url('admin-ajax.php')
+        'ajaxUrl'      => admin_url('admin-ajax.php'),
+        'buildRingUrl' => !empty($build_ring_pages) ? get_permalink($build_ring_pages[0]->ID) : '',
     ));
     wp_enqueue_script('header', get_template_directory_uri() . '/src/dist/js/components/header.js', [], false, true);
 

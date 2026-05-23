@@ -17,6 +17,10 @@
   width: 50px;
   text-align: center;
 }
+.shop_table .product-subtotal,
+.shop_table .product-remove {
+  vertical-align: middle;
+}
 .shop_table .remove {
   font-size: 1.25rem;
   display: inline-flex;
@@ -36,7 +40,7 @@
   color: var(--cl-primary);
 }
 .shop_table .product-thumbnail {
-  width: 10%;
+  width: 110px;
 }
 .shop_table .product-name {
   width: 40%;
@@ -61,6 +65,7 @@
 @media (min-width: 1100px) {
   .shop_table .product-quantity {
     width: 170px;
+    vertical-align: middle;
   }
   .shop_table .product-quantity .quantity {
     width: 170px;
@@ -223,6 +228,22 @@
   .shop_table .quantity input {
     text-align: left;
   }
+}
+.shop_table .design-group-ring {
+  border-bottom: none;
+}
+.shop_table .design-group-ring .product-thumbnail,
+.shop_table .design-group-ring .product-name,
+.shop_table .design-group-ring .product-price {
+  border-bottom: none;
+}
+.shop_table .design-group-stone {
+  border-top: none;
+}
+.shop_table .design-group-stone .product-thumbnail,
+.shop_table .design-group-stone .product-name,
+.shop_table .design-group-stone .product-price {
+  border-top: none;
 }
 .shop_table.order_details tfoot th,
 .shop_table.order_details tfoot td {

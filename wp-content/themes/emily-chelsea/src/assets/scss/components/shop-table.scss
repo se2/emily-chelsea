@@ -19,6 +19,10 @@
 		width: 50px;
 		text-align: center;
 	}
+	.product-subtotal,
+	.product-remove {
+		vertical-align: middle;
+	}
 	.remove {
 		font-size: pxToRem(20);
 		display: inline-flex;
@@ -38,7 +42,7 @@
 		}
 	}
 	.product-thumbnail {
-		width: 10%;
+		width: 110px;
 	}
 	.product-name {
 		width: 40%;
@@ -61,6 +65,7 @@
 
 		@include media-breakpoint-up(md) {
 			width: 170px;
+			vertical-align: middle;
 			.quantity {
 				width: 170px;
 			}
@@ -205,6 +210,22 @@
 			input {
 				text-align: left;
 			}
+		}
+	}
+	.design-group-ring {
+		border-bottom: none;
+		.product-thumbnail,
+		.product-name,
+		.product-price {
+			border-bottom: none;
+		}
+	}
+	.design-group-stone {
+		border-top: none;
+		.product-thumbnail,
+		.product-name,
+		.product-price {
+			border-top: none;
 		}
 	}
 	&.order_details {

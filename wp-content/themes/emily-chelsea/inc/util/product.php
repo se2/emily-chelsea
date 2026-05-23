@@ -32,8 +32,6 @@ class TTG_Product
         $icon = get_field('combine_product_indicator_icon', $stone);
         $text = get_field('combine_product_indicator_text', $stone);
         $add_text = get_field('combine_product_indicator_add_text', $stone);
-        $not_include_text = get_field('combine_product_indicator_not_include_text', $stone);
-
         if (empty($icon)) {
             $icon = '<img src="' . get_theme_file_uri('src/dist/img/Group-161@2x.png') . '" alt="' . $stone->name . '" />';
         } else {
@@ -42,10 +40,6 @@ class TTG_Product
 
         if (empty($text)) {
             $text = $stone->name . ' INCLUDED';
-        }
-
-        if (empty($not_include_text)) {
-            $not_include_text = "* " . $stone->name . " NOT INCLUDED\"";
         }
 
         if (empty($add_text)) {
@@ -57,7 +51,6 @@ class TTG_Product
             'text' => $text,
             'add_text' => $add_text,
             'url' => get_term_link($stone),
-            'not_include_text' => $not_include_text
         ];
     }
 

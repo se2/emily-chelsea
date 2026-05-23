@@ -1,4 +1,13 @@
 <?php
+/**
+ * Build-a-Ring feature — session state, business logic, and AJAX handlers.
+ *
+ * Organises the custom ring builder flow (Setting → Stone → Confirm or Stone → Setting → Confirm)
+ * and keeps a "tray" (in-progress design) plus a "collections" map (completed ring+stone pairs)
+ * in the PHP session, mirrored into the WooCommerce cart for pricing.
+ *
+ * @package TTG\Build_Ring
+ */
 
 namespace TTG\Build_Ring;
 
@@ -6,21 +15,39 @@ use TTG_Template;
 
 define("BUILD_RING_SESSION_KEY", "BUILD_RING_SESSION");
 
+/**
+ * WooCommerce product-category slugs used to identify ring settings and center stones.
+ */
 class PRODUCT_TYPES
 {
-    const RING = "rings";
+    const RING  = "rings";
     const STONE = "center-stones";
 }
 
+/**
+ * Builder flow modes / step identifiers.
+ *
+ * START_WITH_SETTING — user picks the ring setting first.
+ * START_WITH_STONE   — user picks the center stone first.
+ * CONFIRM            — both items chosen; user reviews and confirms.
+ */
 class MODE
 {
     const START_WITH_SETTING = "START_WITH_SETTING";
-    const START_WITH_STONE = "START_WITH_STONE";
-    const CONFIRM = "CONFIRM";
+    const START_WITH_STONE   = "START_WITH_STONE";
+    const CONFIRM            = "CONFIRM";
 }
 
+/**
+ * Thin wrapper around $_SESSION for the Build-a-Ring namespace.
+ *
+ * All data is stored under BUILD_RING_SESSION_KEY to avoid collisions.
+ */
 class Model
 {
+    /**
+     * Starts a PHP session if one is not already active.
+     */
     public static function start_session()
     {
         if (!session_id()) {
@@ -28,6 +55,12 @@ class Model
         }
     }
 
+    /**
+     * Returns the full session bag or a single key from it.
+     *
+     * @param  string $key Optional key to retrieve. Empty = return entire bag.
+     * @return mixed        Array when no key given; scalar/null for a specific key.
+     */
     public static function get_session($key = '')
     {
         self::start_session();
@@ -40,6 +73,13 @@ class Model
         return $data[$key] ?? null;
     }
 
+    /**
+     * Writes a value into the session bag and returns the updated bag.
+     *
+     * @param  string $key  Key to write.
+     * @param  mixed  $data Value to store.
+     * @return array        The updated session bag.
+     */
     public static function set_session($key, $data)
     {
         self::start_session();
@@ -48,6 +88,12 @@ class Model
         return $_SESSION[BUILD_RING_SESSION_KEY];
     }
 
+    /**
+     * Clears a single key (sets it to null) or the entire bag ('ALL').
+     *
+     * @param  string $key Key to clear, or 'ALL' to wipe the entire bag.
+     * @return array       The session bag after clearing.
+     */
     public static function clear_session($key = '')
     {
         self::start_session();
@@ -66,8 +112,29 @@ class Model
     }
 }
 
+/**
+ * Business-logic layer for the Build-a-Ring flow.
+ *
+ * Manages the in-progress "tray" (one ring + one stone being assembled),
+ * the "collections" map (uuid → completed ring+stone pair), step navigation,
+ * and WooCommerce cart synchronisation.
+ */
 class Controller
 {
+    /**
+     * Adds or replaces an item in the tray and syncs with the WC cart.
+     *
+     * If an item of the same type already exists in the tray, its existing
+     * WC cart line is removed before the new product is added.
+     *
+     * @param  array $newItem {
+     *     @type string $type         PRODUCT_TYPES constant.
+     *     @type int    $product_id   WooCommerce product ID.
+     *     @type int    $variation_id Variation ID (0 for simple products).
+     *     @type array  $attrs        Variation attribute key/value pairs.
+     * }
+     * @return array Updated tray stored in session.
+     */
     public static function add_item_to_tray($newItem = [])
     {
         $tray = self::get_tray();
@@ -106,6 +173,12 @@ class Controller
         return Model::set_session("tray", $tray);
     }
 
+    /**
+     * Finds the tray item whose cart_line_item key matches the given value.
+     *
+     * @param  string $cart_line_item WC cart line item key.
+     * @return array                  Matching tray item, or [] if not found.
+     */
     public static function get_tray_item_by_cart_line_item($cart_line_item = '')
     {
         $tray = self::get_tray();
@@ -121,11 +194,22 @@ class Controller
         return $tray_item;
     }
 
+    /**
+     * Returns the current tray (keyed by uuid).
+     *
+     * @return array Tray items, or [] if the tray is empty.
+     */
     public static function get_tray()
     {
         return Model::get_session("tray") ?? [];
     }
 
+    /**
+     * Removes a tray item by uuid and removes its WC cart line.
+     *
+     * @param  string $id UUID of the tray item to remove.
+     * @return array      Updated tray.
+     */
     public static function remove_item_from_tray($id = '')
     {
         $tray = self::get_tray();
@@ -145,6 +229,13 @@ class Controller
         return Model::set_session("tray", $tray);
     }
 
+    /**
+     * Converts a tray array into a flat collection record suitable for storage in "collections".
+     *
+     * @param  array $tray Tray items array.
+     * @return array       Collection with keys: ring, stone, variation_id, attrs,
+     *                     ring_cart_item_line, stone_cart_item_line.
+     */
     public static function parse_tray_to_collection($tray = [])
     {
         $collection = [];
@@ -162,11 +253,22 @@ class Controller
         return $collection;
     }
 
+    /**
+     * Wipes the tray from the session (does NOT remove WC cart items).
+     *
+     * @return array The (now-empty) session bag.
+     */
     public static function clear_tray()
     {
         return Model::clear_session("tray");
     }
 
+    /**
+     * Extracts the stone item from a tray array.
+     *
+     * @param  array $tray Tray items array.
+     * @return array       Stone tray item, or [] if none.
+     */
     public static function get_stone_from_tray($tray = [])
     {
         $stone = [];
@@ -181,6 +283,12 @@ class Controller
         return $stone;
     }
 
+    /**
+     * Extracts the ring setting item from a tray array.
+     *
+     * @param  array $tray Tray items array.
+     * @return array       Ring tray item, or [] if none.
+     */
     public static function get_ring_from_tray($tray = [])
     {
         $ring = [];
@@ -195,6 +303,15 @@ class Controller
         return $ring;
     }
 
+    /**
+     * Returns the ordered step sequence for the given starting mode.
+     *
+     * START_WITH_SETTING → [START_WITH_SETTING, START_WITH_STONE, CONFIRM]
+     * START_WITH_STONE   → [START_WITH_STONE,   START_WITH_SETTING, CONFIRM]
+     *
+     * @param  string $initStep MODE constant for the first step chosen.
+     * @return string[]          Ordered array of MODE constants, or [] for unknown modes.
+     */
     public static function get_steps($initStep = MODE::START_WITH_SETTING)
     {
         $steps = [
@@ -205,24 +322,34 @@ class Controller
         return $steps[$initStep] ?? [];
     }
 
+    /**
+     * Returns true when the user is inside the build-ring flow.
+     *
+     * True when: an active mode is set AND (on a product page) the product belongs to the
+     * rings or center-stones category AND the ?mode query arg is present. Always true on the
+     * page-build-ring.php template regardless of session state.
+     *
+     * @return bool
+     */
     public static function is_building_ring()
     {
-        $is_processing = !empty(self::get_mode());
+        $is_processing = false;
 
         if (is_singular('product')) {
             global $post;
-            $mode = isset($_GET['mode']) ? $_GET['mode'] : '';
-            $is_has_terms = has_term([PRODUCT_TYPES::RING, PRODUCT_TYPES::STONE], 'product_cat', $post);
-            $is_processing = $is_processing && $is_has_terms ? true : false;
-            if (empty($mode)) {
-                $is_processing = false;
-            }
+            $url_mode      = isset($_GET['mode']) ? $_GET['mode'] : '';
+            $is_has_terms  = has_term([PRODUCT_TYPES::RING, PRODUCT_TYPES::STONE], 'product_cat', $post);
+            $is_processing = !empty($url_mode) && !empty(self::get_mode()) && $is_has_terms;
         }
-
 
         return $is_processing || is_page_template('page-build-ring.php');
     }
 
+    /**
+     * Sets a session UUID for the current tray if one does not already exist.
+     *
+     * @return string The current (or newly created) UUID.
+     */
     public static function set_uuid()
     {
         $current_uuid = self::get_uuid();
@@ -232,26 +359,48 @@ class Controller
         return Model::set_session("uuid", $uuid);
     }
 
+    /** Clears the tray UUID from the session. */
     public static function clear_uuid()
     {
         return Model::clear_session("uuid");
     }
 
+    /**
+     * Returns the current tray UUID.
+     *
+     * @return string|null
+     */
     public static function get_uuid()
     {
         return Model::get_session("uuid");
     }
 
+    /**
+     * Stores the initial mode (the flow the user started with).
+     *
+     * @param string $mode MODE constant.
+     */
     public static function set_init_mode($mode)
     {
         return  Model::set_session("init_mode", $mode);
     }
 
+    /**
+     * Returns the initial mode stored at the start of the flow.
+     *
+     * @return string|null MODE constant, or null if not yet set.
+     */
     public static function get_init_mode()
     {
         return Model::get_session("init_mode");
     }
 
+    /**
+     * Sets the current active mode; also sets init_mode if this is the first call.
+     *
+     * @param  string $mode MODE constant.
+     * @return array        Updated session bag.
+     */
     public static function set_mode($mode)
     {
         $init_mode = self::get_init_mode();
@@ -262,17 +411,30 @@ class Controller
         return  Model::set_session("mode", $mode);
     }
 
+    /**
+     * Returns the current active mode, or null when none is set.
+     *
+     * @return string|null MODE constant.
+     */
     public static function get_mode()
     {
         $mode = Model::get_session("mode");
         return empty($mode) ? null : $mode;
     }
 
+    /**
+     * @param mixed $ring Ring product ID (kept for legacy callers; tray is the source of truth).
+     */
     public static function set_ring($ring)
     {
         return Model::set_session("ring", $ring);
     }
 
+    /**
+     * Returns the product ID of the ring currently in the tray, or 0 if none.
+     *
+     * @return int
+     */
     public static function get_ring()
     {
         $tray = self::get_tray();
@@ -282,11 +444,19 @@ class Controller
         return $ring_id;
     }
 
+    /**
+     * @param mixed $stone Stone product ID (kept for legacy callers; tray is the source of truth).
+     */
     public static function set_stone($stone)
     {
         return Model::set_session("stone", $stone);
     }
 
+    /**
+     * Returns the product ID of the stone currently in the tray, or 0 if none.
+     *
+     * @return int
+     */
     public static function get_stone()
     {
         $tray = self::get_tray();
@@ -296,17 +466,30 @@ class Controller
         return $stone_id;
     }
 
+    /**
+     * Returns the 1-based index of the current wizard step (defaults to 1).
+     *
+     * @return int
+     */
     public static function get_active_step()
     {
         $step = Model::get_session("active_step");
         return empty($step) ? 1 : $step;
     }
 
+    /**
+     * @param int $step 1-based step index to persist.
+     */
     public static function set_active_step($step = 1)
     {
         return Model::set_session("active_step", $step);
     }
 
+    /**
+     * Returns true when both a ring and a stone are selected in the tray.
+     *
+     * @return bool
+     */
     public static function is_finish_design()
     {
         $ring = Controller::get_ring();
@@ -314,6 +497,11 @@ class Controller
         return $ring > 0 && $stone > 0 ? true : false;
     }
 
+    /**
+     * Returns true when neither a ring nor a stone has been added to the tray yet.
+     *
+     * @return bool
+     */
     public static function is_start_design()
     {
         $ring = self::get_ring();
@@ -322,36 +510,72 @@ class Controller
         return empty($ring) && empty($stone) ? true : false;
     }
 
+    /**
+     * Returns all saved ring+stone collections keyed by their UUID.
+     *
+     * @return array<string, array>
+     */
     public static function get_collections()
     {
         return Model::get_session("collections") ?? [];
     }
 
+    /**
+     * Persists the full collections map to session.
+     *
+     * @param  array<string, array> $collections UUID-keyed collection records.
+     * @return array                              Updated session bag.
+     */
     public static function set_collections($collections = [])
     {
         return Model::set_session("collections", $collections);
     }
 
+    /**
+     * Stores the variation attributes chosen by the user.
+     *
+     * @param  array $attrs Key/value pairs, e.g. ['attribute_pa_color' => 'gold'].
+     * @return array        Updated session bag.
+     */
     public static function set_product_attrs($attrs = [])
     {
         return Model::set_session('attrs', $attrs);
     }
 
+    /**
+     * Returns the stored variation attributes, or null.
+     *
+     * @return array|null
+     */
     public static function get_attrs()
     {
         return Model::get_session('attrs');
     }
 
+    /**
+     * @param int $variation_id WooCommerce variation post ID.
+     */
     public static function set_product_variation($variation_id)
     {
         return Model::set_session('variation', $variation_id);
     }
 
+    /**
+     * Returns the stored variation ID, or null.
+     *
+     * @return int|null
+     */
     public static function get_product_variation()
     {
         return Model::get_session('variation');
     }
 
+    /**
+     * Removes a completed collection by UUID and removes its WC cart lines.
+     *
+     * @param  string $uuid Collection UUID.
+     * @return array        The removed collection record (empty if not found).
+     */
     public static function remove_design($uuid = '')
     {
         $collections = self::get_collections();
@@ -371,6 +595,12 @@ class Controller
         return $collection;
     }
 
+    /**
+     * Returns the default stone ACF value for a ring product, falling back to the global option.
+     *
+     * @param  int $product_id Ring product ID.
+     * @return mixed            Stone product ID from ACF, or 0/null if not configured.
+     */
     public static function get_default_stone($product_id = 0)
     {
         if (empty($product_id)) return 0;
@@ -381,6 +611,13 @@ class Controller
         return empty($default_stone) ? $default_stone_global : $default_stone;
     }
 
+    /**
+     * Outputs a JSON response containing the combined price of a ring and stone.
+     * Exits via wp_die() — intended as an AJAX handler body.
+     *
+     * @param int $product_id Ring product ID.
+     * @param int $stone_id   Stone product ID; uses tray stone when 0.
+     */
     public static function get_subtotal($product_id = 0, $stone_id = 0)
     {
         $stone_id = empty($stone_id) ? intval(self::get_stone()) : intval($stone_id);
@@ -397,6 +634,12 @@ class Controller
         wp_die();
     }
 
+    /**
+     * Validates that a product is in stock and purchasable.
+     *
+     * @param  int    $product_id Product or variation ID.
+     * @return string             Error message, or '' when the product is valid.
+     */
     public static function product_is_valid($product_id = 0)
     {
         $product = wc_get_product(intval($product_id));
@@ -418,6 +661,15 @@ class Controller
         return $message;
     }
 
+    /**
+     * Re-orders the WC cart array so ring+stone pairs appear together.
+     *
+     * Annotates each cart item with is_ring, is_stone, uuid, and is_finish_design
+     * flags consumed by the cart template.
+     *
+     * @param  array $cart Raw WC cart items array.
+     * @return array       Sorted and annotated cart items array.
+     */
     public static function sort_cart($cart = [])
     {
         $collections = self::get_collections();
@@ -457,16 +709,31 @@ class Controller
         return $cart;
     }
 
+    /**
+     * @param array $cart_item_lines WC cart line item keys to persist.
+     */
     public static function set_cart_item_lines($cart_item_lines = [])
     {
         return Model::set_session('cart_item_lines', $cart_item_lines);
     }
 
+    /** @return array|null Stored cart item line keys. */
     public static function get_cart_item_lines()
     {
         return Model::get_session('cart_item_lines');
     }
 
+    /**
+     * Loads a saved collection back into the tray so the user can edit it.
+     *
+     * If another tray is in progress it is either saved (when complete) or its
+     * WC cart items are removed (when incomplete) before the requested collection
+     * is restored.
+     *
+     * @param  string $uuid The collection UUID to restore.
+     * @param  string $mode The MODE step to land on after restoring.
+     * @return bool         True on success, false if the UUID does not exist.
+     */
     public static function restore_collection_to_tray($uuid, $mode)
     {
         $collections = self::get_collections();
@@ -542,6 +809,10 @@ class Controller
         return true;
     }
 
+    /**
+     * Clears the in-progress tray (ring, stone, attrs, variation, uuid).
+     * Does not affect saved collections or page-level state.
+     */
     public static function reset()
     {
         self::set_ring(0);
@@ -552,6 +823,9 @@ class Controller
         self::clear_tray();
     }
 
+    /**
+     * Resets the wizard page state (init_mode, mode, active_step) without touching the tray.
+     */
     public static function reset_page_data()
     {
         self::set_init_mode('');
@@ -559,6 +833,15 @@ class Controller
         self::set_active_step(1);
     }
 
+    /**
+     * Decrements the active step and updates mode accordingly.
+     *
+     * @return array {
+     *     @type int    $step        New 1-based step number.
+     *     @type string $mode        New MODE constant.
+     *     @type bool   $isFirstStep True if the user is already on step 1.
+     * }
+     */
     public static function go_back_step()
     {
         $currentStep = self::get_active_step();
@@ -578,6 +861,21 @@ class Controller
         return ['step' => $prevStep, 'mode' => $mode, 'isFirstStep' => false];
     }
 
+    /**
+     * Assembles the full UI state payload sent to the front-end after most AJAX calls.
+     *
+     * @return array {
+     *     @type string|null $mode             Current MODE constant.
+     *     @type int         $step             Current 1-based step number.
+     *     @type bool        $isSuccess        Always true.
+     *     @type array       $collections      All saved ring+stone collections.
+     *     @type array|null  $attrs            Current variation attributes.
+     *     @type int|null    $variation_id     Current variation ID.
+     *     @type string      $trayExtra        Rendered extra-tray HTML.
+     *     @type string      $trayItems        Rendered tray-items HTML.
+     *     @type string      $miniCollection   Rendered mini-collection HTML.
+     * }
+     */
     public static function get_data()
     {
         $mode = Controller::get_mode();
@@ -604,6 +902,12 @@ class Controller
         ];
     }
 
+    /**
+     * Returns true when every saved collection has a variation_id selected.
+     * A missing variation means the user left a ring design in a partially-configured state.
+     *
+     * @return bool
+     */
     public static function is_valid_collections()
     {
         $collections = self::get_collections();
@@ -625,8 +929,20 @@ class Controller
 }
 
 
+/**
+ * WordPress AJAX handlers for the Build-a-Ring feature.
+ *
+ * Every public method maps 1-to-1 to a wp_ajax_* / wp_ajax_nopriv_* action registered
+ * at the bottom of this file. Each handler reads its input from $_GET or $_POST,
+ * calls Controller methods for business logic, echoes a JSON response, and calls wp_die().
+ */
 class Ajax
 {
+    /**
+     * Flips the current mode between START_WITH_SETTING and START_WITH_STONE.
+     * Updates init_mode when no items have been selected yet.
+     * AJAX action: toggle_mode
+     */
     public static function toggle_mode()
     {
         $mode = Controller::get_mode();
@@ -655,6 +971,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Sets the active mode from the ?mode query parameter.
+     * AJAX action: set_mode   $_GET: mode
+     */
     public static function set_mode()
     {
         $newMode = $_GET["mode"];
@@ -680,6 +1000,17 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Handles product selection for both ring and stone steps.
+     *
+     * Adds the product to the tray (new design) or updates the WC cart line (editing an
+     * existing collection via uuid). Advances or corrects the step, saves the collection,
+     * and resets the tray when the design is complete.
+     *
+     * AJAX action: select_product
+     * $_POST: product_id, variation_id, type, uuid (optional), stone_option (optional),
+     *         attribute_* (variation attributes, any number of keys)
+     */
     public static function select_product()
     {
         $productId    = intval($_POST["product_id"]);
@@ -855,12 +1186,21 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Returns the full UI state payload on page load.
+     * AJAX action: get_init_data
+     */
     public static function get_init_data()
     {
         echo wp_json_encode(Controller::get_data());
         wp_die();
     }
 
+    /**
+     * Saves selected variation attributes and variation ID without changing any cart items.
+     * Used when the user adjusts ring options on the product page before confirming.
+     * AJAX action: update_product_attrs   $_GET: variation_id, attribute_* keys
+     */
     public static function update_product_attrs()
     {
         $request = $_GET;
@@ -884,6 +1224,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Returns the current WC cart subtotal as a formatted price string.
+     * AJAX action: get_subtotal
+     */
     public static function get_subtotal()
     {
 
@@ -894,6 +1238,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Returns rendered HTML for a single tray product info block.
+     * AJAX action: get_product_tray_product_info   $_GET: product_id
+     */
     public static function get_product_tray_product_info()
     {
         $product_id = intval($_GET["product_id"]);
@@ -904,6 +1252,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Returns rendered HTML for the stone options panel of the currently selected ring.
+     * AJAX action: get_stone_options
+     */
     public static function get_stone_options()
     {
         $ring = Controller::get_ring();
@@ -918,6 +1270,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Validates the requested product (and the stored stone if any) and returns error messages.
+     * AJAX action: product_is_valid   $_GET: product_id
+     */
     public static function product_is_valid()
     {
         $product_id = isset($_GET["product_id"]) ? intval($_GET["product_id"]) : 0;
@@ -943,6 +1299,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Jumps the wizard to an arbitrary step number.
+     * AJAX action: set_step   $_GET: step
+     */
     public static function set_step()
     {
         $step = intval($_GET["step"]);
@@ -958,6 +1318,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Removes a saved collection and its WC cart items.
+     * AJAX action: remove_design   $_GET: uuid
+     */
     public static function remove_design()
     {
         $uuid = $_GET["uuid"];
@@ -970,6 +1334,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Sets both init_mode and mode from a query parameter (used on page load).
+     * AJAX action: set_init_mode   $_GET: initMode
+     */
     public static function set_init_mode()
     {
         $initMode = $_GET["initMode"];
@@ -982,6 +1350,14 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Resets the tray and page-level state.
+     *
+     * Without ?force=1 the reset is blocked when a tray is in progress, returning
+     * isSuccess:false and an isEditing flag so the front-end can prompt the user.
+     *
+     * AJAX action: reset   $_GET: force (optional)
+     */
     public static function reset()
     {
         $force = !empty($_GET['force']);
@@ -1009,6 +1385,13 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Restores a saved collection to the tray so the user can change its ring or stone.
+     *
+     * Blocked without ?force=1 when another tray is already in progress.
+     *
+     * AJAX action: change_item   $_GET: uuid, mode, force (optional)
+     */
     public static function change_item()
     {
         $uuid  = $_GET['uuid']  ?? '';
@@ -1034,6 +1417,11 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Aborts an in-progress edit without touching WC cart items.
+     * The tray session and uuid are cleared; the collection's cart lines remain intact.
+     * AJAX action: cancel_editing
+     */
     public static function cancel_editing()
     {
         // Only clear tray session + uuid — do NOT touch WC cart
@@ -1048,6 +1436,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Moves the wizard back one step.
+     * AJAX action: go_back_step
+     */
     public static function go_back_step()
     {
         $result = Controller::go_back_step();
@@ -1060,6 +1452,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Removes a single item from the tray by its UUID and removes its WC cart line.
+     * AJAX action: remove_tray_item   $_GET: id (tray item uuid)
+     */
     public static function remove_tray_item()
     {
         $id = $_GET["id"];
@@ -1071,6 +1467,11 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Returns re-rendered HTML for the ring card inside a saved collection.
+     * Used after attributes are updated to reflect the new variation visually.
+     * AJAX action: refresh_collection_ring   $_GET: uuid
+     */
     public static function refresh_collection_ring()
     {
         $uuid = $_GET["uuid"];
@@ -1113,6 +1514,11 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Removes any collection that is missing either a ring or a stone, and cleans its WC cart lines.
+     * Intended to be called before checkout to prevent partial designs from reaching the order.
+     * AJAX action: clear_uncomplete_design
+     */
     public static function clear_uncomplete_design()
     {
         $collections = Controller::get_collections();
@@ -1147,6 +1553,10 @@ class Ajax
         wp_die();
     }
 
+    /**
+     * Checks whether every collection has a variation selected and returns a user-facing message if not.
+     * AJAX action: is_valid_collections
+     */
     public static function is_valid_collections()
     {
         $is_valid = Controller::is_valid_collections();

@@ -196,4 +196,77 @@
   padding-bottom: 30px;
 }
 
+.design-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+.design-pair__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.build-ring-collection__change {
+  display: block;
+  margin-top: 8px;
+  width: 100%;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: center;
+  text-decoration: underline;
+  font: normal normal bold 12px/26px Outfit;
+  letter-spacing: 0px;
+  color: #3f7f88;
+  opacity: 1;
+  cursor: pointer;
+}
+.build-ring-collection__change:hover {
+  color: #000;
+}
+.build-ring-collection__change:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.woocommerce-checkout-review-order-table .design-group-row td {
+  vertical-align: top;
+}
+.woocommerce-checkout-review-order-table .design-group-row .design-pair {
+  height: 100%;
+  justify-content: space-between;
+}
+.woocommerce-checkout-review-order-table .design-group-row .design-pair__item {
+  flex: 1;
+}
+.woocommerce-checkout-review-order-table .product-thumbnail {
+  width: 4rem;
+}
+.woocommerce-checkout-review-order-table .product-thumbnail img {
+  width: 4rem;
+  height: 4rem;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+}
+.woocommerce-checkout-review-order-table .design-group-item {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+.woocommerce-checkout-review-order-table .design-group-item td {
+  padding-left: 1rem;
+}
+.woocommerce-checkout-review-order-table .design-group-ring td {
+  border-bottom: none;
+  padding-bottom: 0.25rem;
+}
+.woocommerce-checkout-review-order-table .design-group-stone td {
+  padding-top: 0.25rem;
+  border-bottom: 2px solid var(--cl-border);
+}
+
 /*# sourceMappingURL=checkout.css.map*/
