@@ -17,6 +17,7 @@
 /wp-*.php
 /xmlrpc.php
 /wp-admin/plugins/
+/wp-admin/plugins/*
 
 # Configuration
 wp-config.php
@@ -37,10 +38,7 @@ wp-config.php
 /.htaccess
 
 # All plugins
-#
-# Note: If you wish to whitelist plugins,
-# uncomment the next line
-#/wp-content/plugins
+/wp-content/plugins
 
 # All themes
 #
