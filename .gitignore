@@ -1,52 +1,18 @@
-# Wordpress - ignore core, configuration, examples, uploads and logs.
-# https://github.com/github/gitignore/blob/main/WordPress.gitignore
+# Whitelist mode: ignore everything except the themes directory.
 
-# Core
-#
-# Note: if you want to stage/commit WP core files
-# you can delete this whole section/until Configuration.
-/wp-admin/
-/wp-content/index.php
-/wp-content/languages
-/wp-content/plugins/index.php
-/wp-content/themes/index.php
-/wp-includes/
-/index.php
-/license.txt
-/readme.html
-/wp-*.php
-/xmlrpc.php
-/wp-admin/plugins/
-/wp-admin/plugins/*
+# Ignore everything at the repo root...
+/*
 
-# Configuration
-wp-config.php
+# ...but keep this gitignore and the wp-content path open
+!/.gitignore
+!/wp-content
 
-# Example themes
+# Inside wp-content, ignore everything except the themes directory
+/wp-content/*
+!/wp-content/themes
+
+# WordPress default / example themes
 /wp-content/themes/twenty*/
 
-# Example plugin
-/wp-content/plugins/hello.php
-
-# Uploads
-/wp-content/uploads/
-
-# Log files
-*.log
-
-# htaccess
-/.htaccess
-
-# All plugins
-/wp-content/plugins
-
-# All themes
-#
-# Note: If you wish to whitelist themes,
-# uncomment the next line
-#/wp-content/themes
-node_modules
-local-xdebuginfo.php
-cache
-wp-content/autoptimize_404_handler.php
-wp-content/updraft
+# Dependencies (never track, even inside the theme)
+node_modules/
