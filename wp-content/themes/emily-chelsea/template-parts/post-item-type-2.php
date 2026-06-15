@@ -5,8 +5,9 @@ if (!empty($post)) {
     $is_product = $post->post_type == 'product' ? true : false;
     $label = '';
     if ($is_product) {
-        $stock = $is_product ? get_post_meta($post->ID, '_stock', true) : null;
-        $label = $stock > 0 ? '' : '<span class="stock-status stock-status--out-of-stock">Out of stock</span>';
+        $stock_status = $is_product ? get_post_meta($post->ID, '_stock_status', true) : null;
+        $is_special_product = get_post_meta($post->ID, 'is_special_product', true);
+        $label = $stock_status != 'outofstock' || $is_special_product ? '' : '<span class="stock-status stock-status--out-of-stock">Out of stock</span>';
     }
 
 ?>

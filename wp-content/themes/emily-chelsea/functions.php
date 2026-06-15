@@ -141,3 +141,4 @@ function swap_attr($from, $to, $from_attr = [], $to_attr = [])
 // });
 
 
+require(get_template_directory() . '/tools/generate-datafeed.php');
