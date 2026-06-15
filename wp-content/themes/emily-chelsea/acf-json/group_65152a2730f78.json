@@ -43,6 +43,38 @@
             "return_format": "object",
             "multiple": 0,
             "bidirectional_target": []
+<<<<<<< HEAD
+=======
+        },
+        {
+            "key": "field_6856bd2c065bc",
+            "label": "Stone Default",
+            "name": "default_stone",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "product"
+            ],
+            "post_status": "",
+            "taxonomy": [
+                "product_cat:center-stones"
+            ],
+            "return_format": "id",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
+>>>>>>> build-ring
         },
         {
             "key": "field_6603e6a76fc6f",
@@ -87,6 +119,10 @@
             "max": 0,
             "layout": "table",
             "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+            "rows_per_page": 20,
+>>>>>>> build-ring
             "sub_fields": [
                 {
                     "key": "field_6581b24313fa2",
@@ -181,6 +217,10 @@
             "max": 0,
             "layout": "block",
             "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+            "rows_per_page": 20,
+>>>>>>> build-ring
             "sub_fields": [
                 {
                     "key": "field_656f2e6e0891e",
@@ -198,15 +238,22 @@
                     },
                     "choices": {
                         "term": "Term",
-                        "page": "Page"
+                        "page": "Page",
+                        "url": "Url"
                     },
                     "default_value": false,
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
                     "return_format": "value",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "allow_in_bindings": 1,
+                    "ui": 0,
                     "ajax": 0,
                     "placeholder": "",
+<<<<<<< HEAD
+=======
+                    "create_options": 0,
+                    "save_options": 0,
+>>>>>>> build-ring
                     "parent_repeater": "field_656f2e2f0891c"
                 },
                 {
@@ -272,6 +319,39 @@
                     "ui": 1,
                     "bidirectional_target": [],
                     "parent_repeater": "field_656f2e2f0891c"
+<<<<<<< HEAD
+=======
+                },
+                {
+                    "key": "field_685d64bc41b25",
+                    "label": "Url",
+                    "name": "url",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_656f2e6e0891e",
+                                "operator": "==",
+                                "value": "url"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_656f2e2f0891c"
+>>>>>>> build-ring
                 },
                 {
                     "key": "field_656f2f1b08921",
@@ -292,6 +372,11 @@
                     "max": 0,
                     "layout": "table",
                     "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+                    "rows_per_page": 20,
+                    "parent_repeater": "field_656f2e2f0891c",
+>>>>>>> build-ring
                     "sub_fields": [
                         {
                             "key": "field_6581b22013fa1",
@@ -390,6 +475,10 @@
             "max": 0,
             "layout": "row",
             "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+            "rows_per_page": 20,
+>>>>>>> build-ring
             "sub_fields": [
                 {
                     "key": "field_655f58c29acd7",
@@ -463,6 +552,10 @@
             "max": 0,
             "layout": "block",
             "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+            "rows_per_page": 20,
+>>>>>>> build-ring
             "sub_fields": [
                 {
                     "key": "field_65af9692ea1d4",
@@ -696,6 +789,10 @@
             "max": 0,
             "layout": "block",
             "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+            "rows_per_page": 20,
+>>>>>>> build-ring
             "sub_fields": [
                 {
                     "key": "field_651d7889e4694",
@@ -769,6 +866,7 @@
             "name": "header_phone",
             "aria-label": "",
             "type": "text",
+<<<<<<< HEAD
             "instructions": "Please select default style for header",
             "required": false,
             "conditional_logic": 0,
@@ -790,6 +888,9 @@
             "aria-label": "",
             "type": "text",
             "instructions": "Please select default style for header",
+=======
+            "instructions": "",
+>>>>>>> build-ring
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -841,6 +942,10 @@
             "max": 0,
             "layout": "block",
             "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+            "rows_per_page": 20,
+>>>>>>> build-ring
             "sub_fields": [
                 {
                     "key": "field_6515550c7e81f",
@@ -962,6 +1067,10 @@
             "max": 0,
             "layout": "block",
             "button_label": "Add Row",
+<<<<<<< HEAD
+=======
+            "rows_per_page": 20,
+>>>>>>> build-ring
             "sub_fields": [
                 {
                     "key": "field_65465acac3cb9",
@@ -1261,6 +1370,81 @@
             "toolbar": "full",
             "media_upload": 1,
             "delay": 0
+<<<<<<< HEAD
+=======
+        },
+        {
+            "key": "field_685eb7dfb0d0c",
+            "label": "Build Ring",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_685eb7ecb0d0d",
+            "label": "Setting First Page",
+            "name": "setting_first_page",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "page"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "id",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_685eb80bb0d0e",
+            "label": "Stone First Page",
+            "name": "stone_first_page",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "page"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "id",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "ui": 1,
+            "bidirectional_target": []
+>>>>>>> build-ring
         }
     ],
     "location": [
@@ -1281,5 +1465,9 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
+<<<<<<< HEAD
     "modified": 1744604447
+=======
+    "modified": 1767061696
+>>>>>>> build-ring
 }

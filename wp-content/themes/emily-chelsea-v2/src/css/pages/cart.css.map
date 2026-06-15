@@ -1,0 +1,1 @@
+{"version":3,"file":"dist/css/pages/cart.css","mappings":"AAAA;EACC;AACD;;AAEC;EACC;AACF,C","sources":["webpack://src/./assets/scss/pages/cart.scss"],"sourcesContent":[".wc-empty-cart-message {\n\tpadding: 20px 0;\n}\n.return-to-shop {\n\ta {\n\t\tcolor: var(--cl-gold);\n\t}\n}\n"],"names":[],"sourceRoot":""}

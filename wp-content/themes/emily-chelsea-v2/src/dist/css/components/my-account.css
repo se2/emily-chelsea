@@ -1,0 +1,30 @@
+.woocommerce-MyAccount-navigation {
+  flex: 0 0 250px;
+  margin-left: -0.9375rem;
+}
+.woocommerce-MyAccount-navigation ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.woocommerce-MyAccount-navigation ul li {
+  border-top: 1px solid var(--cl-border);
+}
+.woocommerce-MyAccount-navigation ul li a {
+  display: block;
+  padding: 0.9375rem 0.625rem;
+}
+.woocommerce-MyAccount-navigation ul li:first-child {
+  border-top: 0;
+}
+.woocommerce-MyAccount-navigation ul li.is-active > a {
+  background-color: #000;
+  color: #fff;
+}
+
+.woocommerce-MyAccount-content {
+  padding: 2.5rem 2.5rem;
+  border-left: 1px solid var(--cl-border);
+}
+
+/*# sourceMappingURL=my-account.css.map*/

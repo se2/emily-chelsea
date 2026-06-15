@@ -1,0 +1,67 @@
+@import "../base-components";
+
+.post-feature-item {
+	$this: &;
+	&__inner {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	&__left,
+	&__right {
+		flex: 0 0 100%;
+		max-width: 100%;
+		@include media-breakpoint-up(md) {
+			flex: 0 0 50%;
+			max-width: 50%;
+		}
+	}
+	&__image {
+		background: var(--cl-primary);
+		height: 100%;
+		position: relative;
+		opacity: 0.75;
+		transition: opacity 0.2s linear;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+		@include media-breakpoint-up(md) {
+			padding-top: 0;
+			min-height: 408px;
+		}
+	}
+	&__content {
+		padding: pxToRem(20) pxToRem(20);
+		@include media-breakpoint-up(md) {
+			padding: pxToRem(40) pxToRem(30);
+		}
+		&__cat {
+			font-size: 16px;
+			color: #363636;
+			font-family: $font-body;
+			margin-bottom: pxToRem(30);
+		}
+		&__title {
+			font-size: 36px;
+			line-height: 1.111;
+			margin-bottom: pxToRem(5);
+		}
+		&__desc {
+			font-size: 16px;
+			line-height: 1.625;
+			margin-bottom: pxToRem(30);
+		}
+		&__btn {
+			padding-left: pxToRem(40);
+			padding-right: pxToRem(40);
+		}
+	}
+	&:hover {
+		#{$this} {
+			&__image {
+				opacity: 1;
+			}
+		}
+	}
+}

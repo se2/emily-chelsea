@@ -1,0 +1,8 @@
+@import "../base-components";
+
+.main-header {
+	background: transparent;
+	&:before {
+		border-color: var(--cl-border);
+	}
+}

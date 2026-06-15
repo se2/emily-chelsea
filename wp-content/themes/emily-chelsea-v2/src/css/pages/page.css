@@ -1,0 +1,8 @@
+.main-header {
+  background: transparent;
+}
+.main-header:before {
+  border-color: var(--cl-border);
+}
+
+/*# sourceMappingURL=page.css.map*/

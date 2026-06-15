@@ -1,0 +1,15 @@
+@font-face {
+	font-family: "New Forest";
+	src: url("newforest-italic-webfont.woff2") format("woff2"),
+		url("newforest-italic-webfont.woff") format("woff");
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "New Forest";
+	src: url("newforest-regular-webfont.woff2") format("woff2"),
+		url("newforest-regular-webfont.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+}

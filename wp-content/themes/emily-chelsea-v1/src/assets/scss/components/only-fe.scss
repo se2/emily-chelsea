@@ -1,0 +1,35 @@
+@import "../base-components";
+
+.alignfull {
+	position: relative;
+	margin-left: pxToRem(-15);
+	margin-right: pxToRem(-15);
+	@include media-breakpoint-up(md) {
+		width: 100vw;
+		max-width: calc(100vw - var(--scrollbar-width, 0));
+		left: 50%;
+		right: 50%;
+		margin-right: -50vw;
+		margin-left: calc(-50vw - 50px + var(--scrollbar-width, 15px) / 2);
+	}
+
+	.alignfull {
+		margin-left: 0;
+		margin-right: 0;
+		@include media-breakpoint-up(md) {
+			width: 100%;
+			max-width: 100%;
+			left: 0;
+			right: 0;
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+}
+
+.container-fluid {
+	@include media-breakpoint-up(md) {
+		padding-left: pxToRem(50);
+		padding-right: pxToRem(50);
+	}
+}

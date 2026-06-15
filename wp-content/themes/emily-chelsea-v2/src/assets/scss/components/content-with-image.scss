@@ -1,0 +1,91 @@
+@import "../base-components";
+
+.ttg-content-with-image {
+	$this: &;
+	width: 100%;
+	overflow: hidden;
+	@include media-breakpoint-up(md) {
+		display: flex;
+		align-items: flex-end;
+	}
+	&__image {
+		&__inner {
+			height: var(--ttg-content-with-image-bg-height, auto);
+			max-height: var(--ttg-content-with-image-bg-max-height, 100%);
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			max-height: inherit;
+			object-fit: cover;
+		}
+		@include media-breakpoint-up(md) {
+			flex: 0 0 100%;
+			max-width: 100%;
+			padding-bottom: pxToRem(85);
+		}
+	}
+	&__content {
+		position: relative;
+		z-index: 2;
+		&__inner {
+			position: relative;
+			color: #fff;
+			padding: pxToRem(20) pxToRem(20);
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				color: inherit;
+			}
+			@include media-breakpoint-up(md) {
+				width: var(--ttg-content-with-image-width);
+				max-width: 100%;
+				padding: pxToRem(55) pxToRem(45);
+			}
+			&:before {
+				content: "";
+				display: block;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 100%;
+				background: var(--ttg-content-with-image-bg-color-m);
+				z-index: 0;
+				@include media-breakpoint-up(md) {
+					background: var(--ttg-content-with-image-bg-color);
+					backdrop-filter: blur(
+						var(--ttg-content-with-image-bg-blur)
+					);
+				}
+			}
+			& > .ttg-post {
+				position: relative;
+				z-index: 2;
+			}
+		}
+		@include media-breakpoint-up(md) {
+			flex: 0 0 100%;
+			max-width: 100%;
+			transform: translateX(-100%);
+			display: flex;
+			padding-right: pxToRem(80);
+			padding-left: pxToRem(80);
+		}
+		&--right {
+			@include media-breakpoint-up(md) {
+				justify-content: flex-end;
+			}
+		}
+		&--center {
+			@include media-breakpoint-up(md) {
+				justify-content: center;
+			}
+		}
+	}
+}

@@ -1,0 +1,30 @@
+.woocommerce-products-header {
+  padding: 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-bottom: 2px solid var(--cl-border);
+  width: 100%;
+}
+.woocommerce-products-header__title {
+  font-size: 2.5rem;
+  line-height: 1.15;
+  margin: 0;
+}
+@media (min-width: 1100px) {
+  .woocommerce-products-header__title {
+    font-size: 3.75rem;
+  }
+}
+@media (min-width: 1100px) {
+  .woocommerce-products-header {
+    padding: 1.4375rem 3rem;
+  }
+}
+
+.woocommerce-no-products-found {
+  padding: 20px 20px;
+  width: 100%;
+}
+
+/*# sourceMappingURL=woocommerce-products-header.css.map*/

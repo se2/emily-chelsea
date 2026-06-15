@@ -1,0 +1,20 @@
+.woocommerce-breadcrumb {
+  font-size: 0.75rem;
+  color: #909090;
+  text-align: center;
+}
+.woocommerce-breadcrumb a {
+  color: #000;
+  text-decoration: none;
+}
+.woocommerce-breadcrumb .delimiter {
+  margin: 0.25em;
+}
+@media (min-width: 1100px) {
+  .woocommerce-breadcrumb {
+    text-align: left;
+    font-size: 0.875rem;
+  }
+}
+
+/*# sourceMappingURL=woocommerce-breadcrumb.css.map*/

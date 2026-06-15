@@ -1,0 +1,14 @@
+@import "../base-components";
+
+#customer_login {
+	padding: pxToRem(40) 0;
+}
+
+.woocommerce-form-login,
+.woocommerce-form-register {
+	max-width: 768px;
+	margin: 0 auto;
+	&__submit {
+		width: 200px;
+	}
+}

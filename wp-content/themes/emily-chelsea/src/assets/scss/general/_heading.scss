@@ -1,4 +1,10 @@
-.heading-xsmall {
+.heading-xxsmall,
+.has-xx-small-font-size {
+	@include heading-xxsmall;
+}
+
+.heading-xsmall,
+.has-x-small-font-size {
 	@include heading-xsmall;
 }
 
@@ -6,11 +12,23 @@
 .has-small-font-size {
 	@include heading-small;
 }
+
 .heading-medium,
 .has-medium-font-size {
 	@include heading-medium;
 }
+
 .heading-large,
 .has-large-font-size {
 	@include heading-large;
+}
+
+.heading-xlarge,
+.has-x-large-font-size {
+	@include heading-xlarge;
+}
+
+.heading-xxlarge,
+.has-xx-large-font-size {
+	@include heading-xxlarge;
 }

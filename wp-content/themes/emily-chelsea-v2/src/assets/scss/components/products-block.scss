@@ -1,0 +1,102 @@
+@import "../base-components";
+
+.ttg-block-products {
+	margin-left: pxToRem(-15);
+	margin-right: pxToRem(-15);
+	@include media-breakpoint-up(md) {
+		margin-left: pxToRem(-50);
+		margin-right: pxToRem(-50);
+	}
+	@include media-breakpoint-up(xxl) {
+		margin-left: pxToRem(0);
+		margin-right: pxToRem(0);
+	}
+	.products {
+		.product-title-wrapper {
+			@include media-breakpoint-up(md) {
+				display: flex;
+				flex-wrap: wrap;
+			}
+		}
+		.product-cat {
+			flex: 0 0 100%;
+			max-width: 100%;
+			display: block;
+			font-size: var(--ttg-block-products-font-size-meta-m, pxToRem(24));
+			font-family: $headings-font-family;
+			color: #919191;
+			@include media-breakpoint-up(md) {
+				font-size: var(
+					--ttg-block-products-font-size-meta-tablet,
+					pxToRem(24)
+				);
+			}
+			@include media-breakpoint-up(lg) {
+				font-size: var(
+					--ttg-block-products-font-size-meta-pc,
+					pxToRem(24)
+				);
+			}
+		}
+		.price {
+			flex: 0 0 100%;
+			max-width: 100%;
+			display: block;
+			color: #000000;
+			font-size: var(--ttg-block-products-font-size-price-m, pxToRem(16));
+			@include media-breakpoint-up(md) {
+				flex: 0 0 30%;
+				max-width: 30%;
+				font-size: var(
+					--ttg-block-products-font-size-price-tablet,
+					pxToRem(14)
+				);
+			}
+			@include media-breakpoint-up(lg) {
+				margin-left: auto;
+				text-align: right;
+				font-size: var(
+					--ttg-block-products-font-size-price-pc,
+					pxToRem(14)
+				);
+			}
+		}
+
+		.product {
+			.woocommerce-loop-product__title {
+				font-size: pxToRem(24);
+				font-size: var(
+					--ttg-block-products-font-size-heading-m,
+					pxToRem(24)
+				);
+				@include media-breakpoint-up(md) {
+					flex: 0 0 69%;
+					max-width: 69%;
+					font-size: var(
+						--ttg-block-products-font-size-heading-tablet,
+						pxToRem(32)
+					);
+				}
+				@include media-breakpoint-up(lg) {
+					font-size: var(
+						--ttg-block-products-font-size-heading-pc,
+						pxToRem(38)
+					);
+				}
+			}
+			@include media-breakpoint-down(sm) {
+				flex: 0 0 100%;
+				max-width: 100%;
+			}
+		}
+	}
+}
+
+.ttg-container--full {
+	.ttg-block-products {
+		@include media-breakpoint-up(xxl) {
+			margin-left: pxToRem(-50);
+			margin-right: pxToRem(-50);
+		}
+	}
+}

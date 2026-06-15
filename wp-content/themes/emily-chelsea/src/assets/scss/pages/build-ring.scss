@@ -1,18 +1,35 @@
 @import "../base-components";
 
+.facetwp-selections {
+	padding-left: 20px;
+	ul {
+		li {
+			.facetwp-selection-value {
+				display: flex;
+				background-image: none;
+				background-color: #909090;
+				padding: 5px 5px;
+				font-size: 11px;
+				color: #fff;
+				align-items: center;
+				&:before {
+					background-image: url(../../img/remove.png);
+					background-size: contain;
+					content: "";
+					display: block;
+					margin-right: 3px;
+					width: 15px;
+					height: 15px;
+				}
+			}
+			.facetwp-selection-label {
+				display: none;
+			}
+		}
+	}
+}
+
 .page-build-ring-wrapper {
-	#wrapper__inner {
-		padding-left: 0;
-		position: relative;
-		z-index: 999;
-		background: #fff;
-	}
-
-	#main-content__top {
-		padding: 0;
-		border: 0;
-	}
-
 	.product {
 		&:not(.product-detail) {
 			border: 0;
@@ -59,27 +76,26 @@
 		}
 	}
 
-	#toggle-nav-checkbox {
-		&:checked {
-			& + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner {
-				transform: translateX(418px);
-				@include media-breakpoint-up(md) {
-					transform: translateX(320px);
-				}
-				.alignfull {
-					@include media-breakpoint-up(md) {
-						transform: translateX(200px);
-					}
-				}
-			}
-		}
-	}
 	.facetwp-type-reset {
 		display: none;
 	}
 
 	.product-detail #woocommerce-product-gallery__image-main {
 		aspect-ratio: initial;
+	}
+
+	.drag-handle-zone {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		aspect-ratio: 1 / 1;
+		cursor: url("../../img/drag.png"), auto;
+		z-index: 10;
+		background: #0000000d 0% 0% no-repeat padding-box;
+		opacity: 0;
+		transition: opacity 0.2s ease;
 	}
 }
 
@@ -108,11 +124,12 @@
 			margin-left: -2px;
 		}
 		@include media-breakpoint-up(md) {
-			flex: 0 0 200px;
-			max-width: 200px;
+			flex: 0 0 230px;
+			max-width: 230px;
 			padding-top: 80px;
 			padding-left: 0;
 			border-left: 0;
+			border-right: 2px solid var(--cl-border);
 			&::before {
 				display: none;
 			}
@@ -128,8 +145,8 @@
 		border-top: 1px solid var(--cl-border);
 		padding-top: 25px;
 		@include media-breakpoint-up(md) {
-			flex: 0 0 calc(100% - 480px);
-			max-width: calc(100% - 480px);
+			flex: 0 0 calc(100% - 510px);
+			max-width: calc(100% - 510px);
 			padding: 20px 55px;
 			position: relative;
 			z-index: 10;
@@ -167,15 +184,28 @@
 	justify-content: center;
 }
 
-.build-ring-tray-wrapper {
+.build-ring-tray-collection {
 	@include media-breakpoint-down(md) {
 		position: fixed;
 		left: 0;
-		right: 0;
 		bottom: 0;
-		background: #fff;
+		right: 0;
+		display: flex;
+		flex-direction: column;
 		z-index: 99;
+	}
+}
+
+.build-ring-tray-wrapper {
+	@include media-breakpoint-down(md) {
+		// position: fixed;
+		// left: 0;
+		// right: 0;
+		// bottom: 0;
+		background: #fff;
+		// z-index: 99;
 		box-shadow: 0px -5px 6px #00000029;
+		display: flex;
 	}
 }
 
@@ -184,21 +214,22 @@
 		@include media-breakpoint-down(md) {
 			display: flex;
 			align-items: center;
-			justify-content: center;
-			padding: 20px 20px;
+			padding: 5px 20px;
 			background: #d7bc9961;
+			height: 100%;
 		}
 	}
 	&__title {
 		line-height: 1.16;
 		font-family: $headings-font-family;
-		font-size: 20px;
+		font-size: 16px;
 		font-style: normal;
 		letter-spacing: 0px;
 		color: #363636;
 		opacity: 1;
-		flex: 0 0 110px;
-		max-width: 110px;
+		flex: 0 0 50px;
+		max-width: 50px;
+		margin-bottom: 0;
 		@include media-breakpoint-up(md) {
 			font-size: 30px;
 			display: flex;
@@ -223,8 +254,9 @@
 
 	&__item {
 		position: relative;
-		width: 85px;
-		height: 85px;
+		width: 65px;
+		height: 65px;
+		flex: 0 0 65px;
 		@include media-breakpoint-up(md) {
 			width: 100%;
 			padding-top: 100%;
@@ -333,6 +365,8 @@
 .build-ring-head {
 	text-align: center;
 	margin-bottom: 30px;
+	max-width: 465px;
+	margin: 0 auto;
 	h2 {
 		font: normal normal normal 42px/48px New Forest;
 		letter-spacing: 0px;
@@ -345,6 +379,11 @@
 		color: #363636;
 		opacity: 1;
 	}
+
+	@include media-breakpoint-down(md) {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
 }
 
 .build-ring-mode {
@@ -355,6 +394,19 @@
 	display: flex;
 	align-items: center;
 	padding-left: 10px;
+	&__inner {
+		display: flex;
+		width: 170px;
+
+		padding: 5px 5px;
+		border-radius: 30px;
+		background: #3f7f88;
+		justify-content: space-between;
+
+		@include media-breakpoint-up(md) {
+			width: 260px;
+		}
+	}
 
 	@include media-breakpoint-up(md) {
 		position: static;
@@ -364,18 +416,62 @@
 		width: 100%;
 	}
 
+	&__image {
+		display: inline-block;
+		img {
+			display: inline-block;
+			width: 13px;
+			height: auto;
+			filter: brightness(0) invert(1);
+			@include media-breakpoint-up(md) {
+				width: 13px;
+			}
+		}
+	}
+
 	&__label {
-		font-size: 0;
+		flex: 0 0 50%;
+		max-width: 50%;
+		font-size: 8px;
 		letter-spacing: 1.8px;
-		line-height: 1.25;
+		line-height: 0;
 		font-family: $font-body;
-		color: #909090;
+		color: #ffffff;
 		text-transform: uppercase;
 		opacity: 1;
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		border-radius: 30px;
+		height: 27px;
+		svg {
+			width: 13px;
+			height: auto;
+			@include media-breakpoint-up(md) {
+				width: 13px;
+			}
+		}
+		path {
+			fill: #fff;
+		}
 
 		@include media-breakpoint-up(md) {
-			font-size: 15px;
+			font-size: 12px;
+			letter-spacing: 1.8px;
+			text-transform: uppercase;
+			opacity: 1;
+		}
+		&.active {
+			background: #fff;
+			color: #3f7f88;
+			path {
+				fill: #3f7f88;
+			}
+			img {
+				filter: none !important;
+			}
 		}
 	}
 	&__switch {
@@ -433,6 +529,11 @@
 		margin: 0;
 		position: absolute;
 		left: 30px;
+		cursor: pointer;
+		user-select: none;
+		&:hover {
+			opacity: 0.7;
+		}
 
 		@include media-breakpoint-up(md) {
 			display: block;
@@ -604,17 +705,20 @@
 					padding-right: 60px;
 					display: block;
 					color: #000;
-					font-size: 20px;
+					font-size: 16px;
 					letter-spacing: 0.15;
 					text-transform: uppercase;
 					appearance: none;
 					background-color: transparent;
 					position: relative;
+					word-wrap: break-word;
+					white-space: normal;
 					&:focus {
 						outline: none;
 					}
 					@include media-breakpoint-up(md) {
 						padding-left: 20px;
+						font-size: 20px;
 					}
 				}
 				.custom-select {
@@ -652,6 +756,34 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 100%;
+		position: relative;
+		svg {
+			display: none !important;
+		}
+		&::before,
+		&::after {
+			content: "" !important;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 14px;
+			height: 2px;
+			background-color: #333;
+			transform-origin: center;
+		}
+
+		&::before {
+			transform: translate(-50%, -50%) rotate(45deg);
+		}
+
+		&::after {
+			transform: translate(-50%, -50%) rotate(-45deg);
+		}
+
+		&:hover::before,
+		&:hover::after {
+			background-color: #000;
+		}
 	}
 	&__item {
 		@include media-breakpoint-up(md) {
@@ -677,6 +809,40 @@
 				margin-bottom: 5px;
 			}
 		}
+	}
+}
+
+.build-ring-editing-badge {
+	background: none;
+	padding: 0;
+	border: 0;
+	font: normal normal bold 11px/1 Outfit;
+	text-transform: capitalize;
+	color: var(--cl-gold);
+	cursor: pointer;
+}
+
+.is-editing {
+	position: relative;
+	outline: 2px solid var(--cl-primary);
+	border-radius: 14px;
+}
+
+.build-ring-collection__change {
+	display: inline-block;
+	margin-top: 12px;
+	background: none;
+	border: none;
+	padding: 0;
+	text-align: center;
+	text-decoration: underline;
+	font: normal normal bold 12px/26px Outfit;
+	letter-spacing: 0px;
+	color: #3f7f88;
+	opacity: 1;
+	width: 200px;
+	&:hover {
+		color: #000;
 	}
 }
 
@@ -781,11 +947,27 @@
 	}
 }
 
+// .build-ring-mini-collection-wrapper {
+// 	@include media-breakpoint-down(md) {
+// 		position: fixed;
+// 		bottom: 91px;
+// 		width: 100%;
+// 	}
+// }
+
 .build-ring-mini-collection {
 	padding: 20px 20px;
 	background: #3f7f88 0% 0% no-repeat padding-box;
 	display: block;
 	position: relative;
+
+	@include media-breakpoint-down(md) {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		padding-top: 0px;
+		padding-bottom: 5px;
+	}
 
 	.processing {
 		width: 100%;
@@ -809,6 +991,8 @@
 		margin-right: -40px;
 		margin-top: -80px;
 		margin-bottom: 30px;
+		max-height: 300px;
+		overflow: auto;
 	}
 
 	&-item {
@@ -816,10 +1000,16 @@
 		justify-content: space-between;
 		flex-wrap: wrap;
 		margin-bottom: 20px;
+		@include media-breakpoint-down(md) {
+			width: 48%;
+			align-items: center;
+			margin: 5px 0;
+		}
 		&:hover {
 			.remove-design {
 				opacity: 1 !important;
 				cursor: pointer;
+				position: relative;
 			}
 		}
 		&:last-child {
@@ -848,10 +1038,49 @@
 				justify-content: center;
 				border: 1px solid #fff;
 				opacity: 0;
+				svg {
+					display: none !important;
+				}
+				&::before,
+				&::after {
+					content: "" !important;
+					position: absolute;
+					left: 50%;
+					top: 50%;
+					width: 10px;
+					height: 2px;
+					background-color: #fff;
+					transform-origin: center;
+				}
+
+				&::before {
+					transform: translate(-50%, -50%) rotate(45deg);
+				}
+
+				&::after {
+					transform: translate(-50%, -50%) rotate(-45deg);
+				}
+
+				&:hover::before,
+				&:hover::after {
+					background-color: #fff;
+				}
 
 				@include media-breakpoint-down(md) {
 					opacity: 1 !important;
+					position: absolute !important;
+					left: 0;
 				}
+			}
+
+			@include media-breakpoint-down(md) {
+				font-size: 9px;
+				letter-spacing: 0.12em;
+				position: relative;
+				padding-left: 30px;
+				flex: 0 0 80px;
+				margin-bottom: 0;
+				font-weight: normal;
 			}
 		}
 		&__ring,
@@ -873,6 +1102,11 @@
 				object-fit: cover;
 				top: 0;
 				left: 0;
+			}
+
+			@include media-breakpoint-down(md) {
+				flex: 0 0 calc(50% - 50px);
+				border-radius: 100%;
 			}
 		}
 	}
@@ -1081,6 +1315,10 @@
 				height: 71px;
 			}
 		}
+		&.disabled {
+			opacity: 0.7;
+			pointer-events: none;
+		}
 	}
 }
 
@@ -1098,13 +1336,33 @@
 	margin-top: 32px;
 	margin-bottom: 15px;
 }
-.build-ring-tray-product-info-wrapper {
+.build-ring-tray-product-info {
 	@include media-breakpoint-down(md) {
 		display: none;
 	}
 }
+#build-ring-tray-extra-wrapper {
+	@include media-breakpoint-down(md) {
+		background: rgba(215, 188, 153, 0.3803921569);
+		display: flex;
+		align-items: center;
+		width: 100%;
+	}
+	#build-ring-stone-options__item--1-wrapper {
+		@include media-breakpoint-down(md) {
+			.build-ring-stone-options__item__label {
+				div {
+					display: block;
+					font-size: 10px;
+					padding-left: 5px;
+					line-height: 1.1;
+				}
+			}
+		}
+	}
+}
 #build-ring-tray-extra {
-	padding: 10px 20px;
+	padding: 5px 0px;
 	@include media-breakpoint-up(md) {
 		margin-top: 25px;
 		padding: 25px 0;
@@ -1115,8 +1373,10 @@
 	.build-ring-stone-options__title {
 		@include media-breakpoint-down(md) {
 			font-size: 12px;
+			margin-bottom: 0;
 			span {
 				font-size: 12px;
+				display: none;
 			}
 		}
 	}
@@ -1136,7 +1396,6 @@
 
 	.build-ring-stone-options__items {
 		@include media-breakpoint-down(md) {
-			display: flex;
 			gap: 10px;
 		}
 	}
@@ -1144,15 +1403,20 @@
 		@include media-breakpoint-down(md) {
 			flex: 0 0 30px;
 			height: 30px;
+			display: none;
 		}
 	}
 	.build-ring-stone-options__item {
-		margin-bottom: 15px;
+		margin-bottom: 5px;
+		@include media-breakpoint-up(md) {
+			margin-bottom: 15px;
+		}
 		label {
 			display: block;
 			padding-left: 10px;
 			@include media-breakpoint-down(md) {
 				display: flex !important;
+				padding-left: 0;
 			}
 			strong {
 				font: normal normal bold 16px/19px Outfit;
@@ -1163,6 +1427,7 @@
 					font-size: 11px;
 					padding-left: 5px;
 					line-height: 1.1;
+					margin: 0;
 				}
 			}
 			div {
@@ -1252,4 +1517,146 @@
 	letter-spacing: 0px;
 	color: #fff;
 	opacity: 1;
+}
+
+.build-ring-alert {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #00000052;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	&__inner {
+		width: 814px;
+		max-width: 95%;
+		background: #fa5160 0% 0% no-repeat padding-box;
+		padding: 30px 30px;
+		border-radius: 30px;
+		position: relative;
+	}
+	&__close {
+		width: 37px;
+		height: 37px;
+		border-radius: 100%;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid #fff;
+		position: absolute;
+		font-size: 0;
+		background: none;
+		right: 30px;
+		top: 30px;
+
+		&::before,
+		&::after {
+			content: "";
+			position: absolute;
+			width: 3px;
+			height: 18px;
+			background-color: #fff;
+			top: 8px;
+			left: 15px;
+			transform: rotate(45deg);
+		}
+
+		&::after {
+			transform: rotate(-45deg);
+		}
+
+		@include media-breakpoint-down(md) {
+			right: 15px;
+			top: 15px;
+		}
+	}
+	&__content {
+		text-align: center;
+		padding: 80px 0 40px 0;
+		@include media-breakpoint-down(md) {
+			padding: 30px 0 0px 0;
+		}
+	}
+	&__title {
+		text-align: center;
+		font-family: $headings-font-family;
+		font-size: 60px;
+		line-height: 1.15;
+		font-weight: normal;
+		font-style: normal;
+		letter-spacing: 0px;
+		color: #ffffff;
+		opacity: 1;
+		margin: 0 0 20px 0;
+
+		@include media-breakpoint-down(md) {
+			font-size: 40px;
+		}
+	}
+	&__message {
+		text-align: center;
+		font-family: $font-body;
+		font-size: 24px;
+		line-height: 1.45;
+		letter-spacing: 0px;
+		color: #ffffff;
+		opacity: 1;
+		width: 555px;
+		max-width: 100%;
+		margin: 0 auto;
+
+		@include media-breakpoint-down(md) {
+			font-size: 18px;
+		}
+	}
+	&__actions {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+		flex-wrap: wrap;
+		margin: 50px 0 0 0;
+
+		@include media-breakpoint-down(md) {
+			margin: 30px 0 0 0;
+		}
+	}
+	&__confirm {
+		background: #ffffff;
+		border-radius: 34px;
+		width: 220px;
+		height: 62px;
+		border: 2px solid #ffffff;
+		font: normal normal bold 18px/26px Outfit;
+		letter-spacing: 2.7px;
+		color: #3f7f88;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: all 0.2s linear;
+		&:hover {
+			background: transparent;
+			color: #ffffff;
+		}
+	}
+	&__cancel {
+		background: transparent;
+		border-radius: 34px;
+		width: 220px;
+		height: 62px;
+		border: 2px solid #ffffff;
+		font: normal normal bold 18px/26px Outfit;
+		letter-spacing: 2.7px;
+		color: #ffffff;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: all 0.2s linear;
+		&:hover {
+			background: #ffffff;
+			color: #3f7f88;
+		}
+	}
 }

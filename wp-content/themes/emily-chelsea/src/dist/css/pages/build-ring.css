@@ -1,13 +1,28 @@
-.page-build-ring-wrapper #wrapper__inner {
-  padding-left: 0;
-  position: relative;
-  z-index: 999;
-  background: #fff;
+.facetwp-selections {
+  padding-left: 20px;
 }
-.page-build-ring-wrapper #main-content__top {
-  padding: 0;
-  border: 0;
+.facetwp-selections ul li .facetwp-selection-value {
+  display: flex;
+  background-image: none;
+  background-color: #909090;
+  padding: 5px 5px;
+  font-size: 11px;
+  color: #fff;
+  align-items: center;
 }
+.facetwp-selections ul li .facetwp-selection-value:before {
+  background-image: url(../../img/remove.png);
+  background-size: contain;
+  content: "";
+  display: block;
+  margin-right: 3px;
+  width: 15px;
+  height: 15px;
+}
+.facetwp-selections ul li .facetwp-selection-label {
+  display: none;
+}
+
 .page-build-ring-wrapper .product:not(.product-detail) {
   border: 0;
   padding: 1.25rem 1.25rem;
@@ -58,24 +73,24 @@
 .page-build-ring-wrapper .product .product__image-hover {
   display: none;
 }
-.page-build-ring-wrapper #toggle-nav-checkbox:checked + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner {
-  transform: translateX(418px);
-}
-@media (min-width: 1100px) {
-  .page-build-ring-wrapper #toggle-nav-checkbox:checked + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner {
-    transform: translateX(320px);
-  }
-}
-@media (min-width: 1100px) {
-  .page-build-ring-wrapper #toggle-nav-checkbox:checked + #toggle-nav-btn + #main-navigation + #wrapper #wrapper__inner .alignfull {
-    transform: translateX(200px);
-  }
-}
 .page-build-ring-wrapper .facetwp-type-reset {
   display: none;
 }
 .page-build-ring-wrapper .product-detail #woocommerce-product-gallery__image-main {
   aspect-ratio: initial;
+}
+.page-build-ring-wrapper .drag-handle-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  aspect-ratio: 1/1;
+  cursor: url("../../img/drag.png"), auto;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.0509803922) 0% 0% no-repeat padding-box;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .page-build-ring__inner {
@@ -106,11 +121,12 @@
 }
 @media (min-width: 1100px) {
   .page-build-ring__left {
-    flex: 0 0 200px;
-    max-width: 200px;
+    flex: 0 0 230px;
+    max-width: 230px;
     padding-top: 80px;
     padding-left: 0;
     border-left: 0;
+    border-right: 2px solid var(--cl-border);
   }
   .page-build-ring__left::before {
     display: none;
@@ -127,8 +143,8 @@
 }
 @media (min-width: 1100px) {
   .page-build-ring__center {
-    flex: 0 0 calc(100% - 480px);
-    max-width: calc(100% - 480px);
+    flex: 0 0 calc(100% - 510px);
+    max-width: calc(100% - 510px);
     padding: 20px 55px;
     position: relative;
     z-index: 10;
@@ -169,14 +185,22 @@
 }
 
 @media (max-width: 1099.98px) {
-  .build-ring-tray-wrapper {
+  .build-ring-tray-collection {
     position: fixed;
     left: 0;
-    right: 0;
     bottom: 0;
-    background: #fff;
+    right: 0;
+    display: flex;
+    flex-direction: column;
     z-index: 99;
+  }
+}
+
+@media (max-width: 1099.98px) {
+  .build-ring-tray-wrapper {
+    background: #fff;
     box-shadow: 0px -5px 6px rgba(0, 0, 0, 0.1607843137);
+    display: flex;
   }
 }
 
@@ -184,21 +208,22 @@
   .build-ring-tray__inner {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 20px 20px;
+    padding: 5px 20px;
     background: rgba(215, 188, 153, 0.3803921569);
+    height: 100%;
   }
 }
 .build-ring-tray__title {
   line-height: 1.16;
   font-family: "New Forest", sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   font-style: normal;
   letter-spacing: 0px;
   color: #363636;
   opacity: 1;
-  flex: 0 0 110px;
-  max-width: 110px;
+  flex: 0 0 50px;
+  max-width: 50px;
+  margin-bottom: 0;
 }
 @media (min-width: 1100px) {
   .build-ring-tray__title {
@@ -225,8 +250,9 @@
 }
 .build-ring-tray__item {
   position: relative;
-  width: 85px;
-  height: 85px;
+  width: 65px;
+  height: 65px;
+  flex: 0 0 65px;
 }
 @media (min-width: 1100px) {
   .build-ring-tray__item {
@@ -336,6 +362,8 @@
 .build-ring-head {
   text-align: center;
   margin-bottom: 30px;
+  max-width: 465px;
+  margin: 0 auto;
 }
 .build-ring-head h2 {
   font: normal normal normal 42px/48px New Forest;
@@ -349,6 +377,12 @@
   color: #363636;
   opacity: 1;
 }
+@media (max-width: 1099.98px) {
+  .build-ring-head {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 
 .build-ring-mode {
   position: absolute;
@@ -359,6 +393,19 @@
   align-items: center;
   padding-left: 10px;
 }
+.build-ring-mode__inner {
+  display: flex;
+  width: 170px;
+  padding: 5px 5px;
+  border-radius: 30px;
+  background: #3f7f88;
+  justify-content: space-between;
+}
+@media (min-width: 1100px) {
+  .build-ring-mode__inner {
+    width: 260px;
+  }
+}
 @media (min-width: 1100px) {
   .build-ring-mode {
     position: static;
@@ -368,20 +415,67 @@
     width: 100%;
   }
 }
+.build-ring-mode__image {
+  display: inline-block;
+}
+.build-ring-mode__image img {
+  display: inline-block;
+  width: 13px;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+@media (min-width: 1100px) {
+  .build-ring-mode__image img {
+    width: 13px;
+  }
+}
 .build-ring-mode__label {
-  font-size: 0;
+  flex: 0 0 50%;
+  max-width: 50%;
+  font-size: 8px;
   letter-spacing: 1.8px;
-  line-height: 1.25;
+  line-height: 0;
   font-family: "Outfit", sans-serif;
-  color: #909090;
+  color: #ffffff;
   text-transform: uppercase;
   opacity: 1;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 30px;
+  height: 27px;
+}
+.build-ring-mode__label svg {
+  width: 13px;
+  height: auto;
+}
+@media (min-width: 1100px) {
+  .build-ring-mode__label svg {
+    width: 13px;
+  }
+}
+.build-ring-mode__label path {
+  fill: #fff;
 }
 @media (min-width: 1100px) {
   .build-ring-mode__label {
-    font-size: 15px;
+    font-size: 12px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    opacity: 1;
   }
+}
+.build-ring-mode__label.active {
+  background: #fff;
+  color: #3f7f88;
+}
+.build-ring-mode__label.active path {
+  fill: #3f7f88;
+}
+.build-ring-mode__label.active img {
+  filter: none !important;
 }
 .build-ring-mode__switch {
   position: relative;
@@ -436,6 +530,13 @@
   margin: 0;
   position: absolute;
   left: 30px;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.build-ring-steps__title:hover {
+  opacity: 0.7;
 }
 @media (min-width: 1100px) {
   .build-ring-steps__title {
@@ -605,7 +706,7 @@
   padding-right: 60px;
   display: block;
   color: #000;
-  font-size: 20px;
+  font-size: 16px;
   letter-spacing: 0.15;
   text-transform: uppercase;
   -webkit-appearance: none;
@@ -613,6 +714,8 @@
           appearance: none;
   background-color: transparent;
   position: relative;
+  word-wrap: break-word;
+  white-space: normal;
 }
 .build-ring-confirm .product-detail .variations .value select:focus {
   outline: none;
@@ -620,6 +723,7 @@
 @media (min-width: 1100px) {
   .build-ring-confirm .product-detail .variations .value select {
     padding-left: 20px;
+    font-size: 20px;
   }
 }
 .build-ring-confirm .product-detail .variations .value .custom-select {
@@ -650,6 +754,29 @@
   align-items: center;
   justify-content: center;
   border-radius: 100%;
+  position: relative;
+}
+.build-ring-collection .remove-design svg {
+  display: none !important;
+}
+.build-ring-collection .remove-design::before, .build-ring-collection .remove-design::after {
+  content: "" !important;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 2px;
+  background-color: #333;
+  transform-origin: center;
+}
+.build-ring-collection .remove-design::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.build-ring-collection .remove-design::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.build-ring-collection .remove-design:hover::before, .build-ring-collection .remove-design:hover::after {
+  background-color: #000;
 }
 @media (min-width: 1100px) {
   .build-ring-collection__item {
@@ -672,6 +799,40 @@
 }
 .build-ring-collection__item .variation dd {
   margin-bottom: 5px;
+}
+
+.build-ring-editing-badge {
+  background: none;
+  padding: 0;
+  border: 0;
+  font: normal normal bold 11px/1 Outfit;
+  text-transform: capitalize;
+  color: var(--cl-gold);
+  cursor: pointer;
+}
+
+.is-editing {
+  position: relative;
+  outline: 2px solid var(--cl-primary);
+  border-radius: 14px;
+}
+
+.build-ring-collection__change {
+  display: inline-block;
+  margin-top: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: center;
+  text-decoration: underline;
+  font: normal normal bold 12px/26px Outfit;
+  letter-spacing: 0px;
+  color: #3f7f88;
+  opacity: 1;
+  width: 200px;
+}
+.build-ring-collection__change:hover {
+  color: #000;
 }
 
 .build-ring-collection-proudct__inner {
@@ -781,6 +942,15 @@
   display: block;
   position: relative;
 }
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 0px;
+    padding-bottom: 5px;
+  }
+}
 .build-ring-mini-collection .processing {
   width: 100%;
   height: 100%;
@@ -802,6 +972,8 @@
     margin-right: -40px;
     margin-top: -80px;
     margin-bottom: 30px;
+    max-height: 300px;
+    overflow: auto;
   }
 }
 .build-ring-mini-collection-item {
@@ -810,9 +982,17 @@
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-item {
+    width: 48%;
+    align-items: center;
+    margin: 5px 0;
+  }
+}
 .build-ring-mini-collection-item:hover .remove-design {
   opacity: 1 !important;
   cursor: pointer;
+  position: relative;
 }
 .build-ring-mini-collection-item:last-child {
   margin-bottom: 0;
@@ -841,9 +1021,44 @@
   border: 1px solid #fff;
   opacity: 0;
 }
+.build-ring-mini-collection-item__title .remove-design svg {
+  display: none !important;
+}
+.build-ring-mini-collection-item__title .remove-design::before, .build-ring-mini-collection-item__title .remove-design::after {
+  content: "" !important;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 2px;
+  background-color: #fff;
+  transform-origin: center;
+}
+.build-ring-mini-collection-item__title .remove-design::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.build-ring-mini-collection-item__title .remove-design::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.build-ring-mini-collection-item__title .remove-design:hover::before, .build-ring-mini-collection-item__title .remove-design:hover::after {
+  background-color: #fff;
+}
 @media (max-width: 1099.98px) {
   .build-ring-mini-collection-item__title .remove-design {
     opacity: 1 !important;
+    position: absolute !important;
+    left: 0;
+  }
+}
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-item__title {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 30px;
+    flex: 0 0 80px;
+    margin-bottom: 0;
+    font-weight: normal;
   }
 }
 .build-ring-mini-collection-item__ring, .build-ring-mini-collection-item__stone {
@@ -866,6 +1081,12 @@
      object-fit: cover;
   top: 0;
   left: 0;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-mini-collection-item__ring, .build-ring-mini-collection-item__stone {
+    flex: 0 0 calc(50% - 50px);
+    border-radius: 100%;
+  }
 }
 
 .product-detail-build-ring__inner {
@@ -1059,6 +1280,10 @@
   width: 71px;
   height: 71px;
 }
+.build-ring-stone-options__item.disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
 
 .subtotal-wrapper {
   text-align: left;
@@ -1076,13 +1301,30 @@
 }
 
 @media (max-width: 1099.98px) {
-  .build-ring-tray-product-info-wrapper {
+  .build-ring-tray-product-info {
     display: none;
   }
 }
 
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra-wrapper {
+    background: rgba(215, 188, 153, 0.3803921569);
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+}
+@media (max-width: 1099.98px) {
+  #build-ring-tray-extra-wrapper #build-ring-stone-options__item--1-wrapper .build-ring-stone-options__item__label div {
+    display: block;
+    font-size: 10px;
+    padding-left: 5px;
+    line-height: 1.1;
+  }
+}
+
 #build-ring-tray-extra {
-  padding: 10px 20px;
+  padding: 5px 0px;
 }
 @media (min-width: 1100px) {
   #build-ring-tray-extra {
@@ -1095,9 +1337,11 @@
 @media (max-width: 1099.98px) {
   #build-ring-tray-extra .build-ring-stone-options__title {
     font-size: 12px;
+    margin-bottom: 0;
   }
   #build-ring-tray-extra .build-ring-stone-options__title span {
     font-size: 12px;
+    display: none;
   }
 }
 #build-ring-tray-extra .build-ring-stone-options {
@@ -1115,7 +1359,6 @@
 }
 @media (max-width: 1099.98px) {
   #build-ring-tray-extra .build-ring-stone-options__items {
-    display: flex;
     gap: 10px;
   }
 }
@@ -1123,10 +1366,16 @@
   #build-ring-tray-extra .build-ring-stone-options__item__image {
     flex: 0 0 30px;
     height: 30px;
+    display: none;
   }
 }
 #build-ring-tray-extra .build-ring-stone-options__item {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+}
+@media (min-width: 1100px) {
+  #build-ring-tray-extra .build-ring-stone-options__item {
+    margin-bottom: 15px;
+  }
 }
 #build-ring-tray-extra .build-ring-stone-options__item label {
   display: block;
@@ -1135,6 +1384,7 @@
 @media (max-width: 1099.98px) {
   #build-ring-tray-extra .build-ring-stone-options__item label {
     display: flex !important;
+    padding-left: 0;
   }
 }
 #build-ring-tray-extra .build-ring-stone-options__item label strong {
@@ -1148,6 +1398,7 @@
     font-size: 11px;
     padding-left: 5px;
     line-height: 1.1;
+    margin: 0;
   }
 }
 #build-ring-tray-extra .build-ring-stone-options__item label div {
@@ -1230,6 +1481,151 @@
   letter-spacing: 0px;
   color: #fff;
   opacity: 1;
+}
+
+.build-ring-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3215686275);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.build-ring-alert__inner {
+  width: 814px;
+  max-width: 95%;
+  background: #fa5160 0% 0% no-repeat padding-box;
+  padding: 30px 30px;
+  border-radius: 30px;
+  position: relative;
+}
+.build-ring-alert__close {
+  width: 37px;
+  height: 37px;
+  border-radius: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  position: absolute;
+  font-size: 0;
+  background: none;
+  right: 30px;
+  top: 30px;
+}
+.build-ring-alert__close::before, .build-ring-alert__close::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 18px;
+  background-color: #fff;
+  top: 8px;
+  left: 15px;
+  transform: rotate(45deg);
+}
+.build-ring-alert__close::after {
+  transform: rotate(-45deg);
+}
+@media (max-width: 1099.98px) {
+  .build-ring-alert__close {
+    right: 15px;
+    top: 15px;
+  }
+}
+.build-ring-alert__content {
+  text-align: center;
+  padding: 80px 0 40px 0;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-alert__content {
+    padding: 30px 0 0px 0;
+  }
+}
+.build-ring-alert__title {
+  text-align: center;
+  font-family: "New Forest", sans-serif;
+  font-size: 60px;
+  line-height: 1.15;
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  margin: 0 0 20px 0;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-alert__title {
+    font-size: 40px;
+  }
+}
+.build-ring-alert__message {
+  text-align: center;
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  width: 555px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-alert__message {
+    font-size: 18px;
+  }
+}
+.build-ring-alert__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 50px 0 0 0;
+}
+@media (max-width: 1099.98px) {
+  .build-ring-alert__actions {
+    margin: 30px 0 0 0;
+  }
+}
+.build-ring-alert__confirm {
+  background: #ffffff;
+  border-radius: 34px;
+  width: 220px;
+  height: 62px;
+  border: 2px solid #ffffff;
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 2.7px;
+  color: #3f7f88;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.build-ring-alert__confirm:hover {
+  background: transparent;
+  color: #ffffff;
+}
+.build-ring-alert__cancel {
+  background: transparent;
+  border-radius: 34px;
+  width: 220px;
+  height: 62px;
+  border: 2px solid #ffffff;
+  font: normal normal bold 18px/26px Outfit;
+  letter-spacing: 2.7px;
+  color: #ffffff;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.build-ring-alert__cancel:hover {
+  background: #ffffff;
+  color: #3f7f88;
 }
 
 /*# sourceMappingURL=build-ring.css.map*/

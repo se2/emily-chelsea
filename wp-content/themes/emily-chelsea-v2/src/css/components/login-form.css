@@ -1,0 +1,15 @@
+#customer_login {
+  padding: 2.5rem 0;
+}
+
+.woocommerce-form-login,
+.woocommerce-form-register {
+  max-width: 768px;
+  margin: 0 auto;
+}
+.woocommerce-form-login__submit,
+.woocommerce-form-register__submit {
+  width: 200px;
+}
+
+/*# sourceMappingURL=login-form.css.map*/

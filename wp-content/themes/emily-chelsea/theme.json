@@ -87,6 +87,16 @@
 			"fontSize": "1rem",
 			"fontSizes": [
 				{
+					"slug": "xx-small",
+					"size": "20px",
+					"name": "XX-Small"
+				},
+				{
+					"slug": "x-small",
+					"size": "30px",
+					"name": "X-Small"
+				},
+				{
 					"slug": "small",
 					"size": "36px",
 					"name": "Small"
@@ -100,6 +110,16 @@
 					"slug": "large",
 					"size": "60px",
 					"name": "Large"
+				},
+				{
+					"slug": "x-large",
+					"size": "72px",
+					"name": "X-Large"
+				},
+				{
+					"slug": "xx-large",
+					"size": "96px",
+					"name": "XX-Large"
 				}
 			]
 		},

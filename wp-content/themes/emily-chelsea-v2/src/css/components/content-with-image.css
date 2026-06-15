@@ -1,0 +1,97 @@
+.ttg-content-with-image {
+  width: 100%;
+  overflow: hidden;
+}
+@media (min-width: 1100px) {
+  .ttg-content-with-image {
+    display: flex;
+    align-items: flex-end;
+  }
+}
+.ttg-content-with-image__image__inner {
+  height: var(--ttg-content-with-image-bg-height, auto);
+  max-height: var(--ttg-content-with-image-bg-max-height, 100%);
+}
+.ttg-content-with-image__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: inherit;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+@media (min-width: 1100px) {
+  .ttg-content-with-image__image {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-bottom: 5.3125rem;
+  }
+}
+.ttg-content-with-image__content {
+  position: relative;
+  z-index: 2;
+}
+.ttg-content-with-image__content__inner {
+  position: relative;
+  color: #fff;
+  padding: 1.25rem 1.25rem;
+}
+.ttg-content-with-image__content__inner h1,
+.ttg-content-with-image__content__inner h2,
+.ttg-content-with-image__content__inner h3,
+.ttg-content-with-image__content__inner h4,
+.ttg-content-with-image__content__inner h5,
+.ttg-content-with-image__content__inner h6 {
+  color: inherit;
+}
+@media (min-width: 1100px) {
+  .ttg-content-with-image__content__inner {
+    width: var(--ttg-content-with-image-width);
+    max-width: 100%;
+    padding: 3.4375rem 2.8125rem;
+  }
+}
+.ttg-content-with-image__content__inner:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background: var(--ttg-content-with-image-bg-color-m);
+  z-index: 0;
+}
+@media (min-width: 1100px) {
+  .ttg-content-with-image__content__inner:before {
+    background: var(--ttg-content-with-image-bg-color);
+    -webkit-backdrop-filter: blur(var(--ttg-content-with-image-bg-blur));
+            backdrop-filter: blur(var(--ttg-content-with-image-bg-blur));
+  }
+}
+.ttg-content-with-image__content__inner > .ttg-post {
+  position: relative;
+  z-index: 2;
+}
+@media (min-width: 1100px) {
+  .ttg-content-with-image__content {
+    flex: 0 0 100%;
+    max-width: 100%;
+    transform: translateX(-100%);
+    display: flex;
+    padding-right: 5rem;
+    padding-left: 5rem;
+  }
+}
+@media (min-width: 1100px) {
+  .ttg-content-with-image__content--right {
+    justify-content: flex-end;
+  }
+}
+@media (min-width: 1100px) {
+  .ttg-content-with-image__content--center {
+    justify-content: center;
+  }
+}
+
+/*# sourceMappingURL=content-with-image.css.map*/

@@ -20,6 +20,16 @@
 		});
 	}
 
+	function clearUncompleteDesign(params = {}) {
+		const { success = () => {}, error = () => {} } = params;
+		jQuery.ajax({
+			url: ajaxUrl + "?action=clear_uncomplete_design",
+			success: success,
+			dataType: "json",
+			error,
+		});
+	}
+
 	function reset(params = {}) {
 		const { success = () => {}, error = () => {} } = params;
 		jQuery.ajax({
@@ -34,8 +44,10 @@
 		e.preventDefault();
 		const parent = $(this).closest(".build-ring-selection");
 		parent.addClass("loading");
+		clearUncompleteDesign();
 		reset({
 			success: function (response) {
+				console.log("reset response", response);
 				setMode({
 					mode: MODE.START_WITH_STONE,
 					success: function (response) {
@@ -51,8 +63,10 @@
 		e.preventDefault();
 		const parent = $(this).closest(".build-ring-selection");
 		parent.addClass("loading");
+		clearUncompleteDesign();
 		reset({
 			success: function (response) {
+				console.log("reset response", response);
 				setMode({
 					mode: MODE.START_WITH_SETTING,
 					success: function (response) {

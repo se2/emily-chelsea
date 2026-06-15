@@ -1,0 +1,35 @@
+@import "../base-components";
+
+.my-account-wrapper {
+}
+
+.woocommerce-MyAccount-navigation {
+	flex: 0 0 250px;
+	margin-left: pxToRem(-15);
+	ul {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+		li {
+			border-top: 1px solid var(--cl-border);
+			a {
+				display: block;
+				padding: pxToRem(15) pxToRem(10);
+			}
+			&:first-child {
+				border-top: 0;
+			}
+			&.is-active {
+				> a {
+					background-color: #000;
+					color: #fff;
+				}
+			}
+		}
+	}
+}
+
+.woocommerce-MyAccount-content {
+	padding: pxToRem(40) pxToRem(40);
+	border-left: 1px solid var(--cl-border);
+}

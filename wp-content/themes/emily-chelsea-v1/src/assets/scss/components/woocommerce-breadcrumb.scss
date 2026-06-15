@@ -1,0 +1,19 @@
+@import "../base-components";
+
+.woocommerce-breadcrumb {
+	font-size: pxToRem(12);
+	color: #909090;
+	text-align: center;
+	a {
+		color: #000;
+		text-decoration: none;
+	}
+	.delimiter {
+		margin: 0.25em;
+	}
+
+	@include media-breakpoint-up(md) {
+		text-align: left;
+		font-size: pxToRem(14);
+	}
+}
