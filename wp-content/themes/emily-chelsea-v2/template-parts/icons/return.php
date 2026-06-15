@@ -1,1 +1,0 @@
-<img width="30px" height="30px" alt="30 DAY RETURN GUARANTEE" src="<?php echo get_theme_file_uri('src/dist/img/return.png') ?>" />
