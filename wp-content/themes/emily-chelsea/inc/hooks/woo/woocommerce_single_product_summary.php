@@ -27,11 +27,7 @@ add_action('woocommerce_single_product_summary', function () {
                 display: none;
             }
         </style>
-<<<<<<< HEAD
-    <?php
-=======
 <?php
->>>>>>> build-ring
     }
 });
 
@@ -45,11 +41,6 @@ add_action('woocommerce_single_product_summary', function () {
         $stock_label = '<div class="summary-spacing" style="color:#fa5160; margin-bottom:20px"><span class="stock-status stock-status--out-of-stock" >Out of stock</span></div>';
     }
 
-<<<<<<< HEAD
-    echo $stock_label;
-
-    echo '<div class="summary-spacing">' . TTG_Template::get_template_part('add-stone-button', ['product' => $product]) . '</div>';
-=======
     if (Controller::is_building_ring()) {
         echo $stock_label;
 
@@ -67,7 +58,6 @@ add_action('woocommerce_single_product_summary', function () {
     if (!Controller::is_building_ring()) {
         echo '<div class="summary-spacing">' . TTG_Template::get_template_part('add-stone-button', ['product' => $product]) . '</div>';
     }
->>>>>>> build-ring
 
     if (!empty($anchor_title)) {
         echo '<a href="#product-gallery" class="anchor-gallery">' . $anchor_title . '</a>';
@@ -90,15 +80,8 @@ add_action('woocommerce_single_product_summary', function () {
         echo TTG_Template::get_template_part('product-custom-buttons');
     }
     if (!$product->is_in_stock() && !$is_special_product && $product->is_type('simple')) {
-<<<<<<< HEAD
-    ?>
-        <div class="cart"></div>
-        <div class="product-line"></div>
-<?php
-=======
         echo "<div class=\"cart\"></div>";
         echo '<div class="product-line"></div>';
->>>>>>> build-ring
         echo TTG_Template::get_template_part('inquire-button');
     }
 }, 31);

@@ -5,17 +5,9 @@ if (!empty($post)) {
     $is_product = $post->post_type == 'product' ? true : false;
     $label = '';
     if ($is_product) {
-<<<<<<< HEAD
         $stock_status = $is_product ? get_post_meta($post->ID, '_stock_status', true) : null;
         $is_special_product = get_post_meta($post->ID, 'is_special_product', true);
         $label = $stock_status != 'outofstock' || $is_special_product ? '' : '<span class="stock-status stock-status--out-of-stock">Out of stock</span>';
-=======
-        $product = wc_get_product($post->ID);
-        $label = '';
-        if ($product && $product->is_type('simple') && !$product->is_in_stock()) {
-            $label = '<span class="stock-status stock-status--out-of-stock">Out of stock</span>';
-        }
->>>>>>> build-ring
     }
 
 ?>

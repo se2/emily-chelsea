@@ -29,19 +29,10 @@ function modify_post_type_in_search_page($query)
                 'key' => 'hide_product_from_catalog_listing',
                 'value' => "0",
             ),
-<<<<<<< HEAD
             array(
                 'key' => '_stock_status',
                 'value' => "outofstock",
                 "compare" => "!="
-=======
-            'meta_query'     => array(
-                array(
-                    'key'   => '_stock',
-                    'value' => 0,
-                    "compare" => ">"
-                ),
->>>>>>> build-ring
             ),
         ));
 
@@ -60,14 +51,9 @@ function modify_post_type_in_search_page($query)
         //     ),
         //     'meta_query'     => array(
         //         array(
-<<<<<<< HEAD
         //             'key'   => '_stock',
         //             'value' => 0,
         //             'compare' => '<='
-=======
-        //             'key'   => '_stock_status',
-        //             'value' => 'outofstock',
->>>>>>> build-ring
         //         ),
         //     ),
         // ));
