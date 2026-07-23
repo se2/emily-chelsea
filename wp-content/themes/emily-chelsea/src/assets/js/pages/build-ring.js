@@ -12,6 +12,7 @@
 	const ajaxUrl = "/wp-admin/admin-ajax.php";
 
 	function init() {
+		console.log("init");
 		jQuery(document).on(
 			"click",
 			".build-ring-confirm .remove-design",
@@ -298,7 +299,20 @@
 		}
 	}
 
+	function showProcessing() {
+		let $overlay = jQuery(".processing--global");
+		if (!$overlay.length) {
+			$overlay = jQuery(
+				'<div class="processing processing--global">Processing...</div>',
+			);
+			jQuery("body").append($overlay);
+		}
+		$overlay.addClass("is-active");
+	}
+
 	function redirect() {
+		// Full-page navigation can take a moment; show feedback so the click registers.
+		showProcessing();
 		window.location.href = "/build-ring?step=" + new Date().getTime();
 	}
 
@@ -675,6 +689,7 @@
 	}
 
 	$(document).on("facetwp-loaded", function () {
+		console.log("facetwp-loaded");
 		initDragDrop();
 	});
 
@@ -831,7 +846,13 @@
 				window.history.back();
 				return;
 			}
-			refresh();
+			// On the build-ring page we can update in place; elsewhere (e.g. single
+			// product page) there is no .page-build-ring container to refresh, so go there.
+			if (jQuery(".page-build-ring").length) {
+				refresh();
+			} else {
+				redirect();
+			}
 		});
 	});
 
@@ -893,7 +914,13 @@
 		e.preventDefault();
 		const step = $(this).attr("data-step");
 		setStep(step, () => {
-			refresh();
+			// On the build-ring page we can update in place; elsewhere (e.g. single
+			// product page) there is no .page-build-ring container to refresh, so go there.
+			if (jQuery(".page-build-ring").length) {
+				refresh();
+			} else {
+				redirect();
+			}
 		});
 	});
 

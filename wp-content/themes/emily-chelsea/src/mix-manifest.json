@@ -24,13 +24,16 @@
     "/dist/css/pages/my-account.css": "/dist/css/pages/my-account.css",
     "/dist/css/pages/checkout.css": "/dist/css/pages/checkout.css",
     "/dist/css/pages/cart.css": "/dist/css/pages/cart.css",
+    "/dist/css/pages/build-ring.css": "/dist/css/pages/build-ring.css",
     "/dist/css/pages/blog.css": "/dist/css/pages/blog.css",
     "/dist/css/components/wp-reset-editor-styles.css": "/dist/css/components/wp-reset-editor-styles.css",
     "/dist/css/components/woocommerce-products-header.css": "/dist/css/components/woocommerce-products-header.css",
     "/dist/css/components/woocommerce-pagination.css": "/dist/css/components/woocommerce-pagination.css",
     "/dist/css/components/woocommerce-breadcrumb.css": "/dist/css/components/woocommerce-breadcrumb.css",
     "/dist/css/components/single-post-heading.css": "/dist/css/components/single-post-heading.css",
+    "/dist/css/components/shop-table.css": "/dist/css/components/shop-table.css",
     "/dist/css/components/quantity.css": "/dist/css/components/quantity.css",
+    "/dist/css/components/products.css": "/dist/css/components/products.css",
     "/dist/css/components/products-filter.css": "/dist/css/components/products-filter.css",
     "/dist/css/components/products-block.css": "/dist/css/components/products-block.css",
     "/dist/css/components/product-services.css": "/dist/css/components/product-services.css",
@@ -60,8 +63,5 @@
     "/dist/img/return.png": "/dist/img/return.png",
     "/dist/img/ring.png": "/dist/img/ring.png",
     "/dist/img/search-icon.svg": "/dist/img/search-icon.svg",
-    "/dist/img/video-layer-btn.png": "/dist/img/video-layer-btn.png",
-    "/dist/css/pages/build-ring.css": "/dist/css/pages/build-ring.css",
-    "/dist/css/components/shop-table.css": "/dist/css/components/shop-table.css",
-    "/dist/css/components/products.css": "/dist/css/components/products.css"
+    "/dist/img/video-layer-btn.png": "/dist/img/video-layer-btn.png"
 }

@@ -1,24 +1,2 @@
-/******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
-/*!*********************************************!*\
-  !*** ./assets/js/components/posts-slide.js ***!
-  \*********************************************/
-(function ($) {
-  var defaultConfig = {
-    slidesToShow: 2,
-    autoplay: true,
-    responsive: [{
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1
-      }
-    }]
-  };
-  $(".ttg-posts-slide").each(function (index, el) {
-    var config = $(el).attr("data-config") ? JSON.parse($(el).attr("data-config")) : defaultConfig;
-    $(el).slick(config);
-  });
-})(jQuery);
-/******/ })()
-;
+(()=>{var t,a;t=jQuery,a={slidesToShow:2,autoplay:!0,responsive:[{breakpoint:480,settings:{slidesToShow:1}}]},t(".ttg-posts-slide").each((function(s,o){var e=t(o).attr("data-config")?JSON.parse(t(o).attr("data-config")):a;t(o).slick(e)}))})();
 //# sourceMappingURL=posts-slide.js.map

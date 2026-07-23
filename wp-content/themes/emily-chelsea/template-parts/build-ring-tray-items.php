@@ -4,6 +4,7 @@ use TTG\Build_Ring\Controller;
 
 $tray = Controller::get_tray();
 $items = [null, null];
+$editing_uuid  = Controller::get_uuid();
 
 if (!empty($tray)) {
     $count = 0;
@@ -24,7 +25,11 @@ if (!empty($tray)) {
                 echo TTG_Template::render('build-ring-tray-empty');
             } else {
                 echo '<div class="build-ring-tray__item">';
-                echo '<div data-id="' . $item['uuid'] . '" class="build-ring-tray__item-remove">' . TTG_Template::get_icon('close') . '</div>';
+
+                if (!$editing_uuid) {
+                    echo '<div data-id="' . $item['uuid'] . '" class="build-ring-tray__item-remove">' . TTG_Template::get_icon('close') . '</div>';
+                }
+
                 echo '<div class="processing">Processing...</div>';
                 echo TTG_Template::render('build-ring-tray-product', [
                     'product_id' => $item['product_id'],

@@ -29,9 +29,16 @@ if (!empty($newCollection)) {
                             <?php if ($is_editing): ?><button class="build-ring-editing-badge">(Cancel Editing)</button><?php endif; ?>
                         </span>
 
-                        <span class="remove-design" data-uuid="<?php echo $key; ?>" href="#<?php echo $key; ?>">
-                            <?php echo TTG_Template::get_icon('close'); ?>
-                        </span>
+                        <?php
+                        if (!$editing_uuid) {
+                        ?>
+                            <span class="remove-design" data-uuid="<?php echo $key; ?>" href="#<?php echo $key; ?>">
+                                <?php echo TTG_Template::get_icon('close'); ?>
+                            </span>
+                        <?php
+                        }
+                        ?>
+
                     </h2>
                     <div class="build-ring-mini-collection-item__ring">
                         <?php

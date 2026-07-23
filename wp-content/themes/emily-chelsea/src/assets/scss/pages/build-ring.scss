@@ -178,7 +178,8 @@
 	font-weight: bold;
 	font-family: $headings-font-family;
 }
-.page-build-ring.loading > .processing {
+.page-build-ring.loading > .processing,
+.processing.processing--global.is-active {
 	display: flex;
 	align-items: center;
 	justify-content: center;

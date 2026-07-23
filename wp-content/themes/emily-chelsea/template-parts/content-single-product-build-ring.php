@@ -47,7 +47,7 @@ remove_action('woocommerce_before_single_product', 'woocommerce_output_all_notic
 remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20);
 add_action('woocommerce_single_product_summary', function () {
     global $post;
-    $content = apply_filters('the_content', $post->post_excerpt);
+    $content = apply_filters('the_content', $post->post_content);
     echo '<div class="woocommerce-product-details__short-description">' . $content . '</div>';
 }, 20);
 ?>
@@ -104,9 +104,9 @@ add_action('woocommerce_single_product_summary', function () {
                 </div>
 
                 <?php
-                echo TTG_Template::render("build-ring-content", [
-                    "product_id" => $product->get_id()
-                ]);
+                // echo TTG_Template::render("build-ring-content", [
+                //     "product_id" => $product->get_id()
+                // ]);
                 ?>
                 <?php
                 /**
