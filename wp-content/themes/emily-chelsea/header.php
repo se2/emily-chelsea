@@ -50,7 +50,7 @@
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=146856861782937&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel Code -->
-
+<!-- Start cookieyes banner --> <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/130108cb15e549e81cc9959bdacd3f6f/script.js"></script> <!-- End cookieyes banner -->
 
     <?php wp_head(); ?>
 </head>

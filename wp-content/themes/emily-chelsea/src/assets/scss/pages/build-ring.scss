@@ -657,6 +657,12 @@
 		}
 		.build-ring-collection__title {
 			color: #fff;
+
+			&.design-total {
+				.design-total__amount {
+					font-weight: bold;
+				}
+			}
 		}
 	}
 

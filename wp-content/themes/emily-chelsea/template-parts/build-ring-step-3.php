@@ -75,7 +75,10 @@ wc_clear_notices();
                             <h2 class="build-ring-confirm__right__title">Please Make Necessary Selections</h2>
                         <?php } ?>
 
-                        <div class="build-ring-collection__title">Design <?php echo $count; ?>:</div>
+                        <div class="build-ring-collection__title design-total" data-uuid="<?php echo esc_attr($key); ?>">
+                            <span class="design-total__label">Design <?php echo $count; ?></span>
+                            <span class="design-total__value">Total: <span class="design-total__amount"><?php echo wp_kses_post(wc_price(Controller::get_design_total($key))); ?></span></span>
+                        </div>
                         <div class="woocommerce">
 
                             <div class="product-detail">
@@ -98,7 +101,7 @@ wc_clear_notices();
                             ?>
                                 <div class="subtotal-wrapper">
                                     <label for="subtotal">Subtotal:</label>
-                                    <span class="subtotal"></span>
+                                    <span class="subtotal"><?php echo wp_kses_post(wc_price(Controller::get_collections_total())); ?></span>
                                 </div>
                             <?php } ?>
 

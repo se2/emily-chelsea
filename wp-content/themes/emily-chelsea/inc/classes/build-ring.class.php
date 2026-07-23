@@ -612,6 +612,57 @@ class Controller
     }
 
     /**
+     * Sums the WC cart line totals for a saved design (ring + stone).
+     *
+     * @param  string $uuid Collection key.
+     * @return float        Combined line total, 0 if the collection/lines are missing.
+     */
+    public static function get_design_total($uuid = '')
+    {
+        if (empty($uuid)) return 0;
+
+        $collections = self::get_collections();
+        $collection = $collections[$uuid] ?? [];
+
+        if (empty($collection)) return 0;
+
+        $line_keys = array_filter([
+            $collection['ring_cart_item_line'] ?? '',
+            $collection['stone_cart_item_line'] ?? '',
+        ]);
+
+        $total = 0;
+        foreach ($line_keys as $line_key) {
+            $cart_item = WC()->cart->get_cart_item($line_key);
+            if (!empty($cart_item)) {
+                $total += $cart_item['line_total'];
+            }
+        }
+
+        return $total;
+    }
+
+    /**
+     * Sums get_design_total() across every complete (ring + stone) saved collection.
+     * Used for the build-ring "Subtotal" — deliberately excludes any unrelated
+     * products the user may also have in their WC cart.
+     *
+     * @return float
+     */
+    public static function get_collections_total()
+    {
+        $collections = self::get_collections();
+        $total = 0;
+
+        foreach ($collections as $uuid => $collection) {
+            if (empty($collection['ring']) || empty($collection['stone'])) continue;
+            $total += self::get_design_total($uuid);
+        }
+
+        return $total;
+    }
+
+    /**
      * Outputs a JSON response containing the combined price of a ring and stone.
      * Exits via wp_die() — intended as an AJAX handler body.
      *
@@ -1225,7 +1276,8 @@ class Ajax
     }
 
     /**
-     * Returns the current WC cart subtotal as a formatted price string.
+     * Returns the combined total of every saved design (ring + stone), formatted.
+     * Deliberately excludes unrelated products elsewhere in the WC cart.
      * AJAX action: get_subtotal
      */
     public static function get_subtotal()
@@ -1233,7 +1285,7 @@ class Ajax
 
         echo wp_json_encode([
             "isSuccess" => true,
-            "data" => wc_price(WC()->cart->get_subtotal()),
+            "data" => wc_price(Controller::get_collections_total()),
         ]);
         wp_die();
     }
@@ -1509,6 +1561,7 @@ class Ajax
 
         echo wp_json_encode([
             'data' => $ring_html,
+            'design_total' => wc_price(Controller::get_design_total($uuid)),
             "isSuccess" => true
         ]);
         wp_die();

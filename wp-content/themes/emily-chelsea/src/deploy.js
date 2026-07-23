@@ -4,15 +4,15 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 
 const SFTP_CONFIG = {
-	host: "emilychels1stg.sftp.wpengine.com",
+	host: "emilychelsea.sftp.wpengine.com",
 	port: 2222,
-	username: "emilychels1stg-tr",
+	username: "emilychelsea-tu",
 	password: "45e4h27U76S553q",
 	readyTimeout: 30000,
 };
 
 const GIT_ROOT = path.resolve(__dirname, "../../../.."); // app/public/
-const REMOTE_THEME = "/wp-content/themes/emily-chelsea-v2";
+const REMOTE_THEME = "/wp-content/themes/emily-chelsea";
 const THEME_PREFIX = "wp-content/themes/emily-chelsea/";
 
 const EXCLUDES = [
@@ -33,6 +33,8 @@ const rangeArg = process.argv.find(function (a) {
 	return a.startsWith("--range=");
 });
 const RANGE = rangeArg ? rangeArg.split("=")[1] : "HEAD~1..HEAD";
+const DRY_RUN = process.argv.includes("--dry-run");
+const TEST_CONNECT = process.argv.includes("--test-connect");
 
 function gitDiff(filter) {
 	try {
@@ -50,6 +52,23 @@ function gitDiff(filter) {
 			});
 	} catch (e) {
 		return [];
+	}
+}
+
+async function testConnect() {
+	const sftp = new SftpClient();
+	try {
+		await sftp.connect(SFTP_CONFIG);
+		console.log("[deploy] Connected to " + SFTP_CONFIG.host);
+		const list = await sftp.list(REMOTE_THEME);
+		console.log(
+			"[deploy] " + REMOTE_THEME + " has " + list.length + " item(s)",
+		);
+	} catch (err) {
+		console.error("[deploy] Connection failed:", err.message);
+		process.exit(1);
+	} finally {
+		await sftp.end();
 	}
 }
 
@@ -73,6 +92,17 @@ async function deploy() {
 			toDelete.length +
 			" to delete",
 	);
+
+	if (DRY_RUN) {
+		toUpload.forEach(function (file) {
+			console.log("  + " + file.slice(THEME_PREFIX.length));
+		});
+		toDelete.forEach(function (file) {
+			console.log("  - " + file.slice(THEME_PREFIX.length));
+		});
+		console.log("[deploy] Dry run, nothing uploaded.");
+		return;
+	}
 
 	const sftp = new SftpClient();
 	try {
@@ -114,4 +144,8 @@ async function deploy() {
 	}
 }
 
-deploy();
+if (TEST_CONNECT) {
+	testConnect();
+} else {
+	deploy();
+}

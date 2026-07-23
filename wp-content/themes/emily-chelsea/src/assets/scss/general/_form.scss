@@ -7,6 +7,8 @@ body:not(.wp-admin) {
 
 	.input-text {
 		@extend .form-control;
+		border-style: solid;
+		border-width: 1px;
 	}
 
 	.select2-container .select2-selection--single {

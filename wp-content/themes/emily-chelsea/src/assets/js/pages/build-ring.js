@@ -110,6 +110,7 @@
 									$(size),
 									"custom-select-pa_size_" + uuid,
 								);
+								$(size).trigger("change");
 							},
 							error: (err) => {
 								console.error("Error fetching products:", err);
@@ -362,6 +363,9 @@
 					jQuery(item)
 						.find(".build-ring-collection__item__ring")
 						.html(res.data);
+					jQuery(document)
+						.find('.design-total[data-uuid="' + uuid + '"] .design-total__amount')
+						.html(res.design_total);
 				}
 			},
 			dataType: "json",
@@ -841,9 +845,13 @@
 
 	jQuery(document).on("click", ".build-ring-steps__title", function (e) {
 		e.preventDefault();
+		const loading = processLoading();
+		loading.start();
 		goBackStep((res) => {
 			if (res.isFirstStep) {
-				window.history.back();
+				window.location.href = "/build-ring-landing/";
+				//window.history.back();
+				loading.end();
 				return;
 			}
 			// On the build-ring page we can update in place; elsewhere (e.g. single

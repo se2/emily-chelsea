@@ -36,12 +36,12 @@ add_action('woocommerce_after_add_to_cart_button', function () {
     }
 }, 10, 1);
 
-add_action('woocommerce_single_product_summary', function () {
-    global $product;
-    if (has_term(PRODUCT_TYPES::RING, 'product_cat', $product->get_id())) {
-        echo TTG_Template::get_template_part('build-ring-anchors', ['product_id' => $product->get_id()]);
-    }
-}, 35, 1);
+// add_action('woocommerce_single_product_summary', function () {
+//     global $product;
+//     if (has_term(PRODUCT_TYPES::RING, 'product_cat', $product->get_id())) {
+//         echo TTG_Template::get_template_part('build-ring-anchors', ['product_id' => $product->get_id()]);
+//     }
+// }, 35, 1);
 
 remove_action('woocommerce_before_single_product', 'woocommerce_output_all_notices', 10);
 remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20);
