@@ -2,24 +2,16 @@ const SftpClient = require("ssh2-sftp-client");
 const path = require("path");
 const { execSync } = require("child_process");
 const fs = require("fs");
-
-const SFTP_CONFIG = {
-	host: "emilychelsea.sftp.wpengine.com",
-	port: 2222,
-	username: "emilychelsea-tu",
-	password: "45e4h27U76S553q",
-	readyTimeout: 30000,
-};
+const { ENV_NAME, SFTP_CONFIG, REMOTE_THEME } = require("./env");
 
 const GIT_ROOT = path.resolve(__dirname, "../../../.."); // app/public/
-const REMOTE_THEME = "/wp-content/themes/emily-chelsea";
 const THEME_PREFIX = "wp-content/themes/emily-chelsea/";
 
 const EXCLUDES = [
 	"node_modules",
 	".cache",
 	".DS_Store",
-	path.join("src", "deploy.js"),
+	"deploy",
 ];
 
 function shouldExclude(gitRelPath) {
@@ -35,6 +27,22 @@ const rangeArg = process.argv.find(function (a) {
 const RANGE = rangeArg ? rangeArg.split("=")[1] : "HEAD~1..HEAD";
 const DRY_RUN = process.argv.includes("--dry-run");
 const TEST_CONNECT = process.argv.includes("--test-connect");
+
+const filesArg = process.argv.find(function (a) {
+	return a.startsWith("--files=");
+});
+// Explicit file list (comma-separated, relative to the theme root), e.g.
+// --files=inc/foo.php,template-parts/bar.php — bypasses git diff entirely so it
+// deploys exactly these files regardless of what else is uncommitted/staged.
+const FILES = filesArg
+	? filesArg
+			.slice("--files=".length)
+			.split(",")
+			.map(function (f) {
+				return f.trim();
+			})
+			.filter(Boolean)
+	: null;
 
 function gitDiff(filter) {
 	try {
@@ -59,7 +67,9 @@ async function testConnect() {
 	const sftp = new SftpClient();
 	try {
 		await sftp.connect(SFTP_CONFIG);
-		console.log("[deploy] Connected to " + SFTP_CONFIG.host);
+		console.log(
+			"[deploy] (" + ENV_NAME + ") Connected to " + SFTP_CONFIG.host,
+		);
 		const list = await sftp.list(REMOTE_THEME);
 		console.log(
 			"[deploy] " + REMOTE_THEME + " has " + list.length + " item(s)",
@@ -73,12 +83,25 @@ async function testConnect() {
 }
 
 async function deploy() {
-	const toUpload = gitDiff("ACMRT").filter(function (f) {
-		return !shouldExclude(f) && fs.existsSync(path.join(GIT_ROOT, f));
-	});
-	const toDelete = gitDiff("D").filter(function (f) {
-		return !shouldExclude(f);
-	});
+	let toUpload, toDelete;
+
+	if (FILES) {
+		// Explicit file list is an intentional whitelist — EXCLUDES (which blocks the
+		// whole "deploy" folder from the automatic git-diff flow) does not apply here.
+		toUpload = FILES.map(function (f) {
+			return THEME_PREFIX + f;
+		}).filter(function (f) {
+			return fs.existsSync(path.join(GIT_ROOT, f));
+		});
+		toDelete = [];
+	} else {
+		toUpload = gitDiff("ACMRT").filter(function (f) {
+			return !shouldExclude(f) && fs.existsSync(path.join(GIT_ROOT, f));
+		});
+		toDelete = gitDiff("D").filter(function (f) {
+			return !shouldExclude(f);
+		});
+	}
 
 	if (toUpload.length === 0 && toDelete.length === 0) {
 		console.log("[deploy] No theme files changed, skipping.");
@@ -86,7 +109,9 @@ async function deploy() {
 	}
 
 	console.log(
-		"[deploy] " +
+		"[deploy] (" +
+			ENV_NAME +
+			") " +
 			toUpload.length +
 			" file(s) to upload, " +
 			toDelete.length +

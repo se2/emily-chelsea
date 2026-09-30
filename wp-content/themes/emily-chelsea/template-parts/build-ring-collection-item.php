@@ -29,7 +29,11 @@ if ($product_id > 0) {
                     <?php
                     if (!empty($cart_line_item)) {
                         $cart_item = WC()->cart->get_cart_item($cart_line_item);
-                        echo wc_get_formatted_cart_item_data($cart_item); // PHPCS: XSS ok.
+                        // A stale line key (cart out of sync with the collection)
+                        // must not fatal the whole confirm page.
+                        if (!empty($cart_item)) {
+                            echo wc_get_formatted_cart_item_data($cart_item); // PHPCS: XSS ok.
+                        }
                     }
                     ?>
                 </div>

@@ -28,17 +28,34 @@ add_filter('woocommerce_loop_product_link', function ($post_link, $post) {
         ];
         if ($mode == MODE::START_WITH_STONE) {
             $terms = 'center-stones';
-        }
-
-        $products = new WP_Query(array(
-            'post_type' => 'product',
-            'tax_query' => [
+            $tax_query = [
                 [
                     'taxonomy' => 'product_cat',
                     "field" => "slug",
                     "terms" => $terms
                 ]
-            ],
+            ];
+        } else {
+            // Rings step: opt-out — every product in the "rings" category EXCEPT those
+            // tagged "exclude-build-a-ring". Must match Controller::is_building_ring().
+            $tax_query = [
+                [
+                    'taxonomy' => 'product_tag',
+                    "field" => "slug",
+                    "terms" => 'exclude-build-a-ring',
+                    "operator" => "NOT IN"
+                ],
+                [
+                    'taxonomy' => 'product_cat',
+                    "field" => "slug",
+                    "terms" => 'rings'
+                ]
+            ];
+        }
+
+        $products = new WP_Query(array(
+            'post_type' => 'product',
+            'tax_query' => $tax_query,
             "meta_query" =>  $meta_query,
             "facetwp"        => true,
             "posts_per_page" => 24,

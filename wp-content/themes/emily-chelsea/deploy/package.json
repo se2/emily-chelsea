@@ -1,0 +1,23 @@
+{
+	"name": "emily-chelsea-deploy",
+	"version": "1.0.0",
+	"description": "SFTP deploy/pull scripts between local and WPEngine live for the emily-chelsea theme",
+	"private": true,
+	"scripts": {
+		"check": "node deploy.js --range=HEAD --dry-run",
+		"deploy": "node deploy.js --range=HEAD",
+		"test-connect": "node deploy.js --test-connect",
+		"pull:check": "node pull.js --dry-run",
+		"pull": "node pull.js",
+		"check:staging": "node deploy.js --range=HEAD --dry-run --env=staging",
+		"deploy:staging": "node deploy.js --range=HEAD --env=staging",
+		"test-connect:staging": "node deploy.js --test-connect --env=staging",
+		"pull:check:staging": "node pull.js --dry-run --env=staging",
+		"pull:staging": "node pull.js --env=staging"
+	},
+	"license": "ISC",
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"ssh2-sftp-client": "^12.1.1"
+	}
+}

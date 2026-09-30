@@ -17,7 +17,7 @@ if (!empty($tray)) {
 ?>
 <div class="build-ring-tray__inner">
     <h2 class="build-ring-tray__title">Your <br class="d-md-none" />Design Tray:</h2>
-    <p class="d-none d-md-block">To edit your design, go to the cart screen and adjust the setting or stone.</p>
+    <p class="d-none d-md-block">To edit your design, go to the third step and adjust the setting or stone.</p>
     <div class="build-ring-tray__items">
         <?php
         foreach ($items as $item) {

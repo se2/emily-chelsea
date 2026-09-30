@@ -352,7 +352,7 @@
 		initStickyTray();
 	}
 
-	function refreshCollectionRing(uuid) {
+	function refreshCollectionRing(uuid, callback = () => {}) {
 		jQuery.ajax({
 			url: ajaxUrl + "?action=refresh_collection_ring&uuid=" + uuid,
 			success: (res) => {
@@ -367,6 +367,10 @@
 						.find('.design-total[data-uuid="' + uuid + '"] .design-total__amount')
 						.html(res.design_total);
 				}
+				callback(res);
+			},
+			error: () => {
+				callback(null);
 			},
 			dataType: "json",
 		});
@@ -468,6 +472,11 @@
 			},
 			error: function (err) {
 				console.error("Error selecting product", err);
+				// Still resolve the callback so queued flows don't stall.
+				callback({
+					isSuccess: false,
+					message: "Something went wrong. Please try again.",
+				});
 			},
 		});
 	}
@@ -752,7 +761,7 @@
 					redirect();
 				} else {
 					alertMessage({
-						message: message,
+						message: res.message || "",
 						title: "Error",
 						type: "error",
 					});
@@ -801,6 +810,18 @@
 
 	jQuery(document).on("click", "#continue-to-checkout", function (e) {
 		e.preventDefault();
+
+		// A price update is still in flight — the cart is mid-write.
+		if (jQuery(".build-ring-confirm.is-updating-price").length) {
+			alertMessage({
+				message:
+					"We're still updating your design's price. Please wait a moment and try again.",
+				title: "One moment",
+				type: "warning",
+			});
+			return;
+		}
+
 		const collections = jQuery(document).find(".build-ring-confirm");
 		let isValid = true;
 		jQuery.each(collections, function () {
@@ -823,7 +844,31 @@
 
 			return;
 		}
-		window.location.href = "/checkout/";
+
+		// The DOM can look valid while the server-side collection is not (e.g.
+		// a cart line lost to a failed update) — confirm with the server before
+		// letting the user pay for half a design.
+		isValidCollections({
+			onSuccess: (res) => {
+				if (res.isValid) {
+					window.location.href = "/cart/";
+					return;
+				}
+
+				alertMessage({
+					message:
+						res.message ||
+						"Some ring designs are still incomplete. Please complete them to continue.",
+					title: "Did you forget?",
+					type: "error",
+				});
+			},
+			error: () => {
+				// Validation endpoint unreachable — send to the cart; the checkout
+				// server-side guard still blocks incomplete designs.
+				window.location.href = "/cart/";
+			},
+		});
 	});
 
 	jQuery(document).on(
@@ -932,6 +977,141 @@
 		});
 	});
 
+	// Serializes ALL select_product cart writes — across every design on the
+	// page, not just per design: WooCommerce persists the whole cart
+	// last-writer-wins, so two parallel updates (e.g. two designs re-matching
+	// their variation on page load) would silently drop or resurrect lines.
+	// `pending` keeps only the latest queued change per design; `updating`
+	// tracks which designs show "Calculating…" until the queue drains.
+	const ringUpdateQueue = { inFlight: false, pending: {}, updating: {} };
+
+	function takePendingRingUpdate(uuid) {
+		const key =
+			uuid && ringUpdateQueue.pending[uuid]
+				? uuid
+				: Object.keys(ringUpdateQueue.pending)[0];
+		if (!key) {
+			return null;
+		}
+		const payload = ringUpdateQueue.pending[key];
+		delete ringUpdateQueue.pending[key];
+		return { uuid: key, payload };
+	}
+
+	function finishRingUpdates() {
+		ringUpdateQueue.inFlight = false;
+		Object.keys(ringUpdateQueue.updating).forEach(function (uuid) {
+			setDesignUpdating(uuid, false);
+		});
+		ringUpdateQueue.updating = {};
+	}
+
+	function setDesignUpdating(uuid, updating) {
+		const container = $(document).find(
+			'.build-ring-confirm[data-uuid="' + uuid + '"]',
+		);
+		const totalEl = $(document).find(
+			'.design-total[data-uuid="' + uuid + '"]',
+		);
+		const subtotalWrapper = $(document).find(".subtotal-wrapper");
+
+		if (updating) {
+			container.addClass("is-updating-price");
+			// Block the (custom) selects while a cart update is in flight.
+			container.find(".variations_form").css("pointer-events", "none");
+			totalEl.find(".design-total__amount").hide();
+			if (!totalEl.find(".design-total__calculating").length) {
+				totalEl
+					.find(".design-total__value")
+					.append(
+						'<span class="design-total__calculating">Calculating…</span>',
+					);
+			}
+			subtotalWrapper.find(".subtotal").hide();
+			if (!subtotalWrapper.find(".subtotal-calculating").length) {
+				subtotalWrapper.append(
+					'<span class="subtotal-calculating">Calculating…</span>',
+				);
+			}
+		} else {
+			container.removeClass("is-updating-price");
+			container.find(".variations_form").css("pointer-events", "");
+			totalEl.find(".design-total__calculating").remove();
+			totalEl.find(".design-total__amount").show();
+			subtotalWrapper.find(".subtotal-calculating").remove();
+			subtotalWrapper.find(".subtotal").show();
+		}
+	}
+
+	function queueRingUpdate(uuid, payload) {
+		ringUpdateQueue.updating[uuid] = true;
+		setDesignUpdating(uuid, true);
+
+		if (ringUpdateQueue.inFlight) {
+			// Latest change wins per design; sent when the queue reaches it.
+			ringUpdateQueue.pending[uuid] = payload;
+			return;
+		}
+
+		sendRingUpdate(uuid, payload);
+	}
+
+	function sendRingUpdate(uuid, payload) {
+		ringUpdateQueue.inFlight = true;
+
+		selectProduct(
+			payload.variationId,
+			PRODUCT_TYPES.RING,
+			(res) => {
+				const errorEl = $(document)
+					.find('.build-ring-confirm[data-uuid="' + uuid + '"]')
+					.find(".product-error-message");
+				errorEl.html((res && res.message) || "");
+
+				// A newer change for THIS design supersedes this result — its
+				// own refresh pass will land the final prices, skip this one.
+				// A pending change for a DIFFERENT design must not skip it:
+				// this design's data is final and still needs its refresh.
+				const sameDesign = ringUpdateQueue.pending[uuid]
+					? takePendingRingUpdate(uuid)
+					: null;
+				if (sameDesign) {
+					sendRingUpdate(sameDesign.uuid, sameDesign.payload);
+					return;
+				}
+
+				let pendingRefreshes = 2;
+				const done = () => {
+					pendingRefreshes--;
+					if (pendingRefreshes > 0) {
+						return;
+					}
+					const queued = takePendingRingUpdate();
+					if (queued) {
+						sendRingUpdate(queued.uuid, queued.payload);
+						return;
+					}
+					finishRingUpdates();
+				};
+
+				getSubtotal({
+					success: (subRes) => {
+						if (subRes.isSuccess) {
+							$(document).find(".subtotal").html(subRes.data);
+						}
+						done();
+					},
+					error: done,
+				});
+				refreshCollectionRing(uuid, done);
+				refreshCart();
+			},
+			{
+				...payload.formObj,
+			},
+		);
+	}
+
 	jQuery(document).on(
 		"change",
 		".build-ring-confirm .variations_form .variation_id",
@@ -939,39 +1119,21 @@
 			const container = $(this).closest(".build-ring-confirm");
 			const uuid = $(container).attr("data-uuid");
 			const form = $(this).closest(".variations_form");
-			const subtotalEl = $(document).find(".subtotal");
-			const productId = parseInt($(this).val());
+			const variationId = parseInt($(this).val());
+
+			// WC's variation form clears .variation_id (and fires change) while
+			// the size options are reloading after a metal switch, or when no
+			// matching variation exists yet. Sending that to the server used to
+			// remove the setting from the cart — ignore transient empty values.
+			if (!variationId) {
+				return;
+			}
+
 			const formData = $(form).serialize();
 			const formObj = parseQSToObject(formData);
-			const errorEl = $(container).find(".product-error-message");
-
 			delete formObj["add-to-cart"];
 
-			selectProduct(
-				productId,
-				PRODUCT_TYPES.RING,
-				(res) => {
-					const message = res.message || "";
-					if (message) {
-						errorEl.html(message);
-					} else {
-						errorEl.html("");
-					}
-
-					getSubtotal({
-						success: (res) => {
-							if (res.isSuccess) {
-								subtotalEl.html(res.data);
-							}
-						},
-					});
-					refreshCollectionRing(uuid);
-					refreshCart();
-				},
-				{
-					...formObj,
-				},
-			);
+			queueRingUpdate(uuid, { variationId, formObj });
 		},
 	);
 

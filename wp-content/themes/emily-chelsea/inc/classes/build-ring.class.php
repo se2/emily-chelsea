@@ -325,9 +325,10 @@ class Controller
     /**
      * Returns true when the user is inside the build-ring flow.
      *
-     * True when: an active mode is set AND (on a product page) the product belongs to the
-     * rings or center-stones category AND the ?mode query arg is present. Always true on the
-     * page-build-ring.php template regardless of session state.
+     * True when: an active mode is set AND (on a product page) the product is an eligible
+     * ring (in the "rings" category and NOT tagged "exclude-build-a-ring") or belongs to
+     * the center-stones category (stones) AND the ?mode query arg is present. Always true
+     * on the page-build-ring.php template regardless of session state.
      *
      * @return bool
      */
@@ -338,7 +339,13 @@ class Controller
         if (is_singular('product')) {
             global $post;
             $url_mode      = isset($_GET['mode']) ? $_GET['mode'] : '';
-            $is_has_terms  = has_term([PRODUCT_TYPES::RING, PRODUCT_TYPES::STONE], 'product_cat', $post);
+            // Rings are opt-out: in the "rings" category and NOT tagged
+            // "exclude-build-a-ring" — must match the step-1 listing query in
+            // template-parts/build-ring-step-1.php. Stones are gated by the
+            // "center-stones" category.
+            $is_has_terms  = has_term(PRODUCT_TYPES::STONE, 'product_cat', $post)
+                || (has_term(PRODUCT_TYPES::RING, 'product_cat', $post)
+                    && !has_term('exclude-build-a-ring', 'product_tag', $post));
             $is_processing = !empty($url_mode) && !empty(self::get_mode()) && $is_has_terms;
         }
 
@@ -696,6 +703,10 @@ class Controller
         $product = wc_get_product(intval($product_id));
         $message = '';
 
+        if (empty($product)) {
+            return 'Product is unavailable';
+        }
+
         if (!$product->is_in_stock() || !$product->is_purchasable() || !$product->has_enough_stock(1)) {
             $message = 'Product is available for purchase';
         }
@@ -954,14 +965,60 @@ class Controller
     }
 
     /**
-     * Returns true when every saved collection has a variation_id selected.
-     * A missing variation means the user left a ring design in a partially-configured state.
+     * Removes complete collections whose cart lines are ENTIRELY gone —
+     * typically stale session data after checkout emptied the cart, or an
+     * expired WC cart session. A design with only ONE of its two lines left
+     * is kept: that is a broken half-design validation must surface, not
+     * stale data.
+     *
+     * Only call this from read/validation paths (page render, validation
+     * AJAX, checkout guard) — never mid-write inside select_product, where a
+     * line is legitimately absent between remove and re-add.
+     *
+     * @return array The (possibly pruned) collections map.
+     */
+    public static function prune_stale_collections()
+    {
+        $collections = self::get_collections();
+        $changed = false;
+
+        foreach ($collections as $uuid => $collection) {
+            if (empty($collection['ring']) || empty($collection['stone'])) {
+                continue;
+            }
+
+            $ring_line  = $collection['ring_cart_item_line'] ?? '';
+            $stone_line = $collection['stone_cart_item_line'] ?? '';
+            $ring_in_cart  = !empty($ring_line) && !empty(WC()->cart->get_cart_item($ring_line));
+            $stone_in_cart = !empty($stone_line) && !empty(WC()->cart->get_cart_item($stone_line));
+
+            if (!$ring_in_cart && !$stone_in_cart) {
+                unset($collections[$uuid]);
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            self::set_collections($collections);
+        }
+
+        return $collections;
+    }
+
+    /**
+     * Returns true when every saved collection has a variation_id selected AND
+     * its ring/stone WC cart lines still exist in the cart.
+     * A missing variation means the user left a ring design in a partially-configured
+     * state; a missing cart line means the cart got out of sync with the collection
+     * (e.g. a failed re-add while switching metal types).
      *
      * @return bool
      */
     public static function is_valid_collections()
     {
-        $collections = self::get_collections();
+        // Drop designs whose lines are entirely gone (e.g. after a completed
+        // order emptied the cart) so stale session data never blocks the user.
+        $collections = self::prune_stale_collections();
         $is_valid = true;
 
         if (!empty($collections)) {
@@ -971,6 +1028,19 @@ class Controller
                 if (!$variation_id) {
                     $is_valid = false;
                     return $is_valid;
+                }
+
+                if (!empty($value['ring']) && !empty($value['stone'])) {
+                    $line_keys = [
+                        $value['ring_cart_item_line'] ?? '',
+                        $value['stone_cart_item_line'] ?? '',
+                    ];
+
+                    foreach ($line_keys as $line_key) {
+                        if (empty($line_key) || empty(WC()->cart->get_cart_item($line_key))) {
+                            return false;
+                        }
+                    }
                 }
             }
         }
@@ -1094,7 +1164,20 @@ class Ajax
 
         if ($type === PRODUCT_TYPES::RING) {
             $id = empty($variation_id) ? $productId : $variation_id;
-            $message = Controller::product_is_valid($id);
+            $ring_product = wc_get_product($productId);
+
+            // Guard the uuid-update path ONLY: there the front-end can fire this
+            // while WC's variation form is mid-reload (metal switched, size
+            // options still loading) with an empty variation_id, and adding a
+            // variable product without a variation always fails — so bail before
+            // removing the existing cart line. The new-design/tray path (e.g.
+            // drag-and-drop on step 1) legitimately adds a ring with no
+            // variation yet — metal/size are chosen later on the cart screen.
+            if (!empty($current_uuid) && !empty($ring_product) && $ring_product->is_type('variable') && empty($variation_id)) {
+                $message = 'Please select the Metal Type and Ring Size for your setting.';
+            } else {
+                $message = Controller::product_is_valid($id);
+            }
 
             if (empty($message)) {
                 if (empty($current_uuid)) {
@@ -1107,23 +1190,35 @@ class Ajax
                 }
 
                 if (!empty($current_uuid)) {
-                    $ring_cart_item_line = $currentCollection['ring_cart_item_line'] ?? '';
-                    if (!empty($ring_cart_item_line)) {
-                        WC()->cart->remove_cart_item($ring_cart_item_line);
+                    $old_cart_item_line = $currentCollection['ring_cart_item_line'] ?? '';
+                    if (!empty($old_cart_item_line)) {
+                        WC()->cart->remove_cart_item($old_cart_item_line);
                     }
 
                     $ring_cart_item_line = WC()->cart->add_to_cart($productId, 1, $variation_id, $attrs, [
                         'unique_key' => $uuid . '_ring',
                     ]);
-                    $currentCollection['ring_cart_item_line'] = $ring_cart_item_line;
-                    $currentCollection['ring'] = $productId;
-                    $currentCollection['attrs'] = $attrs;
-                    $currentCollection['variation_id'] = $variation_id;
+
+                    if (empty($ring_cart_item_line)) {
+                        // Failed add would leave the design with no setting in the
+                        // cart — put the old line back and report the failure.
+                        if (!empty($old_cart_item_line)) {
+                            WC()->cart->restore_cart_item($old_cart_item_line);
+                        }
+                        $message = 'Could not update your setting. Please try again.';
+                    } else {
+                        $currentCollection['ring_cart_item_line'] = $ring_cart_item_line;
+                        $currentCollection['ring'] = $productId;
+                        $currentCollection['attrs'] = $attrs;
+                        $currentCollection['variation_id'] = $variation_id;
+                    }
                 }
             }
         }
 
-        if (!empty($stone_option) && $stone_option !== 'custom_stone') {
+        // empty($message): a failed ring selection above must not be masked by
+        // a successful stone add — report the first failure to the front-end.
+        if (!empty($stone_option) && $stone_option !== 'custom_stone' && empty($message)) {
             $message = Controller::product_is_valid($stone_option);
             if (empty($message)) {
                 if (empty($current_uuid)) {
@@ -1136,17 +1231,25 @@ class Ajax
                 }
 
                 if (!empty($current_uuid)) {
-                    $stone_cart_item_line = $currentCollection['stone_cart_item_line'] ?? '';
+                    $old_cart_item_line = $currentCollection['stone_cart_item_line'] ?? '';
 
-                    if (!empty($stone_cart_item_line)) {
-                        WC()->cart->remove_cart_item($stone_cart_item_line);
+                    if (!empty($old_cart_item_line)) {
+                        WC()->cart->remove_cart_item($old_cart_item_line);
                     }
 
                     $stone_cart_item_line = WC()->cart->add_to_cart($stone_option, 1, 0, [], [
                         'unique_key' => $uuid . '_stone_option',
                     ]);
-                    $currentCollection['stone_cart_item_line'] = $stone_cart_item_line;
-                    $currentCollection['stone'] = $stone_option;
+
+                    if (empty($stone_cart_item_line)) {
+                        if (!empty($old_cart_item_line)) {
+                            WC()->cart->restore_cart_item($old_cart_item_line);
+                        }
+                        $message = 'Could not update your stone. Please try again.';
+                    } else {
+                        $currentCollection['stone_cart_item_line'] = $stone_cart_item_line;
+                        $currentCollection['stone'] = $stone_option;
+                    }
                 }
             }
         }
@@ -1164,15 +1267,23 @@ class Ajax
                 }
 
                 if (!empty($current_uuid)) {
-                    $stone_cart_item_line = $currentCollection['stone_cart_item_line'] ?? '';
-                    if (!empty($stone_cart_item_line)) {
-                        WC()->cart->remove_cart_item($stone_cart_item_line);
+                    $old_cart_item_line = $currentCollection['stone_cart_item_line'] ?? '';
+                    if (!empty($old_cart_item_line)) {
+                        WC()->cart->remove_cart_item($old_cart_item_line);
                     }
                     $stone_cart_item_line = WC()->cart->add_to_cart($productId, 1, $variation_id, $attrs, [
                         'unique_key' => $uuid . '_stone',
                     ]);
-                    $currentCollection['stone_cart_item_line'] = $stone_cart_item_line;
-                    $currentCollection['stone'] = $productId;
+
+                    if (empty($stone_cart_item_line)) {
+                        if (!empty($old_cart_item_line)) {
+                            WC()->cart->restore_cart_item($old_cart_item_line);
+                        }
+                        $message = 'Could not update your stone. Please try again.';
+                    } else {
+                        $currentCollection['stone_cart_item_line'] = $stone_cart_item_line;
+                        $currentCollection['stone'] = $productId;
+                    }
                 }
             }
         }

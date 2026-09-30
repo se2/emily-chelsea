@@ -3,7 +3,9 @@
 use TTG\Build_Ring\Controller;
 ?>
 <?php
-$collection   = Controller::get_collections();
+// Read path — drop designs whose cart lines are entirely gone (stale
+// session data, e.g. after a completed order) before rendering.
+$collection   = Controller::prune_stale_collections();
 $editing_uuid = Controller::get_uuid();
 $newCollection = [];
 if (!empty($collection)) {
@@ -123,8 +125,8 @@ wc_clear_notices();
         <a id="start-new-design" class="btn btn--solid btn--large build-ring-confirm-actions__item__btn" href="">START A NEW DESIGN</a>
     </div>
     <div class="build-ring-confirm-actions__item">
-        <h2 class="build-ring-confirm-actions__item__title">Continue to Checkout?</h2>
-        <a id="continue-to-checkout" class="btn btn--solid btn--large build-ring-confirm-actions__item__btn" href="">CHECKOUT NOW</a>
+        <h2 class="build-ring-confirm-actions__item__title">Continue to Cart?</h2>
+        <a id="continue-to-checkout" class="btn btn--solid btn--large build-ring-confirm-actions__item__btn" href="">GO TO CART</a>
     </div>
 </div>
 <div style="display: none;">

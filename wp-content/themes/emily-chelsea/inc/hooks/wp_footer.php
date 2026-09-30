@@ -1,4 +1,7 @@
 <?php
+
+use TTG\Build_Ring\Controller;
+
 add_action('wp_footer', function () {
 ?>
     <?php
@@ -32,6 +35,53 @@ add_action('wp_footer', function () {
 
             })(jQuery);
         </script>
+    <?php
+    }
+    ?>
+    <?php
+    if (Controller::is_building_ring()) {
+    ?>
+        <style>
+            @media (max-width: 1099.98px) {
+                access-widget-ui::part(acsb-trigger) {
+                    left: 5px !important;
+                    width: 30px;
+                    height: 30px;
+                    bottom: 120px !important;
+                }
+
+                .cky-revisit-bottom-left {
+                    bottom: 160px !important;
+                    left: 5px !important;
+                    width: 30px !important;
+                    height: 30px !important;
+                }
+
+                .cky-revisit-bottom-left img {
+                    height: 25px !important;
+                    width: 25px !important;
+                }
+
+                access-widget-ui::part(acsb-trigger) {
+                    left: 5px !important;
+                    bottom: 120px !important;
+                }
+
+                .kl-teaser-UApJ8p {
+                    left: auto !important;
+                    width: 100px !important;
+                    bottom: 0px !important;
+                    right: 0px !important;
+                    margin: 0 !important;
+                }
+
+                .kl-teaser-UApJ8p span {
+                    font-size: 12px !important;
+                    padding: 0 !important;
+                    min-height: 0 !important;
+                }
+            }
+        </style>
     <?php
     }
     ?>

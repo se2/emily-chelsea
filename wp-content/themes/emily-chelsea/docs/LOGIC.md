@@ -4,6 +4,12 @@ Companion to `CLAUDE.md` (structure/conventions). This file documents **what the
 actually does** — the business rules, non-obvious behavior, and known tech debt — so a
 new developer doesn't have to reverse-engineer it from 50+ hook files.
 
+See also `WEBSITE-RULES.md` — the plain-language, admin-facing version of these rules
+(syncs, filters, build-a-ring, product/cart rules), including the **hourly Meta product
+feed** (`tools/generate-datafeed.php`, required from `functions.php` — the one `tools/`
+script that IS live in production; regenerates `/wp-content/uploads/meta-feed.csv` and
+supports admin-only `?regen_meta_feed=1`).
+
 ---
 
 ## 1. Build-ring feature (`inc/classes/build-ring.class.php`)
@@ -117,28 +123,32 @@ session.
   `body_class`/`wp_head` hooks at the bottom of this same class file whenever
   `is_building_ring()` is true.
 
-### Product eligibility (updated 2026-08-16)
+### Product eligibility (updated 2026-09-22)
 
 Which products can be picked as a **ring/setting** vs. a **stone** in the wizard is
 gated differently per side, and both places must stay in sync:
 
 | Side | Eligibility | Enforced in |
 |---|---|---|
-| Ring / setting | Tagged with product tag **`build-a-ring`** | `template-parts/build-ring-step-1.php` (listing query) and `Controller::is_building_ring()` (gates the single-product build-ring UI) |
+| Ring / setting | In the **`rings`** product category AND **not** tagged **`exclude-build-a-ring`** (opt-out) | `template-parts/build-ring-step-1.php` (listing query) and `Controller::is_building_ring()` (gates the single-product build-ring UI) |
 | Stone | In the **`center-stones`** product category | Same two places |
 
-Rings used to be gated by the `rings` product category (same as stones). This was
-switched to an opt-in tag deliberately: with a category, every new ring product is
-included by default (a forgotten product silently *appears* in the wizard); with a tag,
-a forgotten product silently *doesn't appear* — a safer default for a feature where only
-a curated subset of ring products should be buildable. **Any ring meant to be usable in
-build-a-ring must have the `build-a-ring` WooCommerce product tag applied** — the
-`rings` category alone is no longer sufficient.
+History: on 2026-08-16 rings were meant to switch from the `rings` category to an
+**opt-in** `build-a-ring` tag (stakeholder decision — curated subset, safer default).
+In practice the two gates shipped inconsistently: the step-1 listing was implemented
+as **opt-out** (`rings` cat minus `exclude-build-a-ring` tag) while
+`is_building_ring()` required the opt-in `build-a-ring` tag — and no products were
+ever tagged `build-a-ring`. Result: every ring listed in step 1 but its product page
+refused to enter build-ring mode. On 2026-09-22 both gates were unified on the
+**opt-out** convention (matching what the listing already shipped and requiring no
+bulk tagging). To hide a ring from build-a-ring, tag it `exclude-build-a-ring`.
+If the stakeholder still wants strict opt-in, both places must be flipped together
+AND every buildable ring must be tagged `build-a-ring` first.
 
-⚠️ If a ring product is tagged `build-a-ring` but a future change re-adds a category
-check in only one of the two places above, it'll list in step 1 but fail to activate the
-build-ring UI on its product page (or vice versa) — keep both checks using the same
-condition if either is touched again.
+⚠️ If a future change edits the eligibility condition in only one of the two places
+above, a ring will list in step 1 but fail to activate the build-ring UI on its
+product page (or vice versa) — keep both checks using the same condition if either
+is touched again.
 
 ---
 

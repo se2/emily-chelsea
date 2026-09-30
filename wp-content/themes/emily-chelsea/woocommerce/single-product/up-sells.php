@@ -24,7 +24,7 @@ if ($upsells) : ?>
 
 	<section class="related">
 		<?php
-		$heading = apply_filters('woocommerce_product_upsells_products_heading', __('Designs You Might Love:', 'woocommerce'));
+		$heading = apply_filters('woocommerce_product_upsells_products_heading', __('More To Explore:', 'woocommerce'));
 
 		if ($heading) :
 		?>

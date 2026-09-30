@@ -14,17 +14,7 @@ $active_step = Controller::get_active_step();
             ?>
                 <li class="build-ring-steps__item <?php echo $value === $active_step ? 'active' : ''; ?>">
                     <a data-step="<?php echo $value ?>" class="build-ring-step-action set-step" href="#<?php echo $value ?>">
-                        <?php
-                        if ($value != 3) {
-                        ?>
-                            <?php echo $value ?>.
-                        <?php
-                        } else {
-                        ?>
-                            <?php echo  TTG_Template::get_icon('cart-2'); ?>
-                        <?php
-                        }
-                        ?>
+                        <?php echo $value ?>.
                     </a>
                 </li>
             <?php

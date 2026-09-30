@@ -40,7 +40,7 @@ emily-chelsea/
 │   ├── libs/              # Third-party JS (slick, isotope, sticky-kit, touch-punch)
 │   ├── dist/              # Compiled output (do not edit manually)
 │   └── webpack.mix.js     # Laravel Mix config
-└── tools/                 # One-off admin utility scripts (not auto-loaded)
+└── tools/                 # Admin utility scripts (generate-datafeed.php IS loaded via functions.php; the rest are one-off, not auto-loaded)
 ```
 
 ---
@@ -160,4 +160,4 @@ Field group definitions are saved to `acf-json/` automatically by ACF.
 - PHP namespace: `TTG\Build_Ring` (only the build-ring classes are namespaced; everything else is global).
 - Hook files: one hook per file, file name matches the hook name (e.g., `woocommerce_sidebar.php`).
 - No logic in `functions.php` — it is a loader only.
-- `tools/` scripts are one-off admin utilities; they are **not** auto-loaded and should not be deployed to production.
+- `tools/` scripts are one-off admin utilities and are **not** auto-loaded — **except `tools/generate-datafeed.php`**, which `functions.php` requires explicitly (hourly Meta product feed cron; see `docs/WEBSITE-RULES.md` §1).
