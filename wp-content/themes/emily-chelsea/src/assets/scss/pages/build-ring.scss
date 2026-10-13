@@ -1677,3 +1677,12 @@
 		}
 	}
 }
+
+// Evergreen ("Made to Order") stone label on step-2 product cards.
+.product-stock-label--made-to-order {
+	margin-top: pxToRem(6);
+	font-size: pxToRem(12);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	opacity: 0.7;
+}

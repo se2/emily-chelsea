@@ -603,7 +603,8 @@ class Controller
     }
 
     /**
-     * Returns the default stone ACF value for a ring product, falling back to the global option.
+     * Returns the default stone ACF value for a ring product, falling back to the global option
+     * when the ring has none or its stone is no longer purchasable (e.g. a one-of-a-kind stone sold out).
      *
      * @param  int $product_id Ring product ID.
      * @return mixed            Stone product ID from ACF, or 0/null if not configured.
@@ -614,6 +615,13 @@ class Controller
 
         $default_stone = get_field('default_stone', $product_id);
         $default_stone_global = get_field('default_stone', 'option');
+
+        if (!empty($default_stone) && !empty($default_stone_global)) {
+            $stone = wc_get_product($default_stone);
+            if (!$stone || !$stone->is_in_stock() || !$stone->is_purchasable()) {
+                return $default_stone_global;
+            }
+        }
 
         return empty($default_stone) ? $default_stone_global : $default_stone;
     }

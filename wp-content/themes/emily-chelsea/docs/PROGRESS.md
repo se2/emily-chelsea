@@ -397,3 +397,53 @@ tray text "go to the third step"; step 3 shows "Continue to Cart?" + "GO TO CART
 No test designs were created on prod for this check.
 
 **Still pending:** reply to the client; confirm they are happy with the "GO TO CART" button label.
+
+## 2026-10-06 — NEW client request (Jett): evergreen stones / shape compatibility / ring notes — analysis only, nothing built
+
+Current state found in code:
+1. Evergreen: only `default_stone` ACF (per ring, group_683e992a2dcda, fallback to theme option) shown as
+   "Our Recommended Stone". No evergreen concept; stones manage stock qty 1 → `Controller::product_is_valid()`
+   + WC block a 2nd design using the same stone. Plan: `is_evergreen` flag on stones (force manage_stock off,
+   instock, not sold_individually on save), restrict `default_stone` picker to evergreen stones, admin column/filter.
+2. Shape/size compatibility: does NOT exist — step-2 stone list never filters by the chosen ring. Stones already
+   have Shape / Carat Size facet data (FacetWP). Need per-ring allowed shapes + size range, filter list + server check.
+3. Ring notes: build-ring product page only renders post_content; no dedicated note field. Plan: ACF `build_ring_note`.
+Waiting on: client answers (see questions sent) before building.
+**2026-10-09 update (Trello 5403):** client now wants evergreen = existing "Made to Order" (WC `onbackorder`/backorders),
+NOT separate SKUs; show both as recommended AND in step-2 stone list. `product_is_valid()` uses `has_enough_stock()`
+which already passes for backorder stones → mostly config + picker/label + QA. Split estimate drafted (not yet posted): evergreen 3–5h,
+shape/size 2-way filter 8–11h, note 2–3h (total 13–19h, excl. client data entry). Open: show evergreen in Loose Stones?
+**2026-10-12 SCOPE CUT:** client wants ONLY evergreen for now — shape/size filtering in the ring builder is DROPPED
+(ring-note part not mentioned → confirm). Evergreen code findings (code-only, Local DB was down):
+- Step-2 list (`build-ring-step-1.php` + hidden list in `build-ring-step-3.php`) only excludes `outofstock` → Made-to-Order
+  stones in `center-stones` already appear. Recommended-stone card disables only on `!is_in_stock()` → backorder OK.
+- Each design adds the stone as its own cart line (uuid in cart_item_data), so one stone can serve many designs —
+  UNLESS the stone is `sold_individually` (WC refuses a 2nd line) or manage_stock w/ backorders = "no". Per-stone
+  config to verify: Stock status/Backorders = allow, Sold individually = off.
+**2026-10-12 BUILT (local, php -l clean, NOT browser-tested — Local site was stopped, NOT deployed):**
+- `inc/hooks/acf/acf_fields_post_object_query.php` — Default Stone picker (ring + global option) lists only `onbackorder` stones.
+- `inc/hooks/acf/acf_fields_post_object_result.php` — picker flags "Sold individually" stones with ⚠.
+- `inc/hooks/acf/acf_prepare_field.php` — field instructions explaining the rule.
+- `Controller::get_default_stone()` — ring's stone unavailable → falls back to global default.
+- `template-parts/build-ring-step-1.php` — "Made to Order" label on center-stone cards (build-ring listing only, not Loose Stones);
+  style in `src/assets/scss/pages/build-ring.scss`, dist rebuilt (`build-ring.css` only).
+- **Tested on local 2026-10-12: PASS.** Picker (both fields) lists only the 3 local onbackorder stones; ⚠ shows for a
+  sold-individually stone; "MADE TO ORDER" label on step-2 cards (incl. after FacetWP ajax paging); Wheat Ring (rec. stone
+  15693) + Spiral Staircase (same stone picked in step 2) → 2 designs, 4 cart lines, is_valid_collections OK, checkout
+  review correct ($4,728 + tax), no stock error (order NOT placed). Fallback: sold-out ring stone → global default.
+  Test data reverted (Wheat default_stone cleared, cart emptied).
+- Demo GIF of the full storefront flow: `~/Downloads/evergreen-stone-demo.gif` (admin picker not in it — Chrome not
+  logged into local wp-admin). Local test data cleaned again after the demo.
+- Estimate note: core (Made-to-Order reuse) already worked in old code; actual work ≈ 2–3h, below the 3–5h drafted.
+- **Gotcha:** global default stone (local 20356) is a qty-1 one-of-a-kind stone, NOT evergreen → client should set the
+  global + per-ring Default Stone to Made-to-Order stones (check prod values).
+- **Live test 2026-10-13 (read-only): PASS.** Prod has 24 onbackorder center stones (moissanite + lab-grown diamonds);
+  step 2 filtered to Moissanite shows "MADE TO ORDER" on all 12. Theme Options → Default Stone shows the new instructions
+  and the picker lists only those Made-to-Order stones (no ⚠ seen). Nothing saved.
+  **Gotcha:** global Default Stone on prod = 22896 "0.41ct Oval Montana Sapphire", which is OUT OF STOCK → client must
+  switch it to a Made-to-Order stone (fallback for rings lands on it). Multi-design cart flow NOT run on prod (local only).
+- Still awaiting client: ring-note in/out, evergreen on Loose Stones. Changes not yet committed to git.
+- **DEPLOYED to Live 2026-10-13 ~09:28–09:35 via MyKinsta Files** (created `inc/hooks/acf/`, uploaded all 8 files, sizes
+  match local) + Clear all caches. Verified: /build-ring/ loads (no fatal), served `build-ring.css` (29,724 B) has the
+  made-to-order style. "Made to Order" label NOT seen on step-2 page 1 → prod stones there are one-of-a-kind; client must
+  set evergreen stones to Made to Order (Backorders: allow, Sold individually off) + pick them as Default Stone.

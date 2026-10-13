@@ -2,10 +2,19 @@
 
 use TTG\Build_Ring\Controller;
 use TTG\Build_Ring\MODE;
+use TTG\Build_Ring\PRODUCT_TYPES;
 
 add_filter('woocommerce_loop_product_link', function ($post_link, $post) {
     return $post_link .= '?mode=build-ring';;
 }, 10, 2);
+
+// Evergreen ("Made to Order") stones: label the card so customers know it isn't a one-of-a-kind stone.
+add_action('woocommerce_after_shop_loop_item_title', function () {
+    global $product;
+    if ($product && $product->is_on_backorder(1) && has_term(PRODUCT_TYPES::STONE, 'product_cat', $product->get_id())) {
+        echo '<div class="product-stock-label product-stock-label--made-to-order">Made to Order</div>';
+    }
+}, 10);
 ?>
 <div class="page-build-ring__inner">
     <div class="page-build-ring__left">
